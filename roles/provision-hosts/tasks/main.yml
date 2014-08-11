@@ -1,0 +1,67 @@
+---
+- name: Add docker repository key
+  tags: packages
+  apt_key: url=https://get.docker.io/gpg state=present
+  when: ansible_os_family == "Debian"
+
+- name: Add docker repository
+  tags: packages
+  apt_repository: repo="deb http://get.docker.io/ubuntu docker main" state=present
+  when: ansible_os_family == "Debian"
+
+- name: Update package list
+  tags: packages
+  apt: update_cache=yes
+  when: ansible_os_family == "Debian"
+
+- name: Install packages
+  tags: packages
+  apt: pkg={{item}} state=present
+  with_items:
+  - lxc-docker
+  - git
+  - python-pip
+  - python-dev
+  - build-essential
+  - libzmq-dev
+  when: ansible_os_family == "Debian"
+
+# TODO: Package list incomplete
+- name: Install packages
+  tags: packages
+  yum: pkg={{item}} state=present
+  with_items:
+  - docker-io
+  - git
+  - python-pip
+  when: ansible_os_family == "RedHat"
+
+- name: Pull images
+  tags: docker
+  command: docker pull registry.docker:5000/{{item}}
+  with_items:
+    - admin
+    - mysql
+    - keystone
+
+- name: Clone scrambler
+  tags: packages
+  git: repo=http://github.com/Apsu/scrambler dest={{ansible_env.HOME}}/scrambler update=yes
+
+- name: Install scrambler
+  tags: packages
+  command: chdir={{ansible_env.HOME}}/scrambler ./setup.py install
+
+#- name: Clone dockerfiles
+#  tags: docker
+#  git: repo=https://github.com/Apsu/dockerlab-files dest={{ansible_env.HOME}}/dockerfiles update=yes
+# 
+#- name: List dockerfiles
+#  tags: docker
+#  shell: ls -d1 {{ansible_env.HOME}}/dockerfiles/*
+#  register: output
+# 
+#- name: Build docker images
+#  tags: docker
+#  docker_image: path={{item}} name="dockerlab/{{item|basename}}" state=build
+#  with_items: output.stdout_lines

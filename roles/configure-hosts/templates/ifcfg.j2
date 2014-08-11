@@ -1,0 +1,11 @@
+# {{ansible_managed}}
+
+DEVICE="{{ item.iface }}"
+BOOTPROTO="static"
+ONBOOT="yes"
+{% if item.ipv4 is defined %}
+IPADDR="{{ item.ipv4 }}"
+{% endif %}
+{% if item.mask is defined %}
+NETMASK="{{ item.mask }}"
+{%- endif %}

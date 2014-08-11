@@ -1,0 +1,32 @@
+---
+# Root ahoy!
+ansible_ssh_user: root
+
+# pyrax format creds file
+rax_creds: ~/.creds
+
+# Datacenter region
+rax_region: IAD
+
+# The keypair must already exist
+rax_keypair: jenkins
+
+# Ubuntu 14.04 PHVM
+rax_image: 255df5fb-e3d4-45a3-9a07-c976debf7c14
+
+# Manual for the fastness
+rax_diskconfig: manual
+
+host_prefix: "{{lookup('env', 'BUILD_PREFIX')}}-{{lookup('env', 'BUILD_NUMBER')}}"
+host_count: "{{lookup('env', 'BUILD_COUNT')}}"
+
+# Cloud Networks to attach
+rax_net_labels:
+- public
+- private
+- "jenkins-gate-mgmt"
+
+# Cloud networks to ensure
+rax_net_info:
+- label: "jenkins-gate-mgmt"
+  cidr: 172.16.0.0/20

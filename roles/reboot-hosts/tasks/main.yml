@@ -1,0 +1,14 @@
+---
+- name: Reboot servers
+  tags: reboot
+  command: shutdown -r now
+
+- name: Wait for ssh to come back
+  tags: reboot
+  local_action:
+    module: wait_for
+    delay: 10
+    host: "{{ansible_ssh_host}}"
+    port: 22
+    state: started
+    timeout: 300

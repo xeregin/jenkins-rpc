@@ -1,0 +1,65 @@
+---
+- name: Ensure hosts exist
+  tags: ensure
+  local_action:
+    module: rax
+    name: "{{inventory_hostname}}"
+    credentials: "{{rax_creds}}"
+    keypair: "{{rax_keypair}}"
+    networks: "{{rax_net_labels}}"
+    region: "{{rax_region}}"
+    flavor: "{{rax_flavor}}"
+    image: "{{rax_image}}"
+    disk_config: "{{rax_diskconfig}}"
+    wait: yes
+    state: present
+  register: rax
+
+- name: Store host access IPs
+  tags: ensure
+  set_fact: ansible_ssh_host={{item.accessIPv4}} networks={{item.rax_networks}}
+  when: item.name == inventory_hostname # Avoid dupes
+  with_items: rax.instances
+
+# TOOD: Update host ifaces facts based on discovered interface configs
+#- name: Check interfaces
+#  tags: networks
+#  setup: filter=ansible_interfaces,ansible_eth*
+#
+#- name:
+#
+# - name: Check package manager
+#   tags: packages
+#   setup: filter=ansible_pkg_mgr
+#
+# - name: Install python-keyczar
+#   tags: packages
+#   action:
+#     module: "{{ansible_pkg_mgr}}"
+#     name: python-keyczar
+#     state: present
+
+# - name: Check platform
+#   tags: packages
+#   setup: filter=ansible_os_family
+#
+# - name: Install LSB
+#   tags: packages
+#   yum: name=redhat-lsb-core state=present
+#   when: ansible_os_family == "RedHat"
+#
+# - name: Stop iptables
+#   tags: services
+#   service: name={{item}} state=stopped enabled=no
+#   with_items:
+#   - iptables
+#   - ip6tables
+#   when: ansible_os_family == "RedHat"
+#
+# - name: Save empty ruleset
+#   tags: services
+#   shell: "{{item}}-save > /etc/sysconfig/{{item}}"
+#   with_items:
+#   - iptables
+#   - ip6tables
+#   when: ansible_os_family == "RedHat"

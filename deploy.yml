@@ -1,0 +1,3 @@
+---
+- include: hosts.yml
+- include: build.yml
