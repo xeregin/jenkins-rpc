@@ -31,8 +31,8 @@
   interfaces: name={{item.iface}} state=present addr_family=inet iface_type=static address={{item.ipv4}} netmask={{item.mask}}
   when: item.iface in ansible_interfaces
   with_items: ifaces
-  notify:
-  - Down interfaces
-  - Flush interfaces
-  - Up interfaces
-#  - Ping addresses
+#   notify:
+#   - Down interfaces
+#   - Flush interfaces
+#   - Up interfaces
+#   - Ping addresses
