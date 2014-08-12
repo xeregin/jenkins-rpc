@@ -186,7 +186,7 @@ def update(module, state, name, auto, hotplug, iface_type, addr_family,
 
         # Open a temp file to write to
         tmpfile = tempfile.mkstemp()
-        fd = open(tmpfile, 'w')
+        fd, _ = open(tmpfile, 'w')
         fd.write('# This file is controlled by ansible\n')
 
         # Build basic structure
