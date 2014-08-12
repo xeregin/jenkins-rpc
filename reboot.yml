@@ -2,6 +2,6 @@
 - name: Reboot hosts
   tags: reboot-hosts
   hosts: hosts
-  gather_facts: true
+  gather_facts: false
   roles:
   - {role: reboot-hosts, tags: ['reboot-hosts']}
