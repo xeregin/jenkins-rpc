@@ -30,6 +30,7 @@
     port: 22
     state: started
     timeout: 300
+    search_regex: OpenSSH
   with_items: rax.instances
 
 # TOOD: Update host ifaces facts based on discovered interface configs
