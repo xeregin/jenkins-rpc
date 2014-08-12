@@ -2,22 +2,24 @@
 - name: Down interfaces
   command: ifdown {{item.iface}}
   when: item.iface in ansible_interfaces
-  with_items: ifaces.values()
+  with_items: ifaces
 
 - name: Flush interfaces
   command: ip addr flush {{item.iface}}
   when: item.iface in ansible_interfaces
-  with_items: ifaces.values()
+  with_items: ifaces
 
 - name: Up interfaces
   command: ifup {{item.iface}}
   when: item.iface in ansible_interfaces
-  with_items: ifaces.values()
+  with_items: ifaces
 
 - name: Ping addresses
-  command: ping -c 3 -q {{hostvars[item].ifaces.mgmt.ipv4}}
+  command: ping -c 1 -q {{item.1.ipv4}}
   register: output
-  when: "hostvars[item].ifaces.mgmt.iface in ansible_interfaces and hostvars[item].ifaces.mgmt.ipv4 is defined"
-  with_items: groups.hosts
+  when: "item.1.iface in ansible_interfaces and item.1.ipv4 is defined"
+  with_subelements:
+  - groups.hosts
+  - ifaces
   changed_when: False # Never changed
   failed_when: output.rc != 0
