@@ -7,7 +7,9 @@ vmnet_cidr: 172.16.32.0/24
 
 # overrides anything else any where.
 global_overrides:
-  lb_vip_address: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
+  glance_default_store: file
+  internal_lb_vip_address: 172.16.0.1
+  external_lb_vip_address: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
 
 # User defined Infrastructure Hosts, this should be a required group
 infra_hosts:

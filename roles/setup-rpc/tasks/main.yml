@@ -1,9 +1,16 @@
 ---
 - name: Create rpc_deploy directory
+  tags: files
   file: path=~/rpc_deploy state=directory
 
 - name: Render rpc_user_config template
+  tags: files
   template: src=rpc_user_config.yml dest=~/rpc_deploy/rpc_user_config.yml
 
 - name: Copy rpc_environment.yml
+  tags: files
   copy: src=~/ansible-lxc-rpc/etc/rpc_deploy/rpc_environment.yml dest=~/rpc_deploy/rpc_environment.yml
+
+- name: Set glance store to file
+  tags: files
+  lineinfile: dest=~/ansible-lxc-rpc/rpc_deployment/user-variables.yml regex="^glance_default_store" line="glance_default_store: file"

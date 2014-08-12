@@ -2,4 +2,4 @@
 - include: ensure.yml
 - include: configure.yml
 - include: reboot.yml
-#- include: provision.yml
+- include: setup-rpc.yml
