@@ -14,12 +14,12 @@
   when: item.iface in ansible_interfaces
   with_items: ifaces
 
-- name: Ping addresses
-  command: ping -c 1 -q {{item.1.ipv4}}
-  register: output
-  when: "item.1.iface in ansible_interfaces and item.1.ipv4 is defined"
-  with_subelements:
-  - groups.hosts
-  - ifaces
-  changed_when: False # Never changed
-  failed_when: output.rc != 0
+# - name: Ping addresses
+#   command: ping -c 1 -q {{item.ipv4}}
+#   register: output
+#   when: "item.iface in ansible_interfaces and item.ipv4 is defined"
+#   with_items:
+#   - hostvars
+#   - ifaces
+#   changed_when: False # Never changed
+#   failed_when: output.rc != 0
