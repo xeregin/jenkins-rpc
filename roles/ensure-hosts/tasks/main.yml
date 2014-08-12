@@ -12,6 +12,7 @@
     image: "{{rax_image}}"
     disk_config: "{{rax_diskconfig}}"
     wait: yes
+    wait_timeout: 600
     state: present
   register: rax
 
