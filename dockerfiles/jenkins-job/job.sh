@@ -21,10 +21,10 @@ cleanup() {
 trap cleanup 0
 
 # Clone jenkins-rpc repo
-git clone git@github.com:rcbops/jenkins-rpc.git
+git clone git@github.com:rcbops/jenkins-rpc.git || true
 
 # Clone ansible-lx-rpc repo
-git clone git@github.com:rcbops/ansible-lxc-rpc.git
+git clone git@github.com:rcbops/ansible-lxc-rpc.git || true
 
 # Install ansible and other RPC deps
 pip install -r ansible-lxc-rpc/requirements.txt

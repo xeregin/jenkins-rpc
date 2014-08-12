@@ -18,7 +18,7 @@
     iface_type=static
     address={{iface.tunnel}}
 
-- name: Configure vxlan42 interface
+- name: Configure vxlan42 tunnel
   interfaces: >-
     name=vxlan42
     iface_type=manual
