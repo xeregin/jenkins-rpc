@@ -8,31 +8,29 @@
   tags: packages
   apt: update_cache=yes upgrade=dist
 
-# - name: Clear existing cluster hosts
-#   tags: hosts
-#   host: hostname={{inventory_hostname}} state=absent
-#   register: result
-#   until: not result.changed
-#   retries: 10
-#   delay: 0
-#
-# - name: Add cluster hosts svc nets
-#   tags: hosts
-#   host: hostname={{item}} ip={{hostvars[item].ifaces.mgmt.ipv4}} state=present
-#   when: "'mgmt' in hostvars[item].ifaces"
-#   with_items: groups.hosts
-#
-# - name: Add docker registry to hosts
-#   tags: hosts
-#   host: hostname=registry.docker ip=10.208.163.157 state=present
+- name: Install packages
+  tags: packages
+  apt: pkg=bridge-utils state=present
 
-- name: Configure cloud network interfaces
-  tags: networks
-  interfaces: name={{item.iface}} state=present addr_family=inet iface_type=static address={{item.ipv4}} netmask={{item.mask}}
-  when: item.iface in ansible_interfaces
-  with_items: ifaces
-#   notify:
-#   - Down interfaces
-#   - Flush interfaces
-#   - Up interfaces
-#   - Ping addresses
+- name: Configure management interface
+  interfaces: >
+    name={{iface.name}}
+    iface_type=static
+    address={{iface.tunnel}}
+
+- name: Configure vxlan42 interface
+  interfaces: >-
+    name=vxlan42
+    iface_type=manual
+    updown="pre-up ip link add vxlan42 type vxlan id 42 group 239.0.0.42 dev {{iface.name}} || true","up ip link set $IFACE up","down ip link set $IFACE down","post-down ip link del vxlan42 || true"
+
+- name: Configure br-mgmt bridge
+  interfaces: >-
+    name=br-mgmt
+    iface_type=static
+    address={{iface.ipv4}}
+    updown="bridge_ports vxlan42"
+
+# - name: Configure /etc/network/interfaces to source fragments
+#   tags: networks
+#   lineinfile: dest=/etc/network/interfaces regexp="^source" line="source /etc/network/interfaces.d/*.cfg"
