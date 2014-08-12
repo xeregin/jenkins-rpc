@@ -105,6 +105,7 @@ interfaces: name=eth0 state=absent
 
 import json
 import tempfile
+import traceback
 
 
 def update(module, state, name, auto, hotplug, iface_type, addr_family,
@@ -278,7 +279,7 @@ def update(module, state, name, auto, hotplug, iface_type, addr_family,
         )
     except Exception as e:
         module.fail_json(
-            msg='%s' % e,
+            msg='%s' % traceback.format_exc(),
             results=json.dumps(results),
             ignored=json.dumps(ignored)
         )
