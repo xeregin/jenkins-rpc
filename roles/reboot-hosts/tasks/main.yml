@@ -11,4 +11,5 @@
     host: "{{ansible_ssh_host}}"
     port: 22
     state: started
+    search_regex: OpenSSH
     timeout: 300
