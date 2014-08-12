@@ -22,6 +22,16 @@
   when: item.name == inventory_hostname # Avoid dupes
   with_items: rax.instances
 
+- name: Wait for ssh to be available
+  tags: ensure
+  local_action:
+    module: wait_for
+    host: "{{item.accessIPv4}}"
+    port: 22
+    state: started
+    timeout: 300
+  with_items: rax.instances
+
 # TOOD: Update host ifaces facts based on discovered interface configs
 #- name: Check interfaces
 #  tags: networks
