@@ -1,7 +1,7 @@
 ---
 - name: Setup RPC configuration
   tags: setup-rpc
-  hosts: hosts
+  hosts: local
   connection: local
   gather_facts: false
   roles:
