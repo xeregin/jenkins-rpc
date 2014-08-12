@@ -104,6 +104,7 @@ interfaces: name=eth0 state=absent
 '''
 
 import json
+import os
 import tempfile
 import traceback
 
@@ -185,8 +186,8 @@ def update(module, state, name, auto, hotplug, iface_type, addr_family,
         fd.close()
 
         # Open a temp file to write to
-        fd, tmpfile = tempfile.mkstemp()
-        #fd, _ = open(tmpfile, 'w')
+        handle, tmpfile = tempfile.mkstemp()
+        fd = os.fdopen(handle, 'w')
         fd.write('# This file is controlled by ansible\n')
 
         # Build basic structure
