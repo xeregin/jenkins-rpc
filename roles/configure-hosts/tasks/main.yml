@@ -12,24 +12,18 @@
   tags: packages
   apt: pkg=bridge-utils state=present
 
-- name: Configure management interface
-  interfaces: >
-    name={{iface.name}}
-    iface_type=static
-    address={{iface.tunnel}}
-
-- name: Configure vxlan42 tunnel
+- name: Configure vxlan tunnel
   interfaces: >-
-    name=vxlan42
+    name={{iface.tunnel_name}}
     iface_type=manual
-    updown="pre-up ip link add vxlan42 type vxlan id 42 group 239.0.0.42 dev {{iface.name}} || true","up ip link set $IFACE up","down ip link set $IFACE down","post-down ip link del vxlan42 || true"
+    updown="pre-up ip link add $IFACE type vxlan id {{iface.tunnel_id}} group 239.0.0.{{iface.tunnel_id}} dev {{iface.name}} || true","up ip link set $IFACE up","down ip link set $IFACE down","post-down ip link del $IFACE || true"
 
 - name: Configure br-mgmt bridge
   interfaces: >-
     name=br-mgmt
     iface_type=static
-    address={{iface.ipv4}}
-    updown="bridge_ports vxlan42"
+    address={{iface.tunnel_ip}}
+    updown="bridge_ports vxlan{{iface.tunnel_name}}"
 
 # - name: Configure /etc/network/interfaces to source fragments
 #   tags: networks

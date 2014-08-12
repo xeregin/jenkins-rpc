@@ -20,6 +20,8 @@ rax_diskconfig: manual
 host_prefix: "{{lookup('env', 'BUILD_PREFIX')}}-{{lookup('env', 'BUILD_NUMBER')}}"
 host_count: "{{lookup('env', 'BUILD_COUNT')}}"
 
+cluster_id: "{{lookup('env', 'BUILD_NUMBER')}}"
+
 # Cloud Networks to attach
 rax_net_labels:
 - public
