@@ -7,38 +7,38 @@ vmnet_cidr: 172.16.32.0/24
 
 # overrides anything else any where.
 global_overrides:
-  lb_vip_address: {{rax.instances[0].accessIPv4}}
+  lb_vip_address: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
 
 # User defined Infrastructure Hosts, this should be a required group
 infra_hosts:
-{% for host in rax.instances|slice(3) %}
-  {{host.name}}:
-    ip: {{host.accessIPv4}}
+{% for host in groups.hosts %}
+  {{host}}:
+    ip: {{hostvars[host]["ansible_ssh_host"]}}
 {% endfor %}
 
 # User defined Compute Hosts, this should be a required group
 compute_hosts:
-  {{rax.instances[3].name}}:
-    ip: {{rax.instances[3].accessIPv4}}
+  {{groups.hosts[3]}}:
+    ip: {{hostvars[groups.hosts[3]]["ansible_ssh_host"]}}
 
 # User defined Storage Hosts, this should be a required group
 storage_hosts:
-  {{rax.instances[4].name}}:
-    ip: {{rax.instances[4].accessIPv4}}
+  {{groups.hosts[4]}}:
+    ip: {{hostvars[groups.hosts[4]]["ansible_ssh_host"]}}
     container_vars:
       cinder_backends:
         limit_container_types: cinder_volume
         lvm:
           volume_group: cinder-volumes
           driver: cinder.volume.drivers.lvm.LVMISCSIDriver
-          backend_name: LVM_iSCSI
+          backend: LVM_iSCSI
 
 # User defined Logging Hosts, this should be a required group
 log_hosts:
-  {{rax.instances[0].name}}:
-    ip: {{rax.instances[0].accessIPv4}}
+  {{groups.hosts[0]}}:
+    ip: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
 
 # User defined Networking Hosts, this should be a required group
 network_hosts:
-  {{rax.instances[0].name}}:
-    ip: {{rax.instances[0].accessIPv4}}
+  {{groups.hosts[0]}}:
+    ip: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
