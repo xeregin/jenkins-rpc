@@ -1,0 +1,44 @@
+---
+# Cider used in the Management network
+mgmt_cidr: {{rax_net_info[0].cidr}}
+
+# Cidr used in the VM network
+vmnet_cidr: 172.16.32.0/24
+
+# overrides anything else any where.
+global_overrides:
+  lb_vip_address: {{rax.instances[0].accessIPv4}}
+
+# User defined Infrastructure Hosts, this should be a required group
+infra_hosts:
+{% for host in rax.instances|slice(3) %}
+  {{host.name}}:
+    ip: {{host.accessIPv4}}
+{% endfor %}
+
+# User defined Compute Hosts, this should be a required group
+compute_hosts:
+  {{rax.instances[3].name}}:
+    ip: {{rax.instances[3].accessIPv4}}
+
+# User defined Storage Hosts, this should be a required group
+storage_hosts:
+  {{rax.instances[4].name}}:
+    ip: {{rax.instances[4].accessIPv4}}
+    container_vars:
+      cinder_backends:
+        limit_container_types: cinder_volume
+        lvm:
+          volume_group: cinder-volumes
+          driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+          backend_name: LVM_iSCSI
+
+# User defined Logging Hosts, this should be a required group
+log_hosts:
+  {{rax.instances[0].name}}:
+    ip: {{rax.instances[0].accessIPv4}}
+
+# User defined Networking Hosts, this should be a required group
+network_hosts:
+  {{rax.instances[0].name}}:
+    ip: {{rax.instances[0].accessIPv4}}

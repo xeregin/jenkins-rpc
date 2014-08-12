@@ -29,4 +29,4 @@ rax_net_labels:
 # Cloud networks to ensure
 rax_net_info:
 - label: "jenkins-gate-mgmt"
-  cidr: 172.16.0.0/20
+  cidr: 172.16.0.0/24

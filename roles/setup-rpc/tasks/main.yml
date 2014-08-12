@@ -1,0 +1,9 @@
+---
+- name: Create rpc_deploy directory
+  file: path=~/rpc_deploy state=directory
+
+- name: Render rpc_user_config template
+  template: src=rpc_user_config.yml dest=~/rpc_deploy/rpc_user_config.yml
+
+- name: Copy rpc_environment.yml
+  copy: src=~/ansible-lxc-rpc/etc/rpc_deploy/rpc_environment.yml dest=~/rpc_deploy/rpc_environment.yml
