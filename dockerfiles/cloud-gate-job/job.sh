@@ -12,7 +12,7 @@ cd
 # Cleanup function
 cleanup() {
   # Disable trap
-  trap - TERM
+  trap - TERM EXIT
   # Kill process group to catch jobs
   kill 0
   # Exit if we're keeping the build
@@ -21,7 +21,7 @@ cleanup() {
   pushd ~/jenkins-rpc
   ./destroy.sh
 }
-trap cleanup TERM
+trap cleanup TERM EXIT
 
 # Clone jenkins-rpc repo
 git clone git@github.com:rcbops/jenkins-rpc.git & wait || true
@@ -32,6 +32,9 @@ pushd jenkins-rpc
 cp ~/.ssh/id_* roles/configure-hosts/files/
 ./deploy.sh & wait
 popd
+
+# Skip deployment and trigger handler
+[[ $BUILD_SKIP == "yes" ]] && cleanup
 
 # Connect to target and run script
 ssh $(<target.ip) ./target.sh & wait
