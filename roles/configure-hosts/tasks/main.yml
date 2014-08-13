@@ -12,6 +12,7 @@
   copy: >
     src={{item|basename}}
     dest=~/.ssh/{{item|basename}}
+    mode=0600
   with_fileglob: id_*
 
 - name: Updating packages
@@ -27,6 +28,7 @@
     name={{iface.tunnel_name}}
     iface_type=manual
     updown="pre-up ip link add $IFACE type vxlan id {{iface.tunnel_id}} group 239.0.0.{{iface.tunnel_id}} dev {{iface.tunnel_dev}} || true","up ip link set $IFACE up","down ip link set $IFACE down","post-down ip link del $IFACE || true"
+    force=true
 
 - name: Configure br-mgmt bridge
   interfaces: >-
@@ -34,3 +36,4 @@
     iface_type=static
     address={{iface.tunnel_ip}}
     updown="bridge_ports {{iface.tunnel_name}}"
+    force=true
