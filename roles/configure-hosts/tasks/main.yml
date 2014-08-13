@@ -26,7 +26,7 @@
 - name: Source interfaces.d configs
   tags: network
   lineinfile: >
-    path=/etc/network/interfaces
+    dest=/etc/network/interfaces
     regexp="^source"
     line="source /etc/network/interfaces.d/*.cfg"
 
