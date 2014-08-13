@@ -20,7 +20,8 @@ rax_diskconfig: manual
 host_prefix: "{{lookup('env', 'BUILD_PREFIX')}}-{{lookup('env', 'BUILD_NUMBER')}}"
 host_count: "{{lookup('env', 'BUILD_COUNT')}}"
 
-cluster_id: "{{lookup('env', 'BUILD_NUMBER') % 256}}"
+# Used for tunnel/CIDR config; make sure value is 0-255
+cluster_id: "{{lookup('env', 'BUILD_NUMBER')|int % 256}}"
 
 # Cloud Networks to attach
 rax_net_labels:
