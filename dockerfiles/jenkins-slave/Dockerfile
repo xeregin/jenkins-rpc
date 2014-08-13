@@ -21,7 +21,7 @@ RUN apt-get update
 
 # Upgrade and install things
 RUN apt-get upgrade -y
-RUN apt-get install -y jenkins git ssh-client lxc-docker
+RUN apt-get install -y jenkins git ssh-client lxc-docker unzip
 
 # Use volume for docker socket
 VOLUME /var/run/docker.sock
@@ -30,5 +30,8 @@ VOLUME /var/run/docker.sock
 ENV JENKINS_HOME /opt/jenkins
 VOLUME /opt/jenkins
 
+# Extract slave.jar to /root
+RUN unzip -j /usr/share/jenkins/jenkins.war WEB-INF/slave.jar -d /root
+
 # Fire up jenkins
-CMD java -jar /opt/jenkins/war/WEB-INF/slave.jar -jnlpUrl http://${JENKINS_MASTER}/computer/${JENKINS_SLAVE}/slave-agent.jnlp -secret ${JENKINS_SECRET}
+CMD java -jar /root/slave.jar -jnlpUrl http://${JENKINS_MASTER}/computer/${JENKINS_SLAVE}/slave-agent.jnlp -secret ${JENKINS_SECRET}
