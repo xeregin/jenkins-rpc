@@ -23,31 +23,69 @@
   tags: packages
   apt: pkg=bridge-utils,git,python,python-dev,python-pip state=present
 
-- name: Configure vxlan tunnel
-  interfaces: >
-    name={{iface.tunnel_name}}
-    iface_type=manual
-    updown="pre-up ip link add $IFACE type vxlan id {{iface.tunnel_id}} group 239.0.0.{{iface.tunnel_id}} dev {{iface.tunnel_dev}} || true","up ip link set $IFACE up","down ip link set $IFACE down","post-down ip link del $IFACE || true"
-    force=true
+- name: Source interfaces.d configs
+  tags: network
+  lineinfile: >
+    path=/etc/network/interfaces
+    regexp="^source"
+    line="source /etc/network/interfaces.d/*.cfg"
 
-- name: Configure br-mgmt bridge
-  interfaces: >
-    name=br-mgmt
-    iface_type=static
-    address={{iface.tunnel_ip}}
-    updown="bridge_ports {{iface.tunnel_name}}"
-    force=true
+- name: Add interfaces.d configs
+  tags: network
+  template: >
+    src=interface.cfg
+    dest=/etc/network/interfaces.d/{{item.name}}.cfg
+  with_items:
+    - name: "{{iface.tunnel_name}}"
+      type: manual
+      directives:
+        - "pre-up ip link add $IFACE type vxlan id {{iface.tunnel_id}} group 239.0.0.{{iface.tunnel_id}} dev {{iface.tunnel_dev}} || true"
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "post-down ip link del $IFACE || true"
+    - name: br-mgmt
+      type: static
+      directives:
+        - "address {{iface.tunnel_ip}}"
+        - "bridge_ports {{iface.tunnel_name}}"
+    - name: br-vmnet
+      type: manual
+      directives:
+        - "bridge_ports none"
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: br-ext
+      type: manual
+      directives:
+        - "bridge_ports none"
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
 
-- name: Configure br-vmnet bridge
-  interfaces: >
-    name=br-vmnet
-    iface_type=manual
-    updown="bridge_ports none","up ip link set $IFACE up","down ip link set $IFACE down"
-    force=true
-
-- name: Configure br-ext bridge
-  interfaces: >
-    name=br-ext
-    iface_type=manual
-    updown="bridge_ports none","up ip link set $IFACE up","down ip link set $IFACE down"
-    force=true
+# - name: Configure vxlan tunnel
+#   interfaces: >
+#     name={{iface.tunnel_name}}
+#     iface_type=manual
+#     updown="pre-up ip link add $IFACE type vxlan id {{iface.tunnel_id}} group 239.0.0.{{iface.tunnel_id}} dev {{iface.tunnel_dev}} || true","up ip link set $IFACE up","down ip link set $IFACE down","post-down ip link del $IFACE || true"
+#     force=true
+#
+# - name: Configure br-mgmt bridge
+#   interfaces: >
+#     name=br-mgmt
+#     iface_type=static
+#     address={{iface.tunnel_ip}}
+#     updown="bridge_ports {{iface.tunnel_name}}"
+#     force=true
+#
+# - name: Configure br-vmnet bridge
+#   interfaces: >
+#     name=br-vmnet
+#     iface_type=manual
+#     updown="bridge_ports none","up ip link set $IFACE up","down ip link set $IFACE down"
+#     force=true
+#
+# - name: Configure br-ext bridge
+#   interfaces: >
+#     name=br-ext
+#     iface_type=manual
+#     updown="bridge_ports none","up ip link set $IFACE up","down ip link set $IFACE down"
+#     force=true
