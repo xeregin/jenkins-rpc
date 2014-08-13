@@ -25,8 +25,8 @@ ADD job.sh /root/job.sh
 ADD ssh_config /root/.ssh/config
 
 # Add ssh keys
-ADD id_jenkins /root/.ssh/id_rsa
-ADD id_jenkins.pub /root/.ssh/id_rsa.pub
+ADD id_rsa /root/.ssh/id_rsa
+ADD id_rsa.pub /root/.ssh/id_rsa.pub
 
 # Add credsfile
 ADD creds /root/.creds

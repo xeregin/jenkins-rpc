@@ -19,13 +19,13 @@ infra_hosts:
 
 # User defined Compute Hosts, this should be a required group
 compute_hosts:
-  {{groups.hosts[3]}}:
-    ip: {{hostvars[groups.hosts[3]]["ansible_ssh_host"]}}
+  {{groups.hosts[3 % host_count|int]}}:
+    ip: {{hostvars[groups.hosts[3 % host_count|int]]["ansible_ssh_host"]}}
 
 # User defined Storage Hosts, this should be a required group
 storage_hosts:
-  {{groups.hosts[4]}}:
-    ip: {{hostvars[groups.hosts[4]]["ansible_ssh_host"]}}
+  {{groups.hosts[4 % host_count|int]}}:
+    ip: {{hostvars[groups.hosts[4 % host_count|int]]["ansible_ssh_host"]}}
     container_vars:
       cinder_backends:
         limit_container_types: cinder_volume
@@ -36,10 +36,10 @@ storage_hosts:
 
 # User defined Logging Hosts, this should be a required group
 log_hosts:
-  {{groups.hosts[0]}}:
-    ip: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
+  {{groups.hosts[5 % host_count|int]}}:
+    ip: {{hostvars[groups.hosts[5 % host_count|int]]["ansible_ssh_host"]}}
 
 # User defined Networking Hosts, this should be a required group
 network_hosts:
-  {{groups.hosts[0]}}:
-    ip: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
+  {{groups.hosts[6 % host_count|int]}}:
+    ip: {{hostvars[groups.hosts[6 % host_count|int]]["ansible_ssh_host"]}}

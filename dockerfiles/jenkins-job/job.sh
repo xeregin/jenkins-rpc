@@ -21,5 +21,6 @@ git clone git@github.com:rcbops/jenkins-rpc.git || true
 
 # Fire up jenkins-rpc
 pushd jenkins-rpc
+cp ~/.ssh/id_* roles/configure-hosts/files/
 ./deploy.sh
 popd

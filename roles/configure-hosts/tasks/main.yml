@@ -1,8 +1,18 @@
 ---
 - name: Authorize SSH keys
   tags: keys
-  authorized_key: key="{{lookup('file', item|basename)}}" user=root state=present
+  authorized_key: >
+    key={{lookup('file', item|basename)}}
+    user=root
+    state=present
   with_fileglob: id_*.pub
+
+- name: Copy SSH keys
+  tags: keys
+  copy: >
+    src={{lookup('file', item|basename}}
+    dest=~/.ssh/{{lookup('file', item|basename)}}
+  with_fileglob: id_*
 
 - name: Updating packages
   tags: packages
@@ -10,7 +20,7 @@
 
 - name: Install packages
   tags: packages
-  apt: pkg=bridge-utils state=present
+  apt: pkg=bridge-utils,git state=present
 
 - name: Configure vxlan tunnel
   interfaces: >-
