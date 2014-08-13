@@ -32,4 +32,4 @@ ADD id_rsa.pub /root/.ssh/id_rsa.pub
 ADD creds /root/.creds
 
 # Shell entry-point
-CMD /root/job.sh
+CMD ["/root/job.sh"]
