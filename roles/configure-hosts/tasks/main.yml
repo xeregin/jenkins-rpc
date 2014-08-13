@@ -2,7 +2,7 @@
 - name: Authorize SSH keys
   tags: keys
   authorized_key: >
-    key={{lookup('file', item|basename)}}
+    key="{{lookup('file', item|basename)}}"
     user=root
     state=present
   with_fileglob: id_*.pub
@@ -10,8 +10,8 @@
 - name: Copy SSH keys
   tags: keys
   copy: >
-    src={{lookup('file', item|basename}}
-    dest=~/.ssh/{{lookup('file', item|basename)}}
+    src={{item|basename}}
+    dest=~/.ssh/{{item|basename}}
   with_fileglob: id_*
 
 - name: Updating packages
