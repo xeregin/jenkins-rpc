@@ -32,11 +32,20 @@
   tags: rpc
   lineinfile: >
     dest=~/ansible-lxc-rpc/rpc_deployment/vars/user_variables.yml
-    regexp='^glance_default_store'
-    line='glance_default_store: file'
+    regexp="^glance_default_store"
+    line="glance_default_store: file"
 
-- name: Run RPC playbooks
+- name: Copy target.sh to host[0]
   tags: rpc
-  command: >
-    ansible-playbook -e @vars/user_variables.yml playbooks/all-the-all-the-things.yml
-    chdir={{ansible_env.HOME}}/ansible-lxc-rpc/rpc_deployment
+  copy: >
+    src=target.sh
+    dest=~/target.sh
+    mode=0755
+
+- name: Dump host[0] IP to local file
+  tags: rpc
+  connection: local
+  delegate_to: local
+  copy: >
+    content={{ansible_ssh_host}}
+    dest=~/target.ip

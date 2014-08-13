@@ -21,6 +21,10 @@ git clone git@github.com:rcbops/jenkins-rpc.git || true
 
 # Fire up jenkins-rpc
 pushd jenkins-rpc
+# Populate playbook files for SSH keys on targets
 cp ~/.ssh/id_* roles/configure-hosts/files/
 ./deploy.sh
 popd
+
+# Connect to target and run script
+ssh $(<target.ip) ./target.sh

@@ -7,7 +7,7 @@ vmnet_cidr: 172.24.0.0/24
 
 # overrides anything else any where.
 global_overrides:
-  internal_lb_vip_address: {{hostvars[groups.hosts[0]]["rax_networks"]["jenkins-gate-mgmt"][0]}}
+  internal_lb_vip_address: 172.20.{{cluster_id}}.1
   external_lb_vip_address: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
 
 # User defined Infrastructure Hosts, this should be a required group
