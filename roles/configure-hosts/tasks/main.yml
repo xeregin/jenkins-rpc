@@ -16,7 +16,7 @@
   interfaces: >-
     name={{iface.tunnel_name}}
     iface_type=manual
-    updown="pre-up ip link add $IFACE type vxlan id {{iface.tunnel_id}} group 239.0.0.{{iface.tunnel_id}} dev {{iface.name}} || true","up ip link set $IFACE up","down ip link set $IFACE down","post-down ip link del $IFACE || true"
+    updown="pre-up ip link add $IFACE type vxlan id {{iface.tunnel_id}} group 239.0.0.{{iface.tunnel_id}} dev {{iface.tunnel_dev}} || true","up ip link set $IFACE up","down ip link set $IFACE down","post-down ip link del $IFACE || true"
 
 - name: Configure br-mgmt bridge
   interfaces: >-
