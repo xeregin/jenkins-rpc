@@ -23,8 +23,4 @@
     name=br-mgmt
     iface_type=static
     address={{iface.tunnel_ip}}
-    updown="bridge_ports vxlan{{iface.tunnel_name}}"
-
-# - name: Configure /etc/network/interfaces to source fragments
-#   tags: networks
-#   lineinfile: dest=/etc/network/interfaces regexp="^source" line="source /etc/network/interfaces.d/*.cfg"
+    updown="bridge_ports {{iface.tunnel_name}}"

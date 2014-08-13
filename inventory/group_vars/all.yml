@@ -20,15 +20,15 @@ rax_diskconfig: manual
 host_prefix: "{{lookup('env', 'BUILD_PREFIX')}}-{{lookup('env', 'BUILD_NUMBER')}}"
 host_count: "{{lookup('env', 'BUILD_COUNT')}}"
 
-cluster_id: "{{lookup('env', 'BUILD_NUMBER')}}"
+cluster_id: "{{lookup('env', 'BUILD_NUMBER') % 256}}"
 
 # Cloud Networks to attach
 rax_net_labels:
-- public
-- private
-- "jenkins-gate-mgmt"
+  - public
+  - private
+  - jenkins-gate-mgmt
 
 # Cloud networks to ensure
 rax_net_info:
-- label: "jenkins-gate-mgmt"
-  cidr: 172.16.0.0/24
+  - label: "jenkins-gate-mgmt"
+    cidr: 172.16.0.0/24

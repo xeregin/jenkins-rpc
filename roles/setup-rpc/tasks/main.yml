@@ -1,16 +1,42 @@
 ---
+- name: Clone RPC repo
+  tags: rpc
+  git: >
+    repo=git@github.com:rcbops/ansible-lxc-rpc.git
+    dest=~/ansible-lxc-rpc
+    key_file=~/.ssh/id_rsa
+
+- name: Install pip requirements
+  tags: rpc
+  pip: requirements=~/ansible-lxc-rpc/requirements.txt
+
 - name: Create rpc_deploy directory
-  tags: files
-  file: path=~/rpc_deploy state=directory
+  tags: rpc
+  file: >
+    path=~/rpc_deploy
+    state=directory
 
 - name: Render rpc_user_config template
-  tags: files
-  template: src=rpc_user_config.yml dest=~/rpc_deploy/rpc_user_config.yml
+  tags: rpc
+  template: >
+    src=rpc_user_config.yml
+    dest=~/rpc_deploy/rpc_user_config.yml
 
 - name: Copy rpc_environment.yml
-  tags: files
-  copy: src=~/ansible-lxc-rpc/etc/rpc_deploy/rpc_environment.yml dest=~/rpc_deploy/rpc_environment.yml
+  tags: rpc
+  command: >
+    cp ~/ansible-lxc-rpc/etc/rpc_deploy/rpc_environment.yml ~/rpc_deploy/rpc_environment.yml
+    creates=~/rpc_deploy/rpc_environment.yml
 
 - name: Set glance store to file
-  tags: files
-  lineinfile: "dest=~/ansible-lxc-rpc/rpc_deployment/vars/user_variables.yml regexp='^glance_default_store' line='glance_default_store: file'"
+  tags: rpc
+  lineinfile: >
+    dest=~/ansible-lxc-rpc/rpc_deployment/vars/user_variables.yml
+    regexp='^glance_default_store'
+    line='glance_default_store: file'
+
+- name: Run RPC playbooks
+  tags: rpc
+  command: >
+    ansible-playbook -e @vars/user_variables.yml playbooks/all-the-all-the-things.yml
+    chdir={{ansible_env.HOME}}/ansible-lxc-rpc/rpc_deployment

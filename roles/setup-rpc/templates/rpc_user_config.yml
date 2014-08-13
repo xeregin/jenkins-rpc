@@ -1,13 +1,13 @@
 ---
 # Cider used in the Management network
-mgmt_cidr: {{rax_net_info[0].cidr}}
+mgmt_cidr: 172.20.{{cluster_id}}.0/24
 
 # Cidr used in the VM network
-vmnet_cidr: 172.16.32.0/24
+vmnet_cidr: 172.24.0.0/24
 
 # overrides anything else any where.
 global_overrides:
-  internal_lb_vip_address: 172.16.0.1
+  internal_lb_vip_address: {{hostvars[groups.hosts[0]]["rax_networks"]["jenkins-gate-mgmt"][0]}}
   external_lb_vip_address: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
 
 # User defined Infrastructure Hosts, this should be a required group
