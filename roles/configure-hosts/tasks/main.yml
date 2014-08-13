@@ -24,14 +24,14 @@
   apt: pkg=bridge-utils,git,python,python-dev,python-pip state=present
 
 - name: Configure vxlan tunnel
-  interfaces: >-
+  interfaces: >
     name={{iface.tunnel_name}}
     iface_type=manual
     updown="pre-up ip link add $IFACE type vxlan id {{iface.tunnel_id}} group 239.0.0.{{iface.tunnel_id}} dev {{iface.tunnel_dev}} || true","up ip link set $IFACE up","down ip link set $IFACE down","post-down ip link del $IFACE || true"
     force=true
 
 - name: Configure br-mgmt bridge
-  interfaces: >-
+  interfaces: >
     name=br-mgmt
     iface_type=static
     address={{iface.tunnel_ip}}
@@ -39,14 +39,14 @@
     force=true
 
 - name: Configure br-vmnet bridge
-  interfaces: >-
+  interfaces: >
     name=br-vmnet
     iface_type=manual
     updown="bridge_ports none","up ip link set $IFACE up","down ip link set $IFACE down"
     force=true
 
 - name: Configure br-ext bridge
-  interfaces: >-
+  interfaces: >
     name=br-ext
     iface_type=manual
     updown="bridge_ports none","up ip link set $IFACE up","down ip link set $IFACE down"
