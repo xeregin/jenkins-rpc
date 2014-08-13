@@ -13,7 +13,10 @@ RUN apt-get install -y curl git python python-pip python-dev ssh-client
 RUN pip install rackspace-novaclient
 
 # Install pyrax
-RUN pip install git+https://github.com/rackspace/pyrax@working
+RUN pip install pyrax
+
+# Install ansible
+RUN pip install ansible
 
 # Add entrypoint script
 ADD job.sh /root/job.sh
