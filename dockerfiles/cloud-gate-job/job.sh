@@ -11,8 +11,13 @@ cd
 
 # Cleanup function
 cleanup() {
+  # Disable trap
   trap - TERM
+  # Kill process group to catch jobs
   kill 0
+  # Exit if we're keeping the build
+  [[ $BUILD_KEEP == "yes" ]] && exit
+  # Destroy cluster hosts
   pushd ~/jenkins-rpc
   ./destroy.sh
 }
