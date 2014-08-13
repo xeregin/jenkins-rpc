@@ -23,9 +23,6 @@ RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install -y jenkins git ssh-client lxc-docker unzip
 
-# Use volume for docker socket
-VOLUME /var/run/docker.sock
-
 # Use volume for Jenkins home
 ENV JENKINS_HOME /opt/jenkins
 VOLUME /opt/jenkins
