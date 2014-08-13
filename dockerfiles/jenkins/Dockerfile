@@ -21,16 +21,14 @@ RUN apt-get update
 
 # Upgrade and install things
 RUN apt-get upgrade -y
-RUN apt-get install -y jenkins lxc-docker git ssh-client apparmor
+RUN apt-get install -y jenkins git ssh-client lxc-docker
 
-# Wrapdocker wrapper and volume per https://github.com/jpetazzo/dind via CloudBees
-ADD ./wrapdocker /usr/local/bin/wrapdocker
-RUN chmod +x /usr/local/bin/wrapdocker
-VOLUME /var/lib/docker
+# Use volume for docker socket
+VOLUME /var/run/docker.sock
 
 # Use volume for Jenkins home
 ENV JENKINS_HOME /opt/jenkins
 VOLUME /opt/jenkins
 
-# Make sure we exec to pass on signals correctly
-CMD wrapdocker && exec java -jar /usr/share/jenkins/jenkins.war
+# Fire up jenkins
+CMD java -jar /usr/share/jenkins/jenkins.war
