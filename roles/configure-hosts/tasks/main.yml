@@ -21,7 +21,7 @@
 
 - name: Install packages
   tags: packages
-  apt: pkg=bridge-utils,git state=present
+  apt: pkg=bridge-utils,git,python,python-dev,python-pip state=present
 
 - name: Configure vxlan tunnel
   interfaces: >-

@@ -5,6 +5,7 @@
     repo=git@github.com:rcbops/ansible-lxc-rpc.git
     dest=~/ansible-lxc-rpc
     key_file=~/.ssh/id_rsa
+    accept_hostkey=true
 
 - name: Install pip requirements
   tags: rpc

@@ -12,9 +12,14 @@ global_overrides:
 
 # User defined Infrastructure Hosts, this should be a required group
 infra_hosts:
-{% for index in range(3 % host_count) %}
+{% if host_count >= 3 %}
+{% set count = 3 %}
+{% else %}
+{% set count = host_count %}
+{% endif -%}
+{% for index in range(count) %}
   {{groups.hosts[index]}}:
-    ip: {{hostvars[host]["ansible_ssh_host"]}}
+    ip: {{hostvars[groups.hosts[index]]["ansible_ssh_host"]}}
 {% endfor %}
 
 # User defined Compute Hosts, this should be a required group
