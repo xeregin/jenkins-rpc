@@ -48,3 +48,11 @@ log_hosts:
 network_hosts:
   {{groups.hosts[6 % host_count|int]}}:
     ip: {{hostvars[groups.hosts[6 % host_count|int]]["ansible_ssh_host"]}}
+
+# Other hosts can be added whenever needed. Note that containers will not be
+# assigned to "other" hosts by default.  If you would like to have containers
+# assigned to hosts that are outside of the predefined groups, you will need to
+# make an edit to the rpc_environment.yml file.
+haproxy_hosts:
+  {{groups.hosts[0]}}:
+    ip: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}

@@ -37,3 +37,17 @@
     address={{iface.tunnel_ip}}
     updown="bridge_ports {{iface.tunnel_name}}"
     force=true
+
+- name: Configure br-vmnet bridge
+  interfaces: >-
+    name=br-vmnet
+    iface_type=manual
+    updown="bridge_ports none","up ip link set $IFACE up","down ip link set $IFACE down"
+    force=true
+
+- name: Configure br-ext bridge
+  interfaces: >-
+    name=br-ext
+    iface_type=manual
+    updown="bridge_ports none","up ip link set $IFACE up","down ip link set $IFACE down"
+    force=true
