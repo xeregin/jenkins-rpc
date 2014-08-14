@@ -1,0 +1,5 @@
+---
+- hosts: infra:compute:cinder:logger:haproxy
+  roles:
+    - { role: common, tags: target }
+    - update

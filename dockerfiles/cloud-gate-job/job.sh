@@ -19,7 +19,7 @@ cleanup() {
   [[ $BUILD_KEEP == "yes" ]] && exit
   # Destroy cluster hosts
   pushd ~/jenkins-rpc
-  ./destroy.sh
+  ./scripts/destroy.sh
 }
 trap cleanup INT TERM EXIT
 
@@ -28,9 +28,10 @@ git clone git@github.com:rcbops/jenkins-rpc.git & wait || true
 
 # Fire up jenkins-rpc
 pushd jenkins-rpc
+
 # Populate playbook files for SSH keys on targets
 cp ~/.ssh/id_* roles/configure-hosts/files/
-./deploy.sh & wait
+./scripts/deploy.sh & wait
 popd
 
 # Skip deployment and trigger handler

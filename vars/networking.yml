@@ -1,0 +1,65 @@
+# All Centos / RHEL configurations
+centos:
+  ip_iface: em1
+  mgmt:
+    primary_iface: em1
+    secondary_iface: em3
+  vmnet:
+    primary_iface: p1p2
+    secondary_iface: p3p2
+  storage:
+    primary_iface: p1p1
+    secondary_iface: p3p1
+  configs:
+    - ifcfg-mgmt
+    - ifcfg-vmnet
+    - ifcfg-storage
+    - ifcfg-em1
+    - ifcfg-em3
+    - ifcfg-p1p1
+    - ifcfg-p1p2
+    - ifcfg-p3p1
+    - ifcfg-p3p2
+
+# All Ubuntu / Debian Configurations
+ubuntu:
+  ip_iface: eth0
+  mgmt:
+    primary_iface: eth0
+    secondary_iface: eth2
+  vmnet:
+    primary_iface: eth4
+    secondary_iface: eth6
+  storage:
+    primary_iface: eth5
+    secondary_iface: eth7
+  configs:
+    - loopback
+    - mgmt
+    - vmnet
+    - br-mgmt
+    - br-vmnet
+    - br-ext
+
+# Common Networking Configurations
+network:
+  gateway: 10.127.101.1
+  netmask: 255.255.255.0
+  dns:
+    primary: 8.8.8.8
+    secondary: 8.8.4.4
+    search: sat6.lab
+  mgmt:
+    bond_name: mgmt
+    bridge_name: br-mgmt
+  vmnet:
+    bond_name: vmnet
+    vlan_tags:
+      - 10
+    bridge_name: br-vmnet
+  ext:
+    bond_name: vmnet
+    bridge_name: br-ext
+  storage:
+    bond_name: storage
+    bridge_name: br-storage

@@ -1,0 +1,21 @@
+## Packages to install on all hosts
+all:
+   - bridge-utils
+   - ntp
+   - ntpdate
+   - ssh
+   - sudo
+   - vim
+
+## Packages to install on deployment hosts
+deployment:
+   - aptitude
+   - build-essential
+   - git
+   - python-dev
+   - python-pip
+
+## Packages to install on target hosts
+target:
+    - lsof
+    - tcpdump

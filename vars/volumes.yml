@@ -1,0 +1,2 @@
+volume_group: vg_storage
+physical_drive: /dev/sdb

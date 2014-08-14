@@ -1,0 +1,23 @@
+---
+- name: update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: install packages that are for all hosts
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  apt: pkg={{ item }} state=present
+  with_items: all
+  tags:
+    - deployment
+    - target
+
+- name: install packages that are for deployment hosts
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  apt: pkg={{ item }} state=present
+  with_items: deployment
+  tags: deployment
+
+- name: install packages that are for target hosts
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  apt: pkg={{ item }} state=present
+  with_items: target
+  tags: target

@@ -1,0 +1,32 @@
+# {{ ubuntu.vmnet.primary_iface }} is manually configured, and slave to the "vmnet" bonded NIC
+auto {{ ubuntu.vmnet.primary_iface }}
+iface {{ ubuntu.vmnet.primary_iface }} inet manual
+    bond-master {{ network.vmnet.bond_name }}
+    bond-primary {{ ubuntu.vmnet.primary_iface }}
+
+# {{ ubuntu.vmnet.secondary_iface }} ditto, thus creating a 2-link bond.
+auto {{ ubuntu.vmnet.secondary_iface }}
+iface {{ ubuntu.vmnet.secondary_iface }} inet manual
+    bond-master {{ network.vmnet.bond_name }}
+
+# {{ network.vmnet.bond_name }} is the bonding NIC and can be used like any other normal NIC.
+# {{ network.vmnet.bond_name }} is configured using manual network information.
+auto {{ network.vmnet.bond_name }}
+iface {{ network.vmnet.bond_name }} inet manual
+    up ip link set $IFACE up
+    down ip link set $IFACE down
+    bond-slaves none
+    bond-mode active-backup
+    bond-miimon 100
+    bond-downdelay 200
+    bond-updelay 200
+
+{% if network.vmnet.vlan_tags is defined %}
+{% for vlan_tag in network.vmnet.vlan_tags %}
+# {{ network.vmnet.bond_name }}.{{ vlan_tag }} is the vlan tagged interface for the bond
+auto {{ network.vmnet.bond_name }}.{{ vlan_tag }}
+iface {{ network.vmnet.bond_name }}.{{ vlan_tag }} inet manual
+    up ip link set $IFACE up
+    down ip link set $IFACE down
+{% endfor %}
+{% endif %}

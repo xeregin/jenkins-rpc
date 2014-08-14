@@ -1,0 +1,83 @@
+---
+{% set infra = groups['infra'] %}
+{% set network = groups['network'] %}
+{% set compute = groups['compute'] %}
+{% set cinder = groups['cinder'] %}
+{% set logger = groups['logger'] %}
+{% set haproxy = groups['haproxy'] %}
+# Cider used in the Management network
+mgmt_cidr: {{ mgmt_cidr }}
+
+# Cidr used in the VM network
+vmnet_cidr: {{ vmnet_cidr }}
+
+# overrides anything else any where.
+global_overrides:
+  # Internal Management vip address
+  internal_lb_vip_address: {{ internal_lb_vip_address }}
+  # External DMZ VIP address
+  external_lb_vip_address: {{ external_lb_vip_address }}
+
+
+# User defined Infrastructure Hosts, this should be a required group
+infra_hosts:
+{% for host in infra %}
+  infra{{ loop.index }}:
+    ip: {{ host }}
+{% endfor %}
+
+# User defined Network Hosts, this should be a required group
+network_hosts:
+{% for host in network %}
+  network{{ loop.index }}:
+    ip: {{ host }}
+{% endfor %}
+
+# User defined Compute Hosts, this should be a required group
+compute_hosts:
+{% for host in compute %}
+  compute{{ loop.index }}:
+    ip: {{ host }}
+{% endfor %}
+
+# User defined Cinder Hosts, this should be a required group
+cinder_hosts:
+{% for host in cinder %}
+  cinder{{ loop.index }}:
+    ip: {{ host }}
+    container_vars:
+      cinder_backends:
+        limit_container_type: cinder_volume
+{% if 'lvm' in cinder_backend %}
+        lvm:
+          volume_group: {{ volume_group }}
+          driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+          backend_name: LVM_iSCSI
+{% else %}
+        netapp:
+          netapp_storage_family: ontap_7mode
+          netapp_storage_protocol: iscsi
+          netapp_server_hostname: {{ netapp_hostname }}
+          netapp_server_port: 80
+          netapp_login: {{ netapp_username }}
+          netapp_password: {{ netapp_password }}
+          driver: cinder.volume.drivers.netapp.common.NetAppDriver
+          backend_name: NETAPP_iSCSI
+{% endif %}
+{% endfor %}
+
+# User defined Logger Hosts, this should be a required group
+log_hosts:
+{% for host in logger %}
+  logger{{ loop.index }}:
+    ip: {{ host }}
+{% endfor %}
+
+# User defined HAProxy Hosts
+{% if haproxy %}
+haproxy_hosts:
+{% for host in haproxy %}
+  haproxy{{ loop.index }}:
+    ip: {{ host }}
+{% endfor %}
+{% endif %}
