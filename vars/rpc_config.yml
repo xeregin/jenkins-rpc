@@ -2,3 +2,4 @@ volume_group: vg_storage
 netapp_hostname: test
 netapp_username: test
 netapp_password: test
+
