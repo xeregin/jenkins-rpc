@@ -1,0 +1,6 @@
+---
+- hosts: compute
+  vars_files:
+    - nova_destroy.yml
+  roles:
+    - nova_destroy

@@ -11,17 +11,13 @@ cd
 
 # Cleanup function
 cleanup() {
-  # Disable trap
-  trap - INT TERM EXIT
-  # Kill process group to catch jobs
+  trap - TERM
   kill 0
-  # Exit if we're keeping the build
-  [[ $BUILD_KEEP == "yes" ]] && exit
-  # Destroy cluster hosts
-  pushd ~/jenkins-rpc
-  ./scripts/destroy.sh
+  # Put any other cleanup here
 }
-trap cleanup INT TERM EXIT
+trap cleanup TERM
+
+# Job commands follow
 
 # Clone jenkins-rpc repo
 git clone git@github.com:rcbops/jenkins-rpc.git & wait || true
@@ -37,5 +33,5 @@ popd
 # Skip deployment and trigger handler
 [[ $BUILD_SKIP == "yes" ]] && cleanup
 
-# Connect to target and run script
-ssh $(<target.ip) ./target.sh & wait
+# Add '& wait' to every long-running job command
+# Example: ansible-playbook blah & wait

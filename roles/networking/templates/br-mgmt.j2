@@ -1,0 +1,16 @@
+# {{ network.mgmt.bridge_name }} is the bridge NIC and can be used like any other normal NIC.
+# {{ network.mgmt.bridge_name }} is configured using static network information.
+auto {{ network.mgmt.bridge_name }}
+iface {{ network.mgmt.bridge_name }} inet static
+    address {{ ansible_default_ipv4.address }}
+    netmask {{ network.netmask }}
+    gateway {{ network.gateway }}
+    dns-nameservers {{ network.dns.primary }} {{ network.dns.secondary }}
+    dns-search {{ network.dns.search }}
+    bridge_ports {{ network.mgmt.bond_name }}
+    bridge_stp off
+    bridge_fd 0
+    bridge_maxwait 0
+
+iface {{ network.mgmt.bridge_name }} inet static
+    address {{ new_ip_address }}

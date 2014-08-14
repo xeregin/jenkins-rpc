@@ -1,0 +1,4 @@
+---
+- hosts: all
+  roles:
+    - { role: release-upgrade, when: ansible_distribution_release == "precise" }

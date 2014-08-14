@@ -1,0 +1,10 @@
+---
+- include: common.yml
+- include: keys.yml
+# need to fix this (something wrong with the vg module)
+#- include: volumes.yml
+- include: uninstall_chef.yml
+- include: release_upgrade.yml
+- include: networking.yml
+- include: reboot.yml
+- include: update.yml

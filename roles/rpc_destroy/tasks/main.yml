@@ -1,0 +1,10 @@
+---
+- name: remove rpc_deploy directory
+  file: path=/var/lib/jenkins/rpc_deploy state=absent
+  tags: deployment
+
+- name: remove root openstack directory
+  file: path=/openstack state=absent
+
+- name: cleanup hosts file
+  lineinfile: dest=/etc/hosts regexp='container' state=absent

@@ -1,0 +1,15 @@
+---
+- name: delete razor node
+  command: razor delete-node --name {{ ansible_hostname.split('.')[0] }}
+
+- name: delete chef node
+  local_action: command knife node delete -y {{ ansible_fqdn }}
+
+- name: delete chef client
+  local_action: command knife client delete -y {{ ansible_fqdn }}
+
+- name: stop bad process
+  shell: grep rabbit /etc/passwd && for i in `ps -U rabbitmq | tail -n +2 | awk '{print $1}' `; do kill -9 $i; done || true
+
+- name: reboot
+  command: reboot

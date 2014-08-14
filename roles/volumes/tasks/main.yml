@@ -1,0 +1,2 @@
+- name: add volume group
+  lvg:  vg={{ volume_group }} state=present pvs={{ physical_drive }} pesize=8
