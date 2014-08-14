@@ -1,4 +1,4 @@
-clearskys
+jenkins-rpc
 =========
 
-A project for setting up RPCS QE Labs using Ansible
+A set of ansible plays and dockerfiles that will allow rpc to automate deployment testing across mutliple environments
