@@ -12,7 +12,7 @@ cd
 # Cleanup function
 cleanup() {
   # Disable trap
-  trap - TERM EXIT
+  trap - INT TERM EXIT
   # Kill process group to catch jobs
   kill 0
   # Exit if we're keeping the build
@@ -21,7 +21,7 @@ cleanup() {
   pushd ~/jenkins-rpc
   ./destroy.sh
 }
-trap cleanup TERM EXIT
+trap cleanup INT TERM EXIT
 
 # Clone jenkins-rpc repo
 git clone git@github.com:rcbops/jenkins-rpc.git & wait || true
