@@ -4,5 +4,5 @@
 #source .venv/bin/activate
 export PYTHONUNBUFFERED=1
 export ANSIBLE_FORCE_COLOR=1
-ansible-playbook destroy.yml $@ 2>&1
+ansible-playbook playbooks/cloud-gate/destroy.yml $@ 2>&1
 #[[ -d /opt/virtlab ]] && popd
