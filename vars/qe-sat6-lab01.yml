@@ -21,11 +21,11 @@ networking:
     - name: br-mgmt
       type: static
       directives:
-        - "address {{ ansible_default_ipv4_address }}"
-        - "gateway {{ ansible_default_ipv4_gateway }}"
-        - "netmask {{ ansible_default_ipv4_netmask }}"
-        - "dns-nameservers {{ ansible_default_ipv4_nameservers }}"
-        - "dns-search {{ ansible_default_ipv4_dnssearch }}"
+        - "address {{ ansible_default_ipv4.address }}"
+        - "gateway {{ ansible_default_ipv4.gateway }}"
+        - "netmask {{ ansible_default_ipv4.netmask }}"
+        - "dns-nameservers {{ ansible_default_ipv4.nameservers }}"
+        - "dns-search {{ ansible_default_ipv4.dnssearch }}"
         - "address {{ container_cidr_address }}"
         - "bridge-ports bond0"
     - name: eth4
@@ -67,5 +67,5 @@ networking:
     - name: br-vxlan
       type: static
       directives:
-        - "address {{ vxlan_ip_addr }}"
+        - "address {{ vxlan_cidr_address }}"
         - "bridge_ports bond1.30"
