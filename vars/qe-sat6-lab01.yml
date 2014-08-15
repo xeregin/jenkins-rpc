@@ -1,4 +1,6 @@
 networking:
+    - name: lo
+      type: loopback
     - name: eth0
       type: manual
       directives:

@@ -25,7 +25,7 @@
   register: vxlan_cidr_address
 
 - name: setup interface config files
-  template: dest=/etc/network/interfaces.d/{{ item }}.cfg owner=root group=root mode=0644
+  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ item }}.cfg owner=root group=root mode=0644
   with_items: networking
 
 - name: restart networking
