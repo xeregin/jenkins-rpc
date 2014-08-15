@@ -1,0 +1,73 @@
+networking:
+    - name: lo
+      type: loopback
+    - name: eth0
+      type: manual
+      directives:
+        - "bond-master bond0"
+        - "bond-primary eth0"
+    - name: eth2
+      type: manual
+      directives:
+        - "bond master bond0"
+    - name: bond0
+      type: manual
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bond-slaves none"
+        - "bond-mode active-backup"
+        - "bond-miimon 100"
+        - "bond-downdelay 200"
+        - "bond-updelay 200"
+    - name: br-mgmt
+      type: static
+      directives:
+        - "address {{ ansible_default_ipv4.address }}"
+        - "gateway {{ ansible_default_ipv4.gateway }}"
+        - "netmask {{ ansible_default_ipv4.netmask }}"
+        - "dns-nameservers 8.8.8.8 8.8.4.4"
+        - "dns-search sat6.lab"
+        - "ip addr add {{ container_ip_address }} dev $IFACE || true "
+        - "bridge-ports bond0"
+    - name: eth4
+      type: manual
+      directives:
+        - "bond-master bond1"
+        - "bond-primary eth4"
+    - name: eth6
+      type: manual
+      directives:
+        - "bond-master bond1"
+    - name: bond1
+      type: manual
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bond-slaves none"
+        - "bond-mode active-backup"
+        - "bond-miimon 100"
+        - "bond-downdelay 200"
+        - "bond-updelay 200
+    - name: bond1.30:
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: bond1.40:
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: br-vlan
+      type: static
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bridge_ports bond1.40"
+        - "bridge_stp off"
+        - "bridge_fd 0"
+        - "bridge_maxwait 0"
+    - name: br-vxlan
+      type: static
+      directives:
+        - "address {{ vxlan_cidr_address }}"
+        - "bridge_ports bond1.30"
