@@ -18,11 +18,11 @@
 
 - name: retrieve new ip address
   local_action: script cidr.py {{ mgmt_cidr }} {{ ansible_default_ipv4.address }}
-  register: new_ip_address
+  register: container_cidr_address
 
 - name: setup interface config files
   template: dest=/etc/network/interfaces.d/{{ item }}.cfg owner=root group=root mode=0644
-  with_items: network_devices
+  with_items: networking
 
 - name: restart networking
   service: name=networking state=restarted

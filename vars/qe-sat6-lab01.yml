@@ -21,12 +21,12 @@ networking:
     - name: br-mgmt
       type: static
       directives:
-        - "address {{ mgmt_ip_addr }}"
-        - "gateway {{ mgmt_ip_gateway }}"
-        - "netmask {{ mgmt_ip_netmasl }}"
-        - "dns-nameservers {{ mgmt_nameservers }}"
-        - "dns-search {{ mgmt_dnssearch }}"
-        - "address {{ containter_ip_addr }}"
+        - "address {{ ansible_default_ipv4_address }}"
+        - "gateway {{ ansible_default_ipv4_gateway }}"
+        - "netmask {{ ansible_default_ipv4_netmask }}"
+        - "dns-nameservers {{ ansible_default_ipv4_nameservers }}"
+        - "dns-search {{ ansible_default_ipv4_dnssearch }}"
+        - "address {{ container_cidr_address }}"
         - "bridge-ports bond0"
     - name: eth4
       type: manual
