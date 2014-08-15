@@ -33,15 +33,6 @@
   async: 45
   poll: 0
 
-- name: add default route
-  command: route add default gw {{ network.gateway }} dev {{ network.mgmt.bridge_name }}
-
 - name: wait for reconnect
   wait_for: delay=10 host={{ inventory_hostname }} port=22
   delegate_to: localhost
-
-- name: flush interfaces
-  command: ip a f {{ ansible_default_ipv4.interface }}
-
-- name: cycle previous default interface
-  shell: '(ifdown {{ ansible_default_ipv4.interface }}; ifup {{ ansible_default_ipv4.interface }}) &'
