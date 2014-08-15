@@ -29,13 +29,8 @@ git clone git@github.com:rcbops/jenkins-rpc.git & wait || true
 # Fire up jenkins-rpc
 pushd jenkins-rpc
 
-# Populate playbook files for SSH keys on targets
-cp ~/.ssh/id_* roles/configure-hosts/files/
-./scripts/deploy.sh & wait
-popd
-
 # Skip deployment and trigger handler
 [[ $BUILD_SKIP == "yes" ]] && cleanup
 
-# Connect to target and run script
-ssh $(<target.ip) ./target.sh & wait
+# Run build lab playbook
+ansible-playbook -i LAB_ID playbooks/qe-labs/build_lab.yml & wait

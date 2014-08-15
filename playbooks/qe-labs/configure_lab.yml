@@ -1,0 +1,6 @@
+---
+- include: common.yml
+- include: keys.yml
+- include: volumes.yml
+- include: networking.yml
+- include: update.yml

@@ -1,7 +1,4 @@
 ---
 - hosts: all
-  vars_files:
-    - vars/networking.yml
   roles:
     - networking
-    # - { role: networking, when: ansible_default_ipv4.interface != "br-mgmt" }

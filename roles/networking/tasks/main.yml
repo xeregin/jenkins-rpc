@@ -1,32 +1,19 @@
 - name: install bonding / bridge dependencies
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   apt: pkg={{ item }} state=installed
   with_items:
     - ifenslave-2.6
     - bridge-utils
 
 - name: prevent bond0 from loading
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   lineinfile: dest=/etc/modules regexp='bonding' line='bonding' state=absent
 
-- name: ensure kernel bonding persistence
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-  template: src=bonding.conf dest=/etc/modprobe.d/bonding.conf owner=root group=root mode=0644
-
 - name: load kernel bonding
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   modprobe: name=bonding state=present
 
-- name: load kernel bonding
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-  command: modprobe bonding mode=active-backup miimon=100 downdelay=200 updelay=200
-
 - name: ensure /etc/network/interfaces.d exists
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   file: path=/etc/network/interfaces.d state=directory owner=root mode=0655
 
 - name: setup interfaces file
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644
 
 - name: retrieve new ip address
@@ -34,29 +21,15 @@
   register: new_ip_address
 
 - name: setup interface config files
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-  template: src={{ item }}.j2 dest=/etc/network/interfaces.d/{{ item }}.cfg owner=root group=root mode=0644
-  with_items: ubuntu.configs
-
-- name: setup interfaces network scripts
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-  template: src={{ item }}.j2 dest=/etc/sysconfig/network-scripts/{{ item }} owner=root group=root mode=0644
-  with_items: centos.configs
+  template: dest=/etc/network/interfaces.d/{{ item }}.cfg owner=root group=root mode=0644
+  with_items: network_devices
 
 - name: restart networking
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   service: name=networking state=restarted
   async: 45
   poll: 0
 
-- name: restart networking
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
-  service: name=network state=restarted
-  async: 45
-  poll: 0
-
 - name: add default route
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   command: route add default gw {{ network.gateway }} dev {{ network.mgmt.bridge_name }}
 
 - name: wait for reconnect
@@ -64,9 +37,7 @@
   delegate_to: localhost
 
 - name: flush interfaces
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   command: ip a f {{ ansible_default_ipv4.interface }}
 
 - name: cycle previous default interface
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   shell: '(ifdown {{ ansible_default_ipv4.interface }}; ifup {{ ansible_default_ipv4.interface }}) &'
