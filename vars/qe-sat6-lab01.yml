@@ -1,86 +1,71 @@
 networking:
-    devices:
-        eth0:
-            name: eth0
-            type: manual
-            directives:
-                - "bond-master bond0"
-                - "bond-primary eth0"
-        eth2:
-            name: eth2
-            type: manual
-            directives:
-                - "bond master bond0"
-        bond0:
-            name: bond0
-            type: manual
-            vlan_tags:
-                10:
-                    directives:
-                        - "up ip link set $IFACE up"
-                        - "down ip link set $IFACE down"
-                20:
-                    directives:
-                        - "up ip link set $IFACE up"
-                        - "down ip link set $IFACE down"
-            directives:
-                - "up ip link set $IFACE up"
-                - "down ip link set $IFACE down"
-                - "bond-slaves none"
-                - "bond-mode active-backup"
-                - "bond-miimon 100"
-                - "bond-downdelay 200"
-                - "bond-updelay 200"
-        eth4:
-            name: eth4
-            type: manual
-            directives:
-                - "bond-master bond1"
-                - "bond-primary eth4"
-        eth6:
-            name: eth6
-            type: manual
-            directives:
-                - "bond-master bond1"
-        bond1:
-            name: bond1
-            type: manual
-            vlan_tags:
-                30:
-                    directives:
-                        - "up ip link set $IFACE up"
-                        - "down ip link set $IFACE down"
-                40:
-                    directives:
-                        - "up ip link set $IFACE up"
-                        - "down ip link set $IFACE down"
-            directives:
-                - "up ip link set $IFACE up"
-                - "down ip link set $IFACE down"
-                - "bond-slaves none"
-                - "bond-mode active-backup"
-                - "bond-miimon 100"
-                - "bond-downdelay 200"
-                - "bond-updelay 200
-        mgmt:
-            name: br-mgmt
-            type: static
-            directives:
-                - "address {{ mgmt_ip_addr }}"
-                - "bridge-ports bond0.10"
-        vlan:
-            name: br-vlan
-            type: static
-            directives:
-                    - "up ip link set $IFACE up"
-                    - "down ip link set $IFACE down"
-                    - "bridge_ports bond1.10"
-                    - "bridge_stp off"
-                    - "bridge_fd 0"
-                    - "bridge_maxwait 0"
-        vxlan:
-            name: br-vxlan
-            type: static
-            directives:
-                - "address {{ vxlan_ip_addr }}"
-                - "bridge_ports bond1.30"
+    - name: eth0
+      type: manual
+      directives:
+        - "bond-master bond0"
+        - "bond-primary eth0"
+    - name: eth2
+      type: manual
+      directives:
+        - "bond master bond0"
+    - name: bond0
+      type: manual
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bond-slaves none"
+        - "bond-mode active-backup"
+        - "bond-miimon 100"
+        - "bond-downdelay 200"
+        - "bond-updelay 200"
+    - name: br-mgmt
+      type: static
+      directives:
+        - "address {{ mgmt_ip_addr }}"
+        - "gateway {{ mgmt_ip_gateway }}"
+        - "netmask {{ mgmt_ip_netmasl }}"
+        - "dns-nameservers {{ mgmt_nameservers }}"
+        - "dns-search {{ mgmt_dnssearch }}"
+        - "address {{ containter_ip_addr }}"
+        - "bridge-ports bond0"
+    - name: eth4
+      type: manual
+      directives:
+        - "bond-master bond1"
+        - "bond-primary eth4"
+    - name: eth6
+      type: manual
+      directives:
+        - "bond-master bond1"
+    - name: bond1
+      type: manual
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bond-slaves none"
+        - "bond-mode active-backup"
+        - "bond-miimon 100"
+        - "bond-downdelay 200"
+        - "bond-updelay 200
+    - name: bond1.30:
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: bond1.40:
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: br-vlan
+      type: static
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bridge_ports bond1.40"
+        - "bridge_stp off"
+        - "bridge_fd 0"
+        - "bridge_maxwait 0"
+    - name: br-vxlan
+      type: static
+      directives:
+        - "address {{ vxlan_ip_addr }}"
+        - "bridge_ports bond1.30"
