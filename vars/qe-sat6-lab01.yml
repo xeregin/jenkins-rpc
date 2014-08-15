@@ -24,9 +24,9 @@ networking:
         - "address {{ ansible_default_ipv4.address }}"
         - "gateway {{ ansible_default_ipv4.gateway }}"
         - "netmask {{ ansible_default_ipv4.netmask }}"
-        - "dns-nameservers {{ ansible_default_ipv4.nameservers }}"
-        - "dns-search {{ ansible_default_ipv4.dnssearch }}"
-        - "address {{ container_cidr_address }}"
+        - "dns-nameservers 8.8.8.8 8.8.4.4"
+        - "dns-search sat6.lab"
+        - "ip addr add {{ container_ip_address }} dev $IFACE || true "
         - "bridge-ports bond0"
     - name: eth4
       type: manual
