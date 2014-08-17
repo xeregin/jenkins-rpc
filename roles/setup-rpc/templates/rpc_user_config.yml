@@ -1,16 +1,32 @@
 ---
-# Cider used in the Management network
 mgmt_cidr: 172.20.{{cluster_id}}.0/24
-
-# Cidr used in the VM network
 vmnet_cidr: 172.24.0.0/24
 
-# overrides anything else any where.
 global_overrides:
   internal_lb_vip_address: 172.20.{{cluster_id}}.1
   external_lb_vip_address: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
+  tunnel_bridge: br-vmnet
+  container_bridge: br-mgmt
+  lb_name: lb_name_in_core
+  neutron_provider_networks:
+    - network:
+        container_bridge: "br-vmnet"
+        container_interface: "eth2"
+        type: "vxlan"
+        range: "1:1000"
+        net_name: "vmnet"
+    - network:
+        container_bridge: "br-ext"
+        container_interface: "eth3"
+        type: "flat"
+        net_name: "extnet"
+    - network:
+        container_bridge: "br-ext"
+        container_interface: "eth3"
+        type: "vlan"
+        range: "1:1"
+        net_name: "extnet"
 
-# User defined Infrastructure Hosts, this should be a required group
 infra_hosts:
 {% if host_count >= 3 %}
 {% set count = 3 %}
@@ -22,12 +38,10 @@ infra_hosts:
     ip: {{hostvars[groups.hosts[index]]["ansible_ssh_host"]}}
 {% endfor %}
 
-# User defined Compute Hosts, this should be a required group
 compute_hosts:
   {{groups.hosts[3 % host_count|int]}}:
     ip: {{hostvars[groups.hosts[3 % host_count|int]]["ansible_ssh_host"]}}
 
-# User defined Storage Hosts, this should be a required group
 storage_hosts:
   {{groups.hosts[4 % host_count|int]}}:
     ip: {{hostvars[groups.hosts[4 % host_count|int]]["ansible_ssh_host"]}}
@@ -39,20 +53,14 @@ storage_hosts:
           driver: cinder.volume.drivers.lvm.LVMISCSIDriver
           backend: LVM_iSCSI
 
-# User defined Logging Hosts, this should be a required group
 log_hosts:
   {{groups.hosts[5 % host_count|int]}}:
     ip: {{hostvars[groups.hosts[5 % host_count|int]]["ansible_ssh_host"]}}
 
-# User defined Networking Hosts, this should be a required group
 network_hosts:
   {{groups.hosts[6 % host_count|int]}}:
     ip: {{hostvars[groups.hosts[6 % host_count|int]]["ansible_ssh_host"]}}
 
-# Other hosts can be added whenever needed. Note that containers will not be
-# assigned to "other" hosts by default.  If you would like to have containers
-# assigned to hosts that are outside of the predefined groups, you will need to
-# make an edit to the rpc_environment.yml file.
 haproxy_hosts:
   {{groups.hosts[0]}}:
     ip: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
