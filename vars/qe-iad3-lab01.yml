@@ -1,3 +1,23 @@
+mgmt_cidr: 192.168.1.0/24
+vmnet_cidr: 172.31.1.0/24
+internal_lb_vip_address:
+external_lb_vip_address:
+cinder:
+  volume_group: cinder-volumes
+  physical_drive: /dev/sdb
+  backend: lvm
+nova:
+  branch: nova_stable_icehouse
+github_user_keys:
+  - cjoelrun
+  - xeregin
+  - jacobwagner
+  - jpmontez
+  - schofield
+  - cloudnull
+  - jcourtois
+  - xeregin
+  - Apsu
 networking:
     - name: lo
       type: loopback

@@ -48,19 +48,19 @@ cinder_hosts:
     container_vars:
       cinder_backends:
         limit_container_type: cinder_volume
-{% if 'lvm' in cinder_backend %}
+{% if 'lvm' in cinder.backend %}
         lvm:
           volume_group: {{ volume_group }}
           driver: cinder.volume.drivers.lvm.LVMISCSIDriver
           backend_name: LVM_iSCSI
-{% else %}
+{% if 'netapp' in cinder.backend %}
         netapp:
           netapp_storage_family: ontap_7mode
           netapp_storage_protocol: iscsi
-          netapp_server_hostname: {{ netapp_hostname }}
+          netapp_server_hostname: {{ cinder.netapp.hostname }}
           netapp_server_port: 80
-          netapp_login: {{ netapp_username }}
-          netapp_password: {{ netapp_password }}
+          netapp_login: {{ cinder.netapp.username }}
+          netapp_password: {{ cinder.netapp.password }}
           driver: cinder.volume.drivers.netapp.common.NetAppDriver
           backend_name: NETAPP_iSCSI
 {% endif %}
