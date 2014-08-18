@@ -61,3 +61,17 @@
         - "bridge_ports none"
         - "up ip link set $IFACE up"
         - "down ip link set $IFACE down"
+
+- name: Create swap drive
+  tags: swap
+  command: mkswap /dev/xvde1
+
+- name: Add swap drive to /etc/fstab
+  tags: swap
+  lineinfile: >
+    dest=/etc/fstab
+    regexp="^/dev/xvde1" line="/dev/xvde1 none swap sw 0 0" state=present
+
+- name: Enable swap
+  tags: swap
+  command: swapon /dev/xvde1
