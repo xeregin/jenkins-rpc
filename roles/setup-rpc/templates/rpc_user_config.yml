@@ -31,7 +31,7 @@ infra_hosts:
 {% if host_count|int >= 3 %}
 {% set count = 3 %}
 {% else %}
-{% set count = host_count %}
+{% set count = host_count|int %}
 {% endif -%}
 {% for index in range(count) %}
   {{groups.hosts[index]}}:
