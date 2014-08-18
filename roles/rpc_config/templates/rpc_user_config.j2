@@ -50,7 +50,7 @@ cinder_hosts:
         limit_container_type: cinder_volume
 {% if 'lvm' in cinder.backend %}
         lvm:
-          volume_group: {{ volume_group }}
+          volume_group: {{ cinder.volume_group }}
           driver: cinder.volume.drivers.lvm.LVMISCSIDriver
           backend_name: LVM_iSCSI
 {% if 'netapp' in cinder.backend %}
