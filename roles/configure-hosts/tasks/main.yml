@@ -64,7 +64,7 @@
 
 - name: Disable swap if already on
   tags: swap
-  command: swapon /dev/xvde1
+  command: swapoff /dev/xvde1
   ignore_errors: True
 
 - name: Create swap drive
