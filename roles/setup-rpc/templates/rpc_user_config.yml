@@ -28,7 +28,7 @@ global_overrides:
         net_name: "extnet"
 
 infra_hosts:
-{% if host_count >= 3 %}
+{% if host_count|int >= 3 %}
 {% set count = 3 %}
 {% else %}
 {% set count = host_count %}
