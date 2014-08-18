@@ -62,6 +62,11 @@
         - "up ip link set $IFACE up"
         - "down ip link set $IFACE down"
 
+- name: Disable swap if already on
+  tags: swap
+  command: swapon /dev/xvde1
+  ignore_errors: True
+
 - name: Create swap drive
   tags: swap
   command: mkswap /dev/xvde1
