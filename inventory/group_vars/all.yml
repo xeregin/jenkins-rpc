@@ -17,6 +17,10 @@ rax_image: 255df5fb-e3d4-45a3-9a07-c976debf7c14
 # Manual for the fastness
 rax_diskconfig: manual
 
+## Env vars provided by Jenkins
+# Image flavor
+rax_flavor: "{{lookup('env', 'BUILD_FLAVOR')}}"
+# Host prefix and count
 host_prefix: "{{lookup('env', 'BUILD_PREFIX')}}-{{lookup('env', 'BUILD_NUMBER')}}"
 host_count: "{{lookup('env', 'BUILD_COUNT')}}"
 
