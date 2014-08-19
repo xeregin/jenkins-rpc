@@ -12,5 +12,4 @@ def main(cidr, host):
     suffix = ip_address.words[-1]
     return '%s.%s/%s' % (prefix, suffix, cidr_mask)
 
-
 argh.dispatch_command(main)
