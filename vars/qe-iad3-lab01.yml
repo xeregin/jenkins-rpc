@@ -32,7 +32,7 @@ networking:
     - name: eth3
       type: manual
       directives:
-        - "bond master bond0"
+        - "bond-master bond0"
     - name: bond0
       type: manual
       directives:
