@@ -1,40 +1,53 @@
 ---
 mgmt_cidr: 172.20.{{cluster_id}}.0/24
-vmnet_cidr: 172.24.0.0/24
+tunnel_cidr: 172.24.0.0/24
+
+used_ips:
+{% for index in range(host_count|int) %}
+  - 172.24.0.{{index}}
+{% endfor %}
 
 global_overrides:
   internal_lb_vip_address: 172.20.{{cluster_id}}.1
   external_lb_vip_address: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
-  tunnel_bridge: br-vmnet
+  tunnel_bridge: br-vxlan
   container_bridge: br-mgmt
   lb_name: lb_name_in_core
   neutron_provider_networks:
     - network:
-        container_bridge: "br-vmnet"
+        container_bridge: "br-vxlan"
         container_interface: "eth2"
         type: "vxlan"
         range: "1:1000"
-        net_name: "vmnet"
+        net_name: "vxlan"
     - network:
-        container_bridge: "br-ext"
+        container_bridge: "br-vlan"
         container_interface: "eth3"
         type: "flat"
-        net_name: "extnet"
+        net_name: "vlan"
     - network:
-        container_bridge: "br-ext"
+        container_bridge: "br-vlan"
         container_interface: "eth3"
         type: "vlan"
         range: "1:1"
-        net_name: "extnet"
+        net_name: "vlan"
 
 infra_hosts:
-{% if host_count >= 3 %}
+{% if host_count|int >= 3 %}
 {% set count = 3 %}
 {% else %}
-{% set count = host_count %}
+{% set count = host_count|int %}
 {% endif -%}
 {% for index in range(count) %}
   {{groups.hosts[index]}}:
+{% if count < 3 %}
+    affinity:
+{% if count < 2 %}
+      galera_container: 3
+{% else %}
+      galera_container: 2
+{% endif %}
+{% endif %}
     ip: {{hostvars[groups.hosts[index]]["ansible_ssh_host"]}}
 {% endfor %}
 
