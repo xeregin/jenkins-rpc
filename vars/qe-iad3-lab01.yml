@@ -1,7 +1,7 @@
 mgmt_cidr: 172.29.236.0/22
 vxlan_cidr:  172.29.240.0/22
-storage_cidr: 172.29.244.0/22
-snet_cidr: 172.29.248.0/22
+#storage_cidr: 172.29.244.0/22
+servnet_cidr: 172.29.248.0/22
 internal_lb_vip_address:
 external_lb_vip_address:
 cinder:
@@ -53,15 +53,6 @@ networking:
         - "dns-search qe1.iad3.rackspace.com"
         - "ip addr add {{ container_address }} dev $IFACE || true "
         - "bridge-ports bond0"
-    - name: bond0.xxx:
-      directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
-    - name: br-storage
-      type: static
-      directives:
-        - "address {{ storage_address }}"
-        - "bridge-ports bond0.xxx"
     - name: eth8
       type: manual
       directives:
