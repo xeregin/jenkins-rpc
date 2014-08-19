@@ -4,9 +4,6 @@
     - ifenslave-2.6
     - bridge-utils
 
-- name: prevent bond0 from loading
-  lineinfile: dest=/etc/modules regexp='bonding' line='bonding' state=absent
-
 - name: load kernel bonding
   modprobe: name=bonding state=present
 
@@ -17,12 +14,12 @@
   template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644
 
 - name: retrieve container ip address
-  local_action: script cidr.py {{ mgmt_cidr }} {{ ansible_default_ipv4.address }}
-  register: container_cidr_address
+  local_action: script cidr.py mgmt_cidr {{ ansible_default_ipv4.address }}
+  register: container_address
 
 - name: retrieve vxlan ip address
-  local_action: script cidr.py {{ vmnet_cidr }} {{ansible_default_ipv4.address }}
-  register: vxlan_cidr_address
+  local_action: script cidr.py vmnet_cidr {{ansible_default_ipv4.address }}
+  register: vxlan_address
 
 - name: setup interface config files
   template: src=interface.j2 dest=/etc/network/interfaces.d/{{ item }}.cfg owner=root group=root mode=0644
