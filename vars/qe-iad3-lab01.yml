@@ -51,7 +51,7 @@ networking:
         - "netmask {{ ansible_default_ipv4.netmask }}"
         - "dns-nameservers 69.20.0.164 69.20.0.196"
         - "dns-search qe1.iad3.rackspace.com"
-        - "ip addr add {{ "container_address.stdout"|replace("\n","") }} dev $IFACE || true"
+        - "ip addr add {{ container_address.stdout|replace('\n','') }} dev $IFACE || true"
         - "bridge-ports bond0"
     - name: eth8
       type: manual
@@ -89,5 +89,5 @@ networking:
     - name: br-vxlan
       type: static
       directives:
-        - "address {{ "vxlan_address.stdout"|replace("\n","") }}"
+        - "address {{ vxlan_address.stdout|replace('\n','') }}"
         - "bridge_ports bond1.231"
