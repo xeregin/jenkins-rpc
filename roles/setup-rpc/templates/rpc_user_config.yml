@@ -14,18 +14,18 @@ global_overrides:
         container_interface: "eth2"
         type: "vxlan"
         range: "1:1000"
-        net_name: "vmnet"
+        net_name: "vxlan"
     - network:
         container_bridge: "br-vlan"
         container_interface: "eth3"
         type: "flat"
-        net_name: "extnet"
+        net_name: "vlan"
     - network:
         container_bridge: "br-vlan"
         container_interface: "eth3"
         type: "vlan"
         range: "1:1"
-        net_name: "extnet"
+        net_name: "vlan"
 
 infra_hosts:
 {% if host_count|int >= 3 %}
