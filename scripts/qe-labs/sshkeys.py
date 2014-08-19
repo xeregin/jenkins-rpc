@@ -21,14 +21,14 @@ def run_cmd(command):
                 'command': command}
 
 
-def main(configuration=None):
-    """ Given an inventory and configuration file, place SSH keys onto
+def main(inventory=None):
+    """ Given an inventory file, place SSH keys onto
         designated hosts
 
-    :param configuration: Path to a configuration file with credentials
+    :param inventory: Path to a inventory file with credentials
     """
 
-    with open(configuration, 'r') as fp:
+    with open(inventory, 'r') as fp:
         credentials = json.load(fp)
 
         for host in credentials.keys():

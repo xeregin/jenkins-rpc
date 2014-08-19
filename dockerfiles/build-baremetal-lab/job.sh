@@ -19,7 +19,7 @@ cleanup() {
   [[ $BUILD_KEEP == "yes" ]] && exit
   # Destroy cluster hosts
   pushd ~/jenkins-rpc
-  ./scripts/destroy.sh
+  ./scripts/qe-labs/destroy.sh
 }
 trap cleanup INT TERM EXIT
 
