@@ -34,16 +34,6 @@ networking:
       directives:
         - "bond-master bond0"
     - name: bond0
-      type: manual
-      directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
-        - "bond-slaves none"
-        - "bond-mode active-backup"
-        - "bond-miimon 100"
-        - "bond-downdelay 200"
-        - "bond-updelay 200"
-    - name: br-mgmt
       type: static
       directives:
         - "address {{ ansible_default_ipv4.address }}"
@@ -51,8 +41,20 @@ networking:
         - "netmask {{ ansible_default_ipv4.netmask }}"
         - "dns-nameservers 69.20.0.164 69.20.0.196"
         - "dns-search qe1.iad3.rackspace.com"
-        - "ip addr add {{ container_address.stdout|replace('\n','') }} dev $IFACE || true"
-        - "bridge-ports bond0"
+        - "bond-mode active-backup"
+        - "bond-miimon 100"
+        - "bond-downdelay 200"
+        - "bond-updelay 200"
+    - name: bond0.694
+      type: manual
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: br-mgmt
+      type: static
+      directives:
+        - "address {{ container_address.stdout|replace('\n','') }}"
+        - "bridge-ports bond0.694"
     - name: eth8
       type: manual
       directives:
