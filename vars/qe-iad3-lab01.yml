@@ -1,5 +1,7 @@
-mgmt_cidr: 192.168.1.0/24
-vmnet_cidr: 172.31.1.0/24
+mgmt_cidr: 172.29.236.0/22
+vxlan_cidr:  172.29.240.0/22
+storage_cidr: 172.29.244.0/22
+snet_cidr: 172.29.248.0/22
 internal_lb_vip_address:
 external_lb_vip_address:
 cinder:
@@ -9,24 +11,25 @@ cinder:
 nova:
   branch: nova_stable_icehouse
 github_user_keys:
-  - cjoelrun
-  - xeregin
   - jacobwagner
   - jpmontez
-  - schofield
-  - cloudnull
   - jcourtois
   - xeregin
-  - Apsu
 networking:
     - name: lo
       type: loopback
+    - name: eth2
+      type: static
+      directives:
+      - "netmask {{ ansible_eth2.ipv4.netmask }}"
+      - "post-up ip route add 10.191.192.0/18 via 10.136.93.65 dev eth2"
+      - "address {{ ansible_eth2.ipv4.address }}"
     - name: eth0
       type: manual
       directives:
         - "bond-master bond0"
         - "bond-primary eth0"
-    - name: eth2
+    - name: eth3
       type: manual
       directives:
         - "bond master bond0"
@@ -46,16 +49,25 @@ networking:
         - "address {{ ansible_default_ipv4.address }}"
         - "gateway {{ ansible_default_ipv4.gateway }}"
         - "netmask {{ ansible_default_ipv4.netmask }}"
-        - "dns-nameservers 8.8.8.8 8.8.4.4"
-        - "dns-search sat6.lab"
+        - "dns-nameservers 69.20.0.164 69.20.0.196"
+        - "dns-search qe1.iad3.rackspace.com"
         - "ip addr add {{ container_address }} dev $IFACE || true "
         - "bridge-ports bond0"
-    - name: eth4
+    - name: bond0.xxx:
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: br-storage
+      type: static
+      directives:
+        - "address {{ storage_address }}"
+        - "bridge-ports bond0.xxx"
+    - name: eth8
       type: manual
       directives:
         - "bond-master bond1"
-        - "bond-primary eth4"
-    - name: eth6
+        - "bond-primary eth8"
+    - name: eth10
       type: manual
       directives:
         - "bond-master bond1"
@@ -69,25 +81,21 @@ networking:
         - "bond-miimon 100"
         - "bond-downdelay 200"
         - "bond-updelay 200
-    - name: bond1.30:
-      directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
-    - name: bond1.40:
-      directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
     - name: br-vlan
-      type: static
+      type: manual
       directives:
         - "up ip link set $IFACE up"
         - "down ip link set $IFACE down"
-        - "bridge_ports bond1.40"
+        - "bridge_ports bond1."
         - "bridge_stp off"
         - "bridge_fd 0"
         - "bridge_maxwait 0"
+    - name: bond1.231:
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
     - name: br-vxlan
       type: static
       directives:
         - "address {{ vxlan_address }}"
-        - "bridge_ports bond1.30"
+        - "bridge_ports bond1.231"
