@@ -82,6 +82,7 @@ networking:
         - "bridge_fd 0"
         - "bridge_maxwait 0"
     - name: bond1.231
+      type: manual
       directives:
         - "up ip link set $IFACE up"
         - "down ip link set $IFACE down"
