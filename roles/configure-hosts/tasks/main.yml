@@ -49,13 +49,13 @@
       directives:
         - "address {{iface.tunnel_ip}}"
         - "bridge_ports {{iface.tunnel_name}}"
-    - name: br-vmnet
+    - name: br-vxlan
       type: manual
       directives:
         - "bridge_ports none"
         - "up ip link set $IFACE up"
         - "down ip link set $IFACE down"
-    - name: br-ext
+    - name: br-vlan
       type: manual
       directives:
         - "bridge_ports none"
