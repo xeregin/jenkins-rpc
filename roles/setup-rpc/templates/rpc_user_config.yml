@@ -35,6 +35,14 @@ infra_hosts:
 {% endif -%}
 {% for index in range(count) %}
   {{groups.hosts[index]}}:
+{% if count < 3 %}
+  container_affinity:
+{% if count < 2 %}
+      galera_container: 3
+{% else %}
+      galera_container: 2
+{% endif %}
+{% endif %}
     ip: {{hostvars[groups.hosts[index]]["ansible_ssh_host"]}}
 {% endfor %}
 
