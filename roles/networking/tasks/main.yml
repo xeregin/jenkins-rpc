@@ -11,6 +11,12 @@
 - name: load 802.1q module
   modprobe: name=8021q state=present
 
+- name: ensure module persistance
+  lineinfile: dest=/etc/modules state=present regexp="^{{ item }}" line="{{ item }}"
+  with_items:
+    - bonding
+    - 8021q
+
 - name: ensure /etc/network/interfaces.d exists
   file: path=/etc/network/interfaces.d state=directory owner=root mode=0655
 
