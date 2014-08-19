@@ -26,7 +26,7 @@
   register: storage_address
 
 - name: setup interface cfg files
-  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ item }}.cfg owner=root group=root mode=0644
+  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ item.name }}.cfg owner=root group=root mode=0644
   with_items: networking
 
 - name: restart networking
