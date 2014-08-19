@@ -3,9 +3,13 @@
   with_items:
     - ifenslave-2.6
     - bridge-utils
+    - vlan
 
 - name: load kernel bonding
   modprobe: name=bonding state=present
+
+- name: load 802.1q module
+  modprobe: name=8021q state=present
 
 - name: ensure /etc/network/interfaces.d exists
   file: path=/etc/network/interfaces.d state=directory owner=root mode=0655
