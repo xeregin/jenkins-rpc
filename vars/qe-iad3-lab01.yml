@@ -51,7 +51,7 @@ networking:
         - "netmask {{ ansible_default_ipv4.netmask }}"
         - "dns-nameservers 69.20.0.164 69.20.0.196"
         - "dns-search qe1.iad3.rackspace.com"
-        - "ip addr add {{ container_address }} dev $IFACE || true "
+        - "ip addr add {{ container_address }} dev $IFACE || true"
         - "bridge-ports bond0"
     - name: eth8
       type: manual
@@ -71,13 +71,13 @@ networking:
         - "bond-mode active-backup"
         - "bond-miimon 100"
         - "bond-downdelay 200"
-        - "bond-updelay 200
+        - "bond-updelay 200"
     - name: br-vlan
       type: manual
       directives:
         - "up ip link set $IFACE up"
         - "down ip link set $IFACE down"
-        - "bridge_ports bond1."
+        - "bridge_ports bond1"
         - "bridge_stp off"
         - "bridge_fd 0"
         - "bridge_maxwait 0"
