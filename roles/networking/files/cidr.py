@@ -10,6 +10,6 @@ def main(cidr, host):
 
     prefix = '.'.join(map(str, subnet.network.words[0:3]))
     suffix = ip_address.words[-1]
-    return '%s.%s/%s' % (prefix, suffix, cidr_mask)
+    return '%s.%s/%s'.strip() % (prefix, suffix, cidr_mask)
 
 argh.dispatch_command(main)
