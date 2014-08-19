@@ -1,6 +1,6 @@
 mgmt_cidr: 172.29.236.0/22
 vxlan_cidr:  172.29.240.0/22
-#storage_cidr: 172.29.244.0/22
+storage_cidr: 172.29.244.0/22
 servnet_cidr: 172.29.248.0/22
 internal_lb_vip_address:
 external_lb_vip_address:
