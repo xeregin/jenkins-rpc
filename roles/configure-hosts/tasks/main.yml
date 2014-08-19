@@ -50,8 +50,9 @@
         - "address {{iface.tunnel_ip}}"
         - "bridge_ports {{iface.tunnel_name}}"
     - name: br-vxlan
-      type: manual
+      type: static
       directives:
+        - "address 172.24.0.{{groups.hosts.index(inventory_hostname) + 1}}/24"
         - "bridge_ports none"
         - "up ip link set $IFACE up"
         - "down ip link set $IFACE down"
