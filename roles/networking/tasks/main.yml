@@ -40,7 +40,7 @@
   with_items: networking
 
 - name: restart networking
-  command: ifdown -a --exclude=lo; ifup -a
+  shell: ifdown -a --exclude=lo; ifup -a
   async: 45
   poll: 0
 
