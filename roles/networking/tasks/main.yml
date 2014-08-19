@@ -14,11 +14,11 @@
   template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644
 
 - name: retrieve container ip address
-  local_action: script cidr.py mgmt_cidr {{ ansible_default_ipv4.address }}
+  local_action: script cidr.py {{ mgmt_cidr }} {{ ansible_default_ipv4.address }}
   register: container_address
 
 - name: retrieve vxlan ip address
-  local_action: script cidr.py vmnet_cidr {{ansible_default_ipv4.address }}
+  local_action: script cidr.py {{ vmnet_cidr }} {{ansible_default_ipv4.address }}
   register: vxlan_address
 
 - name: setup interface cfg files
