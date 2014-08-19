@@ -32,7 +32,7 @@ git clone git@github.com:rcbops/jenkins-rpc.git & wait || true
 pushd jenkins-rpc
 
 # Place users keys on all hosts
-python ./scripts/qe-labs/sshkeys.py --file ~/keys.json & wait
+python ./scripts/qe-labs/sshkeys.py --inventory ~/keys.json & wait
 
 # Skip deployment and trigger handler
 [[ $BUILD_SKIP == "yes" ]] && cleanup
