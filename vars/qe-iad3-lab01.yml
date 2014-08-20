@@ -25,14 +25,7 @@ networking:
       - "post-up ip route add 10.191.192.0/18 via 10.136.93.65 dev eth2"
       - "address {{ ansible_eth2.ipv4.address }}"
     - name: eth0
-      type: manual
-      directives:
-        - "bond-master bond0"
-        - "bond-primary eth0"
     - name: eth3
-      type: manual
-      directives:
-        - "bond-master bond0"
     - name: bond0
       type: static
       directives:
@@ -41,7 +34,8 @@ networking:
         - "netmask {{ ansible_default_ipv4.netmask }}"
         - "dns-nameservers 69.20.0.164 69.20.0.196"
         - "dns-search qe1.iad3.rackspace.com"
-        - "bond-slaves none"
+        - "bond-slaves eth0 eth3"
+        - "bond-master eth0"
         - "bond-mode active-backup"
         - "bond-miimon 100"
         - "bond-downdelay 200"
@@ -57,20 +51,14 @@ networking:
         - "address {{ container_address.stdout|replace('\n','') }}"
         - "bridge-ports bond0.694"
     - name: eth8
-      type: manual
-      directives:
-        - "bond-master bond1"
-        - "bond-primary eth8"
     - name: eth10
-      type: manual
-      directives:
-        - "bond-master bond1"
     - name: bond1
       type: manual
       directives:
         - "up ip link set $IFACE up"
         - "down ip link set $IFACE down"
-        - "bond-slaves none"
+        - "bond-slaves eth8 eth10"
+        - "bond-master eth8"
         - "bond-mode active-backup"
         - "bond-miimon 100"
         - "bond-downdelay 200"
