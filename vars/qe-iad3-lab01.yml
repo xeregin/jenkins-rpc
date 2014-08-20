@@ -16,10 +16,10 @@ rpc_user_config:
           bridge: br-vlan
           iface: eth11
           type: vlan
-          address:
+          address: tunnel_address
           range: 231:231
           group_binds:
-            - neutron-linux-bridge-agent
+            - neutron_linuxbridge_agent
         - name: tenant
           bridge: br-vxlan
           iface: eth10
@@ -27,10 +27,11 @@ rpc_user_config:
           address:
           range: 1:1000
           group_binds:
-            - neutron-linux-bridge-agent
+            - neutron_linuxbridge_agent
         - name: storage
           bridge: br-storage
           iface: eth11
+          address: storage_address
           type: raw
           group_binds:
             - glance_api
