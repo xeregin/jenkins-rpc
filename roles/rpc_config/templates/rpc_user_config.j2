@@ -43,6 +43,7 @@ global_overrides:
 {% for group_bind in network.group_binds %}
         - {{ group_bind }}
 {% endfor %}
+{% endfor %}
       container_bridge: "{{ network.bridge }}"
       container_interface: "{{ network.iface }}"
       type: "{{ network.type }}"
