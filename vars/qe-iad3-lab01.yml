@@ -10,11 +10,12 @@ cinder:
   backend: lvm
 nova:
   branch: nova_stable_icehouse
-github_user_keys:
-  - jacobwagner
-  - jpmontez
-  - jcourtois
-  - xeregin
+add_ssh_keys_from_github:
+  usernames:
+    - jacobwagner
+    - jpmontez
+    - jcourtois
+    - xeregin
 networking:
     - name: lo
       type: loopback
