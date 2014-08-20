@@ -43,7 +43,6 @@ global_overrides:
 {% for group_bind in network.group_binds %}
         - {{ group_bind }}
 {% endfor %}
-{% endfor %}
       container_bridge: "{{ network.bridge }}"
       container_interface: "{{ network.iface }}"
       type: "{{ network.type }}"
@@ -95,6 +94,7 @@ cinder_hosts:
           volume_group: {{ cinder.volume_group }}
           driver: cinder.volume.drivers.lvm.LVMISCSIDriver
           backend_name: LVM_iSCSI
+{% endif %}
 {% if 'netapp' in cinder.backend %}
         netapp:
           netapp_storage_family: ontap_7mode
