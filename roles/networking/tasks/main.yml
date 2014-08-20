@@ -17,12 +17,6 @@
     - bonding
     - 8021q
 
-- name: ensure /etc/network/interfaces.d exists
-  file: path=/etc/network/interfaces.d state=directory owner=root mode=0655
-
-- name: setup interfaces file
-  template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644
-
 - name: retrieve container ip address
   local_action: script cidr.py {{ rpc_user_config.mgmt_cidr }} {{ ansible_default_ipv4.address }}
   register: container_address
@@ -35,22 +29,23 @@
   local_action: script cidr.py {{ rpc_user_config.storage_cidr }} {{ansible_default_ipv4.address }}
   register: storage_address
 
-- name: setup interface cfg files
+- name: ensure /etc/network/interfaces.d exists
+  file: path=/etc/network/interfaces.d state=directory owner=root mode=0655
+
+- name: setup interfaces file
+  template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644
+
+- name: setup interface config files
   template: src=interface.j2 dest=/etc/network/interfaces.d/{{ item.name }}.cfg owner=root group=root mode=0644
   with_items: networking
   register: result
 
 - name: restart networking
   shell: ifdown -a --exclude=lo; ifup -a
-  async: 60
+  async: 45
   poll: 0
   when: result.changed
 
 - name: wait for reconnect
   wait_for: delay=10 host={{ inventory_hostname }} port=22
   delegate_to: localhost
-
-- name: bring up bonded interfaces
-  command: ifup {{ item }}
-  with_items: vlan_tagged_bonds
-  when: result.changed

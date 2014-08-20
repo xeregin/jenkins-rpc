@@ -59,9 +59,6 @@ add_ssh_keys_from_github:
     - jpmontez
     - jcourtois
     - xeregin
-vlan_tagged_bonds:
-    - bond0.694
-    - bond1.231
 networking:
     - name: lo
       type: loopback
