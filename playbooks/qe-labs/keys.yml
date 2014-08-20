@@ -1,6 +1,4 @@
 ---
 - hosts: all
-  vars_files:
-    - vars/kernel.yml
   roles:
     - laggyluke.add-ssh-keys-from-github

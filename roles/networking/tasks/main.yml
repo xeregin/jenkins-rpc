@@ -38,12 +38,14 @@
 - name: setup interface cfg files
   template: src=interface.j2 dest=/etc/network/interfaces.d/{{ item.name }}.cfg owner=root group=root mode=0644
   with_items: networking
+  register: result
 
 - name: restart networking
   shell: ifdown -a --exclude=lo; ifup -a
   async: 60
   poll: 15
+  when: result.changed
 
 - name: wait for reconnect
-  wait_for: delay=30 host={{ inventory_hostname }} port=22
+  wait_for: delay=10 host={{ inventory_hostname }} port=22
   delegate_to: localhost
