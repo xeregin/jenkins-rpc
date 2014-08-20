@@ -1,0 +1,5 @@
+- name: bring up all tagged bond interfaces
+  command: ifup {{ item }}
+  async: 60
+  poll: 0
+  with_items: bonds

@@ -49,3 +49,8 @@
 - name: wait for reconnect
   wait_for: delay=10 host={{ inventory_hostname }} port=22
   delegate_to: localhost
+
+- name: bring up bonded interfaces
+  command: ifup {{ item }}
+  with_items: vlan_tagged_bonds
+  when: result.changed
