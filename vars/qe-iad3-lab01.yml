@@ -41,6 +41,7 @@ networking:
         - "netmask {{ ansible_default_ipv4.netmask }}"
         - "dns-nameservers 69.20.0.164 69.20.0.196"
         - "dns-search qe1.iad3.rackspace.com"
+        - "bond-slaves none"
         - "bond-mode active-backup"
         - "bond-miimon 100"
         - "bond-downdelay 200"
