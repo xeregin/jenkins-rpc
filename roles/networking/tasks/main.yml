@@ -43,7 +43,7 @@
 - name: restart networking
   shell: ifdown -a --exclude=lo; ifup -a
   async: 60
-  poll: 15
+  poll: 0
   when: result.changed
 
 - name: wait for reconnect
