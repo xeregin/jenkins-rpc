@@ -1,9 +1,50 @@
-mgmt_cidr: 172.29.236.0/22
-vxlan_cidr:  172.29.240.0/22
-storage_cidr: 172.29.244.0/22
-servnet_cidr: 172.29.248.0/22
-internal_lb_vip_address:
-external_lb_vip_address:
+rpc_user_config:
+    mgmt_cidr: 172.29.236.0/22
+    vxlan_cidr:  172.29.240.0/22
+    storage_cidr: 172.29.244.0/22
+    servnet_cidr: 172.29.248.0/22
+    used_ips:
+        - 172.29.236.132,172.29.236.155
+        - 172.29.240.132,172.29.240.155
+        - 172.29.244.132,172.29.244.155
+        - 172.29.248.132,172.29.248.155
+    internal_lb_vip_address:
+    external_lb_vip_address:
+    lb_name:
+    networking:
+        - name: provider
+          bridge: br-vlan
+          iface: eth11
+          type: vlan
+          address:
+          range: 231:231
+          group_binds:
+            - neutron-linux-bridge-agent
+        - name: tenant
+          bridge: br-vxlan
+          iface: eth10
+          type: vxlan
+          address:
+          range: 1:1000
+          group_binds:
+            - neutron-linux-bridge-agent
+        - name: storage
+          bridge: br-storage
+          iface: eth11
+          type: raw
+          group_binds:
+            - glance_api
+            - cinder_api
+            - cinder_volume
+            - nova_compute
+        - name: service
+          bridge: br-snet
+          iface: eth2
+          type: raw
+          group_binds:
+            - glance_api
+            - nova_compute
+            - neutron_linuxbridge_agent
 cinder:
   volume_group: cinder-volumes
   physical_drive: /dev/sdb

@@ -4,20 +4,61 @@
 {% set compute = groups['compute'] %}
 {% set cinder = groups['cinder'] %}
 {% set logger = groups['logger'] %}
-{% set haproxy = groups['haproxy'] %}
-# Cider used in the Management network
-mgmt_cidr: {{ mgmt_cidr }}
 
-# Cidr used in the VM network
-vmnet_cidr: {{ vmnet_cidr }}
+{% if groups['haproxy'] is defined %}
+{% set haproxy = groups['haproxy'] %}
+{% endif %}
+
+# Cider used in the Management network
+mgmt_cidr: {{ rpc_user_config.mgmt_cidr }}
+
+# Cider used for the private vm network
+tunnel_cider: {{ rpc_user_config.vxlan_cidr }}
+
+# Cidr used for the storage network
+{% if rpc_user_config.storage_cidr is defined %}
+storage_cidr: {{ rpc_user_config.storage_cidr }}
+{% endif %}
+
+{% if rpc_user_config.used_ips is defined %}
+used_ips:
+{% for used_ip_range in rpc_user_config.used_ips %}
+  - {{ used_ip_range }}
+{% endfor %}
+{% endif %}
 
 # overrides anything else any where.
 global_overrides:
   # Internal Management vip address
-  internal_lb_vip_address: {{ internal_lb_vip_address }}
-  # External DMZ VIP address
-  external_lb_vip_address: {{ external_lb_vip_address }}
+  internal_lb_vip_address: {{ rpc_user_config.internal_lb_vip_address }}
 
+  # External DMZ VIP address
+  external_lb_vip_address: {{ rpc_user_config.external_lb_vip_address }}
+
+  # Define your neutron netowrks.
+  provider_networks:
+{% for network in rpc_user_config.networking %}
+    - network:
+      - group_binds:
+{% for group_bind in network.group_binds %}
+        - {{ group_bind }}
+{% endfor %}
+      container_bridge: "{{ network.bridge }}"
+      container_interface: "{{ network.iface }}"
+      type: "{{ network.type }}"
+{% if network.address is defined %}
+      interface_address: "{{ network.address }}"
+{% endif %}
+{% if network.range is defined %}
+      range: "{{ network.tenant_range }}"
+{% endif %}
+{% if network.net_name is defined %}
+      net_name: "{{ network.net_name }}"
+{% endif %}
+{% endfor %}
+
+  # Name of load balancer
+  lb_name: {{ rpc_user_config.lb_name }}
 
 # User defined Infrastructure Hosts, this should be a required group
 infra_hosts:
@@ -74,7 +115,7 @@ log_hosts:
 {% endfor %}
 
 # User defined HAProxy Hosts
-{% if haproxy %}
+{% if haproxy is defined %}
 haproxy_hosts:
 {% for host in haproxy %}
   haproxy{{ loop.index }}:
