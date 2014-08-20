@@ -50,7 +50,7 @@ global_overrides:
       interface_address: "{{ network.address }}"
 {% endif %}
 {% if network.range is defined %}
-      range: "{{ network.tenant_range }}"
+      range: "{{ network.range }}"
 {% endif %}
 {% if network.net_name is defined %}
       net_name: "{{ network.net_name }}"
