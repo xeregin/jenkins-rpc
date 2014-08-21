@@ -4,4 +4,4 @@
   hosts: hosts
   gather_facts: true
   roles:
-  - {role: configure-hosts, tags: ['configure-hosts']}
+  - {role: cloud-configure-hosts, tags: ['configure-hosts']}

@@ -4,4 +4,4 @@
   hosts: hosts
   gather_facts: false
   roles:
-  - {role: reboot-hosts, tags: ['reboot-hosts']}
+  - {role: cloud-reboot-hosts, tags: ['reboot-hosts']}
