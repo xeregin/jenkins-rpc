@@ -1,7 +1,7 @@
 ---
 - name: Reboot hosts
   tags: reboot-hosts
-  hosts: hosts
+  hosts: cloud-hosts
   gather_facts: false
   roles:
   - {role: cloud-reboot-hosts, tags: ['reboot-hosts']}

@@ -1,14 +1,14 @@
 ---
 - name: Ensure networks
   tags: ensure-networks
-  hosts: local
+  hosts: cloud-local
   gather_facts: false
   roles:
   - {role: cloud-ensure-networks, tags: ['ensure-networks']}
 
 - name: Ensure hosts
   tags: ensure-hosts
-  hosts: hosts
+  hosts: cloud-hosts
   gather_facts: false
   roles:
   - {role: cloud-ensure-hosts, tags: ['ensure-hosts']}
