@@ -11,6 +11,7 @@ rpc_user_config:
     external_lb_vip_address: 192.168.96.10
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
+    container_netmask: 255.255.252.0
     lb_name:
     networking:
         - name: provider
