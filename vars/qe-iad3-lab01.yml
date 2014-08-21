@@ -32,16 +32,6 @@ rpc_user_config:
           net_name: private
           group_binds:
             - neutron_linuxbridge_agent
-        - name: storage
-          bridge: br-storage
-          iface: eth11
-          address: storage_address
-          type: raw
-          group_binds:
-            - glance_api
-            - cinder_api
-            - cinder_volume
-            - nova_compute
         - name: service
           bridge: br-snet
           iface: eth2
