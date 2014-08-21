@@ -1,14 +1,14 @@
 ---
 - name: Delete hosts
   tags: delete-hosts
-  hosts: hosts
+  hosts: cloud-hosts
   gather_facts: false
   roles:
-  - {role: delete-hosts, tags: ['delete-hosts']}
+  - {role: cloud-delete-hosts, tags: ['delete-hosts']}
 
 # - name: Delete networks
 #   tags: delete-networks
-#   hosts: local
+#   hosts: cloud-local
 #   gather_facts: false
 #   roles:
-#   - {role: delete-networks, tags: ['delete-networks']}
+#   - {role: cloud-delete-networks, tags: ['delete-networks']}

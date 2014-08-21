@@ -1,7 +1,7 @@
 ---
 - name: Configure hosts
   tags: configure-hosts
-  hosts: hosts
+  hosts: cloud-hosts
   gather_facts: true
   roles:
-  - {role: configure-hosts, tags: ['configure-hosts']}
+  - {role: cloud-configure-hosts, tags: ['configure-hosts']}
