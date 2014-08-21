@@ -1,12 +1,10 @@
 rpc_user_config:
     mgmt_cidr: 192.168.96.0/22
     vxlan_cidr:  172.29.240.0/22
-    storage_cidr: 172.29.244.0/22
     used_ips:
         - "192.168.96.1,192.168.96.15"
         - "192.168.96.132,192.168.96.155"
         - "172.29.240.132,172.29.240.155"
-        - "172.29.244.132,172.29.244.155"
     internal_lb_vip_address: 192.168.96.10
     external_lb_vip_address: 192.168.96.10
     tunnel_bridge: br-vxlan
@@ -25,6 +23,7 @@ rpc_user_config:
             - neutron_linuxbridge_agent
         - name: tenant
           bridge: br-vxlan
+          subnetmask: 255.255.252.0
           iface: eth10
           type: vxlan
           address:

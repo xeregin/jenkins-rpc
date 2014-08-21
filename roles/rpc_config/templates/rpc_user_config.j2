@@ -13,8 +13,8 @@ mgmt_cidr: {{ rpc_user_config.mgmt_cidr }}
 # Cider used for the private vm network
 tunnel_cidr: {{ rpc_user_config.vxlan_cidr }}
 
-# Cidr used for the storage network
 {% if rpc_user_config.storage_cidr is defined %}
+# Cidr used for the storage network
 storage_cidr: {{ rpc_user_config.storage_cidr }}
 {% endif %}
 
@@ -48,21 +48,24 @@ global_overrides:
   provider_networks:
 {% for network in rpc_user_config.networking %}
     - network:
-      group_binds:
+        group_binds:
 {% for group_bind in network.group_binds %}
-        - {{ group_bind }}
+          - {{ group_bind }}
 {% endfor %}
-      container_bridge: "{{ network.bridge }}"
-      container_interface: "{{ network.iface }}"
-      type: "{{ network.type }}"
+        container_bridge: "{{ network.bridge }}"
+        container_interface: "{{ network.iface }}"
+        type: "{{ network.type }}"
 {% if network.address is defined %}
-      interface_address: "{{ network.address }}"
+        interface_address: "{{ network.address }}"
 {% endif %}
 {% if network.range is defined %}
-      range: "{{ network.range }}"
+        range: "{{ network.range }}"
 {% endif %}
 {% if network.net_name is defined %}
-      net_name: "{{ network.net_name }}"
+        net_name: "{{ network.net_name }}"
+{% endif %}
+{% if network.subnetmask is defined %}
+        subnetmask: "{{ network.subnetmask }}"
 {% endif %}
 {% endfor %}
 
@@ -124,8 +127,8 @@ log_hosts:
     ip: {{ host }}
 {% endfor %}
 
-# User defined HAProxy Hosts
 {% if haproxy is defined %}
+# User defined HAProxy Hosts
 haproxy_hosts:
 {% for host in haproxy %}
   haproxy{{ loop.index }}:
