@@ -33,6 +33,12 @@ global_overrides:
   # External DMZ VIP address
   external_lb_vip_address: {{ rpc_user_config.external_lb_vip_address }}
 
+  # Bridged interface to use with tunnel type networks
+  tunnel_bridge: "{{ rpc_user_config.tunnel_bridge }}"
+
+  # Bridged interface to build containers with
+  container_bridge: "{{ rpc_user_config.container_bridge }}"
+
   # Define your neutron netowrks.
   provider_networks:
 {% for network in rpc_user_config.networking %}

@@ -9,6 +9,8 @@ rpc_user_config:
         - "172.29.244.132,172.29.244.155"
     internal_lb_vip_address: 192.168.96.10
     external_lb_vip_address: 192.168.96.10
+    tunnel_bridge: br-vxlan
+    container_bridge: br-mgmt
     lb_name:
     networking:
         - name: provider
