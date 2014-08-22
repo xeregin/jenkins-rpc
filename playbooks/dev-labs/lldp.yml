@@ -1,0 +1,6 @@
+---
+- name: Configure LLDP
+  hosts: clusters
+  tasks:
+    - name: Install lldpd package
+      apt: pkg=lldpd state=present

@@ -1,0 +1,9 @@
+---
+- name: Update repos and packages
+  hosts: clusters
+  tasks:
+    - name: Update package cache
+      apt: update_cache=yes
+
+    - name: Perform dist-upgrade
+      apt: upgrade=dist
