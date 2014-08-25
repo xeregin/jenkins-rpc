@@ -16,7 +16,7 @@
   lineinfile: >
     dest=/etc/network/interfaces
     insertbefore=BOF
-    regexp="^# Ansible managed"
+    regex="^# Ansible managed"
     line="# Ansible managed: This file is managed by ansible, do not modify it directly!"
 
 - name: Enable sourcing of interfaces.d fragments
