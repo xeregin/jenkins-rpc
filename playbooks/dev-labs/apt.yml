@@ -1,6 +1,6 @@
 ---
 - name: Update repos and packages
-  hosts: clusters
+  hosts: "{{hosts}}"
   tasks:
     - name: Update package cache
       apt: update_cache=yes
