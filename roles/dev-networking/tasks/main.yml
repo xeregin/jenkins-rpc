@@ -15,10 +15,10 @@
   lineinfile: dest=/etc/network/interfaces insertafter=EOF regexp="^source" line="source /etc/network/interfaces.d/*.cfg"
 
 - name: Render fragment templates
-  template: src=iface.j2 dest=/etc/network/interfaces.d/{{item}}.cfg
+  template: src=iface.j2 dest=/etc/network/interfaces.d/{{item.name}}.cfg
   with_items:
-    - name: em1.216
-      type: manual
+    - name: "em1.216"
+      type: "manual"
       directives:
-        - up ip link set $IFACE up
-        - down ip link set $IFACE down
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
