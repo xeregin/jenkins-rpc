@@ -12,7 +12,7 @@
 #   lineinfile: dest=/etc/network/interfaces insertbefore=BOF regex="^{{ansible_managed}}" line="{{ansible_managed}}"
 
 - name: Source interfaces.d fragments
-  lineinfile: dest=/etc/network/interfaces insertafter=EOF regex="^source" line="source /etc/network/interfaces.d/*.cfg"
+  lineinfile: dest=/etc/network/interfaces insertafter=EOF regexp="^source" line="source /etc/network/interfaces.d/*.cfg"
 
 - name: Render fragment templates
   template: src=interface.j2 dest=/etc/network/interfaces.d/{{item}}.cfg
