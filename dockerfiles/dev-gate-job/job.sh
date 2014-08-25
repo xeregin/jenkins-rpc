@@ -26,7 +26,7 @@ git clone git@github.com:rcbops/jenkins-rpc.git & wait || true
 # Fire up jenkins-rpc
 pushd jenkins-rpc
 
-ansible-playbook -e hosts=${EXECUTOR_NUMBER} playbooks/dev-labs/networking.yml & wait
+ansible-playbook -i inventory/dev-sat6-lab01 -e hosts=${EXECUTOR_NUMBER} playbooks/dev-labs/networking.yml & wait
 popd
 
 # Skip deployment and trigger handler
