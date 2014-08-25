@@ -6,7 +6,7 @@
   file: dest=/etc/network/interfaces.d state=absent
 
 - name: Create fresh interfaces.d directory
-  file: dest=/etc/network/interfaces.d state=present
+  file: dest=/etc/network/interfaces.d state=directory
 
 - name: Tag interfaces file as Ansible Managed
   lineinfile: dest=/etc/network/interfaces insertbefore=BOF regex="^{{ansible_managed}}" line="{{ansible_managed}}"
