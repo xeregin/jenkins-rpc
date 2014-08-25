@@ -1,6 +1,6 @@
 ---
 - name: Bring down previously configured interfaces
-  command: ifdown -a --exclude=lo,em1
+  command: ifdown -a -X lo -X em1
 
 - name: Remove previously configured interface fragments
   file: dest=/etc/network/interfaces.d state=absent
