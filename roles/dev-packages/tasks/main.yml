@@ -1,0 +1,15 @@
+---
+- name: Update package cache
+  apt: update_cache=yes
+
+- name: Perform dist-upgrade
+  apt: upgrade=dist
+
+- name: Install lldpd
+  apt: pkg=lldpd state=latest
+
+- name: Install vlan
+  apt: pkg=vlan state=latest
+
+- name: Install bridge-utils
+  apt: pkg=bridge-utils state=latest
