@@ -51,6 +51,8 @@ add_ssh_keys_from_github:
     - jpmontez
     - jcourtois
     - xeregin
+    - devgrega
+    - besanradwan
 networking:
     - name: lo
       type: loopback
