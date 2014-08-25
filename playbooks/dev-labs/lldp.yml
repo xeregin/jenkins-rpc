@@ -1,6 +1,0 @@
----
-- name: Configure LLDP
-  hosts: "{{hosts}}"
-  tasks:
-    - name: Install lldpd package
-      apt: pkg=lldpd state=present

@@ -1,7 +1,0 @@
----
-- name: Setup networking
-  hosts: "{{hosts}}"
-  gather_facts: True
-  tasks:
-    - name: Test
-      command: ls

@@ -1,0 +1,7 @@
+{{ansible_managed}}
+
+auto {{item.name}}
+iface {{item.name}} type {{item.type}}
+{% for directive in directives %}
+    {{directive}}
+{% endfor %}
