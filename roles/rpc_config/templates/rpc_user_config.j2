@@ -94,7 +94,7 @@ compute_hosts:
 {% endfor %}
 
 # User defined Cinder Hosts, this should be a required group
-cinder_hosts:
+storage_hosts:
 {% for host in cinder %}
   cinder{{ loop.index }}:
     ip: {{ host }}
