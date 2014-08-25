@@ -11,12 +11,17 @@ cd
 
 # Cleanup function
 cleanup() {
+  # Store return value
+  retval=$?
   # Disable trap
   trap - INT TERM EXIT
   # Kill process group to catch jobs
   kill 0
   # Exit if we're keeping the build
-  [[ $BUILD_KEEP == "yes" ]] && exit
+  [[ $BUILD_KEEP == "yes" ]] && exit $retval
+  # Otherwise cleanup
+  # Exit
+  exit $retval
 }
 trap cleanup INT TERM EXIT
 
