@@ -1,17 +1,17 @@
 ---
-- name: Bring down previously configured interfaces
+- name: Bring down any previously configured interfaces
   command: ifdown -a -X lo -X em1
 
-- name: Remove previously configured interface fragments
+- name: Remove previously configured interfaces.d fragments
   file: dest=/etc/network/interfaces.d state=absent
 
 - name: Create fresh interfaces.d directory
   file: dest=/etc/network/interfaces.d state=directory
 
-# - name: Tag interfaces file as Ansible Managed
-#   lineinfile: dest=/etc/network/interfaces insertbefore=BOF regex="^{{ansible_managed}}" line="{{ansible_managed}}"
+ - name: Tag interfaces file as Ansible Managed
+   lineinfile: dest=/etc/network/interfaces insertbefore=BOF regex="^# Ansible managed" line="# Ansible managed: This file is managed by ansible, do not modify it directly!"
 
-- name: Source interfaces.d fragments
+- name: Enable sourcing of interfaces.d fragments
   lineinfile: dest=/etc/network/interfaces insertafter=EOF regexp="^source" line="source /etc/network/interfaces.d/*.cfg"
 
 - name: Render fragment templates
