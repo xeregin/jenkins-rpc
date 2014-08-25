@@ -32,7 +32,7 @@ git clone -b dev-sat6 git@github.com:Apsu/jenkins-rpc.git & wait || true
 pushd jenkins-rpc
 export PYTHONUNBUFFERED=1
 export ANSIBLE_FORCE_COLOR=1
-ansible-playbook -i inventory/dev-sat6-lab01 -e hosts=cluster${EXECUTOR_NUMBER} playbooks/dev-labs/networking.yml & wait
+ansible-playbook -i inventory/dev-sat6-lab01 -e hosts=cluster${EXECUTOR_NUMBER} playbooks/dev-labs/all.yml & wait
 popd
 
 # Skip deployment and trigger handler
