@@ -1,0 +1,43 @@
+---
+- name: Bring down any previously configured interfaces
+  command: ifdown -a -X lo -X em1
+
+- name: Remove previously configured interfaces.d fragments
+  file: >
+    dest=/etc/network/interfaces.d
+    state=absent
+
+- name: Create fresh interfaces.d directory
+  file: >
+    dest=/etc/network/interfaces.d
+    state=directory
+
+- name: Tag interfaces file as Ansible Managed
+  lineinfile: >
+    dest=/etc/network/interfaces
+    insertbefore=BOF
+    regexp="^# Ansible managed"
+    line="# Ansible managed: This file is managed by ansible, do not modify it directly!"
+
+- name: Enable sourcing of interfaces.d fragments
+  lineinfile: >
+    dest=/etc/network/interfaces
+    insertafter=EOF
+    regexp="^source"
+    line="source /etc/network/interfaces.d/*.cfg"
+
+- name: Render fragment templates
+  template: >
+    src=iface.j2
+    dest=/etc/network/interfaces.d/{{item.name}}.cfg
+  with_items:
+    - name: "em1.216"
+      type: "manual"
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+
+- name: Bring up new interfaces
+  command: ifup {{item.name}}
+  with_items:
+    - name: "em1.216"

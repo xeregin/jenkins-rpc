@@ -1,0 +1,7 @@
+---
+- name: Provision dev cluster
+  hosts: "{{hosts}}"
+  gather_facts: True
+  roles:
+    - dev-packages
+    - dev-networking
