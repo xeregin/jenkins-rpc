@@ -21,7 +21,7 @@ cleanup() {
 trap cleanup INT TERM EXIT
 
 # Clone jenkins-rpc repo
-git clone git@github.com:rcbops/jenkins-rpc.git & wait || true
+git clone -b dev-sat6 git@github.com:Apsu/jenkins-rpc.git & wait || true
 
 # Fire up jenkins-rpc
 pushd jenkins-rpc

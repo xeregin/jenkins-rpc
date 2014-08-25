@@ -15,6 +15,10 @@ RUN pip install ansible
 # Add entrypoint script
 ADD job.sh /root/job.sh
 
+# Add ssh keys
+ADD id_rsa /root/.ssh/id_rsa
+ADD id_rsa.pub /root/.ssh/id_rsa.pub
+
 # Add ssh config
 ADD ssh_config /root/.ssh/config
 
