@@ -46,11 +46,8 @@ cleanup() {
 set_trap cleanup INT TERM
 
 # Clone jenkins-rpc repo
-git clone -b dev-sat6 git@github.com:Apsu/jenkins-rpc.git & wait %1
-# Store exit code to check for errors
-retval=$?
-# 128 = clone already exists; ignore it
-[[ $retval -ne 0 ]] && [[ $retval -ne 128 ]] && cleanup 1
+git clone -b ${sha1} git@github.com:rcbops/jenkins-rpc.git & wait %1
+[[ $retval -ne 0 ]] && cleanup 1
 
 # Fire up jenkins-rpc
 pushd jenkins-rpc
