@@ -14,7 +14,6 @@
     dest=~/.ssh/authorized_keys
     line="# {{ item }}"
     create=yes
-
   with_items: add_ssh_keys_from_github.usernames
 
 - name: add SSH keys to ~/.ssh/authorized_keys

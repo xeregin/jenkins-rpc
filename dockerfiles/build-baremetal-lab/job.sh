@@ -11,13 +11,17 @@ cd
 
 # Cleanup function
 cleanup() {
-  trap - TERM
+  # Disable trap
+  trap - INT TERM EXIT
+  # Kill process group to catch jobs
   kill 0
-  # Put any other cleanup here
+  # Exit if we're keeping the build
+  [[ $BUILD_KEEP == "yes" ]] && exit
+  # Destroy cluster hosts
+  pushd ~/jenkins-rpc
+  ./scripts/qe-labs/destroy.sh
 }
-trap cleanup TERM
-
-# Job commands follow
+trap cleanup INT TERM EXIT
 
 # Clone jenkins-rpc repo
 git clone git@github.com:rcbops/jenkins-rpc.git & wait || true
@@ -25,13 +29,8 @@ git clone git@github.com:rcbops/jenkins-rpc.git & wait || true
 # Fire up jenkins-rpc
 pushd jenkins-rpc
 
-# Populate playbook files for SSH keys on targets
-cp ~/.ssh/id_* roles/configure-hosts/files/
-./scripts/deploy.sh & wait
-popd
-
 # Skip deployment and trigger handler
 [[ $BUILD_SKIP == "yes" ]] && cleanup
 
-# Add '& wait' to every long-running job command
-# Example: ansible-playbook blah & wait
+# Run build lab playbook
+ansible-playbook -i LAB_ID playbooks/qe-labs/build_lab.yml & wait

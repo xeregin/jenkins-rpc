@@ -4,20 +4,73 @@
 {% set compute = groups['compute'] %}
 {% set cinder = groups['cinder'] %}
 {% set logger = groups['logger'] %}
+{% if 'haproxy' in groups %}
 {% set haproxy = groups['haproxy'] %}
-# Cider used in the Management network
-mgmt_cidr: {{ mgmt_cidr }}
+{% endif %}
+# Cidr used in the Management network
+mgmt_cidr: {{ rpc_user_config.mgmt_cidr }}
 
-# Cidr used in the VM network
-vmnet_cidr: {{ vmnet_cidr }}
+# Cider used for the private vm network
+tunnel_cidr: {{ rpc_user_config.vxlan_cidr }}
+
+{% if rpc_user_config.storage_cidr is defined %}
+# Cidr used for the storage network
+storage_cidr: {{ rpc_user_config.storage_cidr }}
+{% endif %}
+
+{% if rpc_user_config.used_ips is defined %}
+used_ips:
+{% for used_ip_range in rpc_user_config.used_ips %}
+  - {{ used_ip_range }}
+{% endfor %}
+{% endif %}
 
 # overrides anything else any where.
 global_overrides:
   # Internal Management vip address
-  internal_lb_vip_address: {{ internal_lb_vip_address }}
-  # External DMZ VIP address
-  external_lb_vip_address: {{ external_lb_vip_address }}
+  internal_lb_vip_address: {{ rpc_user_config.internal_lb_vip_address }}
 
+  # External DMZ VIP address
+  external_lb_vip_address: {{ rpc_user_config.external_lb_vip_address }}
+
+  # Bridged interface to use with tunnel type networks
+  tunnel_bridge: "{{ rpc_user_config.tunnel_bridge }}"
+
+  # Bridged interface to build containers with
+  container_bridge: "{{ rpc_user_config.container_bridge }}"
+
+  # Netmask for container interfaces
+{% if rpc_user_config.container_netmask is defined %}
+  container_netmask: {{ rpc_user_config.container_netmask }}
+{% endif %}
+
+  # Define your neutron netowrks.
+  provider_networks:
+{% for network in rpc_user_config.networking %}
+    - network:
+        group_binds:
+{% for group_bind in network.group_binds %}
+          - {{ group_bind }}
+{% endfor %}
+        container_bridge: "{{ network.bridge }}"
+        container_interface: "{{ network.iface }}"
+        type: "{{ network.type }}"
+{% if network.address is defined %}
+        interface_address: "{{ network.address }}"
+{% endif %}
+{% if network.range is defined %}
+        range: "{{ network.range }}"
+{% endif %}
+{% if network.net_name is defined %}
+        net_name: "{{ network.net_name }}"
+{% endif %}
+{% if network.subnetmask is defined %}
+        subnetmask: "{{ network.subnetmask }}"
+{% endif %}
+{% endfor %}
+
+  # Name of load balancer
+  lb_name: {{ rpc_user_config.lb_name }}
 
 # User defined Infrastructure Hosts, this should be a required group
 infra_hosts:
@@ -41,26 +94,27 @@ compute_hosts:
 {% endfor %}
 
 # User defined Cinder Hosts, this should be a required group
-cinder_hosts:
+storage_hosts:
 {% for host in cinder %}
   cinder{{ loop.index }}:
     ip: {{ host }}
     container_vars:
       cinder_backends:
         limit_container_type: cinder_volume
-{% if 'lvm' in cinder_backend %}
+{% if 'lvm' in cinder_storage.backend %}
         lvm:
-          volume_group: {{ volume_group }}
+          volume_group: {{ cinder_storage.volume_group }}
           driver: cinder.volume.drivers.lvm.LVMISCSIDriver
           backend_name: LVM_iSCSI
-{% else %}
+{% endif %}
+{% if 'netapp' in cinder_storage.backend %}
         netapp:
           netapp_storage_family: ontap_7mode
           netapp_storage_protocol: iscsi
-          netapp_server_hostname: {{ netapp_hostname }}
+          netapp_server_hostname: {{ cinder_storage.netapp.hostname }}
           netapp_server_port: 80
-          netapp_login: {{ netapp_username }}
-          netapp_password: {{ netapp_password }}
+          netapp_login: {{ cinder_storage.netapp.username }}
+          netapp_password: {{ cinder_storage.netapp.password }}
           driver: cinder.volume.drivers.netapp.common.NetAppDriver
           backend_name: NETAPP_iSCSI
 {% endif %}
@@ -73,8 +127,8 @@ log_hosts:
     ip: {{ host }}
 {% endfor %}
 
+{% if haproxy is defined %}
 # User defined HAProxy Hosts
-{% if haproxy %}
 haproxy_hosts:
 {% for host in haproxy %}
   haproxy{{ loop.index }}:

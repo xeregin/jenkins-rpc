@@ -1,6 +1,4 @@
 ---
 - hosts: deployment
-  vars_files:
-    - vars/rpc_config.yml
   roles:
     - rpc_config

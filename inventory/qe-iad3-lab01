@@ -1,13 +1,6 @@
 [deployment]
 10.17.255.132
 
-[deployment:vars]
-mgmt_cidr=192.168.3.0/24
-vmnet_cidr=172.31.3.0/24
-cinder_backend=lvm
-internal_lb_vip_address=
-external_lb_vip_address=
-
 [infra]
 10.17.255.132
 10.17.255.133

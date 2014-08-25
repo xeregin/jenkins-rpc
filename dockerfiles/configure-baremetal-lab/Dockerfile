@@ -1,5 +1,5 @@
 FROM ubuntu:14.04
-MAINTAINER Evan Callicoat <apsu@propter.net>
+MAINTAINER Jacob Wagner <swagner1104@gmail.com>
 
 # Make apt quiet
 ENV DEBIAN_FRONTEND noninteractive
@@ -14,13 +14,6 @@ ADD job.sh /root/job.sh
 
 # Add ssh config
 ADD ssh_config /root/.ssh/config
-
-# Add ssh keys
-ADD id_rsa /root/.ssh/id_rsa
-ADD id_rsa.pub /root/.ssh/id_rsa.pub
-
-# Add credsfile
-ADD creds /root/.creds
 
 # Shell entry-point
 CMD /root/job.sh

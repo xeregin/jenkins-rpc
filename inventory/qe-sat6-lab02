@@ -1,11 +1,6 @@
 [deployment]
 10.127.101.22
 
-[deployment:vars]
-cinder_backend=netapp
-internal_lb_vip_address=10.127.101.63
-external_lb_vip_address=10.127.101.63
-
 [infra]
 10.127.101.22
 10.127.101.17

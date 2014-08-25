@@ -1,6 +1,5 @@
-ansible
+ansible==1.6.6
 argh
 argcomplete
 netaddr
-pychef
 requests
