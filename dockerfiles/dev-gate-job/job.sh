@@ -47,7 +47,7 @@ set_trap cleanup INT TERM
 
 # Clone jenkins-rpc repo
 git clone -b ${sha1} git@github.com:rcbops/jenkins-rpc.git & wait %1
-[[ $retval -ne 0 ]] && cleanup 1
+[[ $? -ne 0 ]] && cleanup 1
 
 # Fire up jenkins-rpc
 pushd jenkins-rpc
