@@ -22,3 +22,8 @@
       directives:
         - "up ip link set $IFACE up"
         - "down ip link set $IFACE down"
+
+- name: Bring up new interfaces
+  command: ifup {{item.name}}
+  with_items:
+    - name: "em1.216"

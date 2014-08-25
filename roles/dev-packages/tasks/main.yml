@@ -7,3 +7,9 @@
 
 - name: Install lldpd
   apt: pkg=lldpd state=latest
+
+- name: Install vlan
+  apt: pkg=vlan state=latest
+
+- name: Install bridge-utils
+  apt: pkg=bridge-utils state=latest
