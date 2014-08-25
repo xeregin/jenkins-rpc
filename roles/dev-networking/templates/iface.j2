@@ -2,6 +2,6 @@
 
 auto {{item.name}}
 iface {{item.name}} type {{item.type}}
-{% for directive in directives %}
+{% for directive in item.directives %}
     {{directive}}
 {% endfor %}
