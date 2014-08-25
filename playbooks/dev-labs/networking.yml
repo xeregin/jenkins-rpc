@@ -1,6 +1,6 @@
 ---
 - name: Setup networking
-  hosts: {{hosts}}
+  hosts: "{{hosts}}"
   gather_facts: True
   tasks:
     - name: Test
