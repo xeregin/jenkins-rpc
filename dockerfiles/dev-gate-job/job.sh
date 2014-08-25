@@ -38,10 +38,6 @@ cleanup() {
   fi
   # Disable trap
   trap - INT TERM
-  # Exit if we're keeping the build
-  [[ $BUILD_KEEP == "yes" ]] && exit $retval
-  # Otherwise cleanup
-  # ...
   # Exit
   exit $retval
 }
