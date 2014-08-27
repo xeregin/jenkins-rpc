@@ -6,7 +6,7 @@ rpc_user_config:
         - "192.168.96.132,192.168.96.155"
         - "172.29.240.132,172.29.240.155"
     internal_lb_vip_address: 192.168.96.10
-    external_lb_vip_address: 192.168.96.10
+    external_lb_vip_address: 10.17.255.180
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     container_netmask: 255.255.252.0
