@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -e
 set -x
 
 # Set HOME to /root
@@ -21,15 +22,15 @@ set_trap() {
 
 # Cleanup trap
 cleanup() {
-      # If first trap
+  # If first trap
   if [[ $trapped -eq 0 ]]
   then
     # We've trapped now
     trapped=1
     # Store exit code
     case $1 in
-      INT|TERM)
-        retval=1;; # exit 1 on INT or TERM
+      INT|TERM|ERR)
+        retval=1;; # exit 1 on INT, TERM, ERR
       *)
         retval=$1;; # specified code otherwise
     esac
@@ -43,11 +44,10 @@ cleanup() {
 }
 
 # Set the trap
-set_trap cleanup INT TERM
+set_trap cleanup INT TERM ERR
 
 # Clone jenkins-rpc repo
 git clone git@github.com:rcbops/jenkins-rpc.git & wait %1
-[[ $? -ne 0 ]] && cleanup 1
 
 # Move into jenkins-rpc
 pushd jenkins-rpc
@@ -62,14 +62,12 @@ git checkout pr/${ghprbPullId}
 export PYTHONUNBUFFERED=1
 export ANSIBLE_FORCE_COLOR=1
 ansible-playbook -i inventory/dev-sat6-lab01 -e hosts=cluster${EXECUTOR_NUMBER} playbooks/dev-labs/site.yml & wait %1
-# Cleanup on error
-[[ $? -ne 0 ]] && cleanup 2
 popd
 
-# Skip deployment and trigger handler
+# Skip deployment and trigger success handler
 [[ $BUILD_SKIP == "yes" ]] && cleanup 0
 
 # Connect to target and run script
 ssh $(<target.ip) ./target.sh & wait %1
-# Cleanup with return code
-cleanup $?
+# Trigger success handler
+cleanup 0
