@@ -38,7 +38,7 @@ cleanup() {
     kill 0
   fi
   # Disable trap
-  trap - INT TERM
+  trap - INT TERM ERR
   # Exit
   exit $retval
 }
