@@ -46,11 +46,19 @@ cleanup() {
 set_trap cleanup INT TERM
 
 # Clone jenkins-rpc repo
-git clone -b ${sha1} git@github.com:rcbops/jenkins-rpc.git & wait %1
+git clone git@github.com:rcbops/jenkins-rpc.git & wait %1
 [[ $? -ne 0 ]] && cleanup 1
 
-# Fire up jenkins-rpc
+# Move into jenkins-rpc
 pushd jenkins-rpc
+# Add pull-request fetch refspec
+git config --add remote.origin.fetch "+refs/pull/*/head:refs/remotes/origin/pr/*"
+# Fetch the pull requests
+git fetch origin
+# Checkout the pull request
+git checkout pr/${ghprbPullId}
+
+# Fire up the ansibles
 export PYTHONUNBUFFERED=1
 export ANSIBLE_FORCE_COLOR=1
 ansible-playbook -i inventory/dev-sat6-lab01 -e hosts=cluster${EXECUTOR_NUMBER} playbooks/dev-labs/site.yml & wait %1
