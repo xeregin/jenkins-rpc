@@ -100,7 +100,7 @@ storage_hosts:
     ip: {{ host }}
     container_vars:
       cinder_backends:
-        limit_container_type: cinder_volume
+        limit_container_types: cinder_volume
 {% if 'lvm' in cinder_storage.backend %}
         lvm:
           volume_group: {{ cinder_storage.volume_group }}
