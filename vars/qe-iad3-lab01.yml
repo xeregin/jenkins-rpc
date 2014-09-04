@@ -9,9 +9,16 @@ rpc_user_config:
     external_lb_vip_address: 10.17.255.180
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
-    container_netmask: 255.255.252.0
     lb_name:
     networking:
+        - name: container
+          bridge: br-mgmt
+          container_bridge: br-mgmt
+          container_interface: eth1
+          ip_from_q: container
+          group_binds:
+            - all_containers
+            - hosts
         - name: provider
           bridge: br-vlan
           iface: eth11
@@ -23,21 +30,12 @@ rpc_user_config:
             - neutron_linuxbridge_agent
         - name: tenant
           bridge: br-vxlan
-          subnetmask: 255.255.252.0
           iface: eth10
           type: vxlan
-          address:
+          ip_from_q: tunnel
           range: 1:1000
           net_name: private
           group_binds:
-            - neutron_linuxbridge_agent
-        - name: service
-          bridge: br-snet
-          iface: eth2
-          type: raw
-          group_binds:
-            - glance_api
-            - nova_compute
             - neutron_linuxbridge_agent
 cinder_storage:
   volume_group: cinder-volumes
@@ -137,11 +135,3 @@ networking:
         - "bridge_fd 0"
         - "bridge_maxwait 0"
         - "bridge_ports bond1"
-    - name: br-snet
-      type: static
-      directives:
-        - "address 172.29.248.1"
-        - "netmask 255.255.252.0"
-        - "bridge_stp off"
-        - "bridge_waitport 0"
-        - "bridge_fd 0"
