@@ -54,27 +54,27 @@ add_ssh_keys_from_github:
 networking:
     - name: lo
       type: loopback
-    - name: eth0
+    - name: em1
       type: manual
       directives:
         - "bond-master bond0"
-        - "bond-primary eth0"
-    - name: eth2
+        - "bond-primary em1"
+    - name: em3
       type: static
       directives:
-      - "netmask {{ ansible_eth2.ipv4.netmask }}"
-      - "post-up ip route add 10.191.192.0/18 via 10.136.93.65 dev eth2"
+      - "netmask {{ ansible_em3.ipv4.netmask }}"
+      - "post-up ip route add 10.191.192.0/18 via 10.136.93.65 dev em3"
       - "address {{ ansible_eth2.ipv4.address }}"
-    - name: eth3
+    - name: em4
       type: manual
       directives:
         - "bond-master bond0"
-    - name: eth8
+    - name: p6p1
       type: manual
       directives:
         - "bond-master bond1"
-        - "bond-primary eth8"
-    - name: eth10
+        - "bond-primary p6p1"
+    - name: p7p1
       type: manual
       directives:
         - "bond-master bond1"
