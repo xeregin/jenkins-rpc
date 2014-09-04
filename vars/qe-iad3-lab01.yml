@@ -31,8 +31,8 @@ rpc_user_config:
         - name: tenant
           bridge: br-vxlan
           iface: eth10
-          type: vxlan
           ip_from_q: tunnel
+          type: vxlan
           range: 1:1000
           net_name: private
           group_binds:
