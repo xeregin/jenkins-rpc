@@ -20,14 +20,18 @@
 - name: retrieve container ip address
   local_action: script cidr.py {{ rpc_user_config.mgmt_cidr }} {{ ansible_default_ipv4.address }}
   register: container_address
+  when: rpc_user_config.mgmt_cidr is defined
+
 
 - name: retrieve vxlan ip address
   local_action: script cidr.py {{ rpc_user_config.vxlan_cidr }} {{ansible_default_ipv4.address }}
   register: vxlan_address
+  when: rpc_user_config.vxlan_cidr is defined
 
 - name: retrieve storage ip address
   local_action: script cidr.py {{ rpc_user_config.storage_cidr }} {{ansible_default_ipv4.address }}
   register: storage_address
+  when: rpc_user_config.storage_cidr is defined
 
 - name: ensure /etc/network/interfaces.d exists
   file: path=/etc/network/interfaces.d state=directory owner=root mode=0655
