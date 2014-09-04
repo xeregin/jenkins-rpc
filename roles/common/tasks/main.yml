@@ -25,13 +25,13 @@
     - blacklist e1000e
     - blacklist ixgbe
 
-- name: load {{ item }} module
+- name: load blacklisted modules
   modprobe: name={{ item }} state=present
   with_items:
     - e1000e
     - ixgbe
 
-- name: ensure module persistance
+- name: ensure blacklisted module persistance
   lineinfile: dest=/etc/modules state=present regexp="^{{ item }}" line="{{ item }}"
   with_items:
     - e1000e
