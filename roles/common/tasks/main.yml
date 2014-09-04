@@ -20,10 +20,10 @@
   tags: target
 
 - name: unblacklist required kernel modules
-  lineinfile: dest=/etc/modprobe.d/blacklist.local.conf state=absent line={{ item }}
+  lineinfile: dest=/etc/modprobe.d/blacklist.local.conf state=absent line="{{ item }}"
   with_items:
-    - "blacklist e1000e"
-    - "blacklist ixgbe"
+    - blacklist e1000e
+    - blacklist ixgbe
 
 - name: load {{ item }} module
   modprobe: name={{ item }} state=present
