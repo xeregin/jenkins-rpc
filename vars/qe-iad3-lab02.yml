@@ -16,6 +16,7 @@ rpc_user_config:
           container_bridge: br-mgmt
           container_interface: eth1
           ip_from_q: container
+          type: raw
           group_binds:
             - all_containers
             - hosts
