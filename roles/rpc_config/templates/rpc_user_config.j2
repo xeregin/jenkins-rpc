@@ -53,8 +53,11 @@ global_overrides:
           - {{ group_bind }}
 {% endfor %}
         container_bridge: "{{ network.bridge }}"
-        container_interface: "{{ network.iface }}"
+        container_interface: "{{ network.container_interface }}"
         type: "{{ network.type }}"
+{% if network.ip_from_q is defined %}
+        ip_from_q: "{{ network.ip_from_q }}"
+{% endif %}
 {% if network.address is defined %}
         interface_address: "{{ network.address }}"
 {% endif %}

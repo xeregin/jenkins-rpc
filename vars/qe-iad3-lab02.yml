@@ -21,7 +21,7 @@ rpc_user_config:
             - hosts
         - name: provider
           bridge: br-vlan
-          iface: eth11
+          container_interface: eth11
           type: vlan
           address: tunnel_address
           range: 410:410
@@ -30,7 +30,7 @@ rpc_user_config:
             - neutron_linuxbridge_agent
         - name: tenant
           bridge: br-vxlan
-          iface: eth10
+          container_interface: eth10
           ip_from_q: tunnel
           type: vxlan
           range: 1:1000
