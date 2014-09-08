@@ -1,6 +1,7 @@
 rpc_user_config:
     mgmt_cidr: 192.168.100.0/22
     vxlan_cidr:  172.29.241.0/22
+    snet_cidr: 172.29.100.0/22
     used_ips:
         - "192.168.100.1,192.168.100.15"
         - "192.168.100.132,192.168.100.155"
@@ -37,6 +38,15 @@ rpc_user_config:
           range: 1:1000
           net_name: private
           group_binds:
+            - neutron_linuxbridge_agent
+        - name: service
+          bridge: br-snet
+          container_interface: eth3
+          ip_from_q: snet
+          type: raw
+          group_binds:
+            - glance_api
+            - nova_compute
             - neutron_linuxbridge_agent
 cinder_storage:
   volume_group: cinder-volumes
@@ -136,3 +146,11 @@ networking:
         - "bridge_fd 0"
         - "bridge_maxwait 0"
         - "bridge_ports bond1"
+    - name: br-snet
+      type: manual
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bridge_stp off"
+        - "bridge_fd 0"
+        - "bridge_maxwait 0"
