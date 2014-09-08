@@ -7,15 +7,17 @@
 {% if 'haproxy' in groups %}
 {% set haproxy = groups['haproxy'] %}
 {% endif %}
-# Cidr used in the Management network
-mgmt_cidr: {{ rpc_user_config.mgmt_cidr }}
 
-# Cider used for the private vm network
-tunnel_cidr: {{ rpc_user_config.vxlan_cidr }}
+cidr_networks:
+  # Cidr used in the Management network
+  mgmt_cidr: {{ rpc_user_config.mgmt_cidr }}
+
+  # Cider used for the private vm network
+  tunnel_cidr: {{ rpc_user_config.vxlan_cidr }}
 
 {% if rpc_user_config.storage_cidr is defined %}
-# Cidr used for the storage network
-storage_cidr: {{ rpc_user_config.storage_cidr }}
+  # Cidr used for the storage network
+  storage_cidr: {{ rpc_user_config.storage_cidr }}
 {% endif %}
 
 {% if rpc_user_config.used_ips is defined %}
