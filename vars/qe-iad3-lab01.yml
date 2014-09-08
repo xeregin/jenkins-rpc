@@ -21,7 +21,7 @@ rpc_user_config:
             - hosts
         - name: provider
           bridge: br-vlan
-          iface: eth11
+          container_interface: eth11
           type: vlan
           address: tunnel_address
           range: 231:231
@@ -30,12 +30,21 @@ rpc_user_config:
             - neutron_linuxbridge_agent
         - name: tenant
           bridge: br-vxlan
-          iface: eth10
+          container_interface: eth10
           ip_from_q: tunnel
           type: vxlan
           range: 1:1000
           net_name: private
           group_binds:
+            - neutron_linuxbridge_agent
+        - name: service
+          bridge: br-snet
+          container_interface: eth3
+          ip_from_q: snet
+          type: raw
+          group_binds:
+            - glance_api
+            - nova_compute
             - neutron_linuxbridge_agent
 cinder_storage:
   volume_group: cinder-volumes
@@ -135,3 +144,11 @@ networking:
         - "bridge_fd 0"
         - "bridge_maxwait 0"
         - "bridge_ports bond1"
+    - name: br-snet
+      type: manual
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bridge_stp off"
+        - "bridge_fd 0"
+        - "bridge_maxwait 0"
