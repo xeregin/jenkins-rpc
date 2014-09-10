@@ -6,7 +6,7 @@
   template: src=rpc_environment.j2 dest=/etc/rpc_deploy/rpc_environment.yml owner=root mode=0644
 
 - name: get environment version md5sum
-  command: md5sum /etc/rpc_deploy/rpc_environment
+  command: md5sum /etc/rpc_deploy/rpc_environment.yml
   register: environment_version
 
 - name: install rpc user config file
