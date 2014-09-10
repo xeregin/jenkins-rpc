@@ -46,11 +46,6 @@ global_overrides:
   # Bridged interface to build containers with
   container_bridge: "{{ rpc_user_config.container_bridge }}"
 
-  # Netmask for container interfaces
-{% if rpc_user_config.container_netmask is defined %}
-  container_netmask: {{ rpc_user_config.container_netmask }}
-{% endif %}
-
   # Define your neutron netowrks.
   provider_networks:
 {% for network in rpc_user_config.networking %}
