@@ -1,38 +1,38 @@
 [deployment]
-10.17.255.132
+569037-infra01 ansible_ssh_host=10.17.255.132 ansible_ssh_user=root
 
 [infra]
-10.17.255.132
-10.17.255.133
-10.17.255.134
+569037-infra01 ansible_ssh_host=10.17.255.132 ansible_ssh_user=root
+569038-infra02 ansible_ssh_host=10.17.255.133 ansible_ssh_user=root
+569039-infra03 ansible_ssh_host=10.17.255.134 ansible_ssh_user=root
 
 [network]
-10.17.255.133
-10.17.255.134
+569038-infra02 ansible_ssh_host=10.17.255.133 ansible_ssh_user=root
+569039-infra03 ansible_ssh_host=10.17.255.134 ansible_ssh_user=root
 
 [compute]
-10.17.255.135
-10.17.255.136
-10.17.255.137
-10.17.255.138
-10.17.255.139
-10.17.255.140
-10.17.255.141
-10.17.255.142
-10.17.255.143
-10.17.255.144
-10.17.255.145
-10.17.255.146
-10.17.255.147
-10.17.255.148
-10.17.255.149
-10.17.255.150
-10.17.255.152
-10.17.255.151
+573972-compute01 ansible_ssh_host=10.17.255.152 ansible_ssh_user=root
+573973-compute02 ansible_ssh_host=10.17.255.151 ansible_ssh_user=root
+573951-compute03 ansible_ssh_host=10.17.255.135 ansible_ssh_user=root
+573952-compute04 ansible_ssh_host=10.17.255.136 ansible_ssh_user=root
+573953-compute05 ansible_ssh_host=10.17.255.137 ansible_ssh_user=root
+573954-compute06 ansible_ssh_host=10.17.255.138 ansible_ssh_user=root
+573955-compute07 ansible_ssh_host=10.17.255.139 ansible_ssh_user=root
+573956-compute08 ansible_ssh_host=10.17.255.140 ansible_ssh_user=root
+573957-compute09 ansible_ssh_host=10.17.255.141 ansible_ssh_user=root
+573958-compute10 ansible_ssh_host=10.17.255.142 ansible_ssh_user=root
+573959-compute11 ansible_ssh_host=10.17.255.143 ansible_ssh_user=root
+573960-compute12 ansible_ssh_host=10.17.255.144 ansible_ssh_user=root
+573961-compute13 ansible_ssh_host=10.17.255.145 ansible_ssh_user=root
+573962-compute14 ansible_ssh_host=10.17.255.146 ansible_ssh_user=root
+573963-compute15 ansible_ssh_host=10.17.255.147 ansible_ssh_user=root
+573964-compute16 ansible_ssh_host=10.17.255.148 ansible_ssh_user=root
+573965-compute17 ansible_ssh_host=10.17.255.149 ansible_ssh_user=root
+573970-compute18 ansible_ssh_host=10.17.255.150 ansible_ssh_user=root
 
 [cinder]
-10.17.255.154
-10.17.255.153
+573972-cinder01 ansible_ssh_host=10.17.255.154 ansible_ssh_user=root
+573973-cinder02 ansible_ssh_host=10.17.255.153 ansible_ssh_user=root
 
 [logger]
-10.17.255.155
+568575-logger01 ansible_ssh_host=10.17.255.155 ansible_ssh_user=root

@@ -18,15 +18,15 @@
     - 8021q
 
 - name: retrieve container ip address
-  local_action: script cidr.py {{ rpc_user_config.mgmt_cidr }} {{ ansible_default_ipv4.address }}
+  local_action: script cidr.py {{ rpc_user_config.container_cidr }} {{ ansible_default_ipv4.address }}
   register: container_address
-  when: rpc_user_config.mgmt_cidr is defined
+  when: rpc_user_config.container_cidr is defined
 
 
 - name: retrieve vxlan ip address
-  local_action: script cidr.py {{ rpc_user_config.vxlan_cidr }} {{ansible_default_ipv4.address }}
+  local_action: script cidr.py {{ rpc_user_config.tunnel_cidr }} {{ansible_default_ipv4.address }}
   register: vxlan_address
-  when: rpc_user_config.vxlan_cidr is defined
+  when: rpc_user_config.tunnel_cidr is defined
 
 - name: retrieve storage ip address
   local_action: script cidr.py {{ rpc_user_config.storage_cidr }} {{ansible_default_ipv4.address }}
