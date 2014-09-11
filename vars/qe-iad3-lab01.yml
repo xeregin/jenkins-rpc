@@ -152,5 +152,5 @@ networking:
         - "bridge_stp off"
         - "bridge_fd 0"
         - "bridge_maxwait 0"
-        - "address 172.29.248.1"
+        - "address 172.31.252.1"
         - "netmask 255.255.252.0"
