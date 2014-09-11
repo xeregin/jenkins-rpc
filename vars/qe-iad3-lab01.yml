@@ -149,8 +149,6 @@ networking:
     - name: br-snet
       type: static
       directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
         - "bridge_stp off"
         - "bridge_fd 0"
         - "bridge_maxwait 0"
