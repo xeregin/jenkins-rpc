@@ -115,8 +115,8 @@ storage_hosts:
 {% if 'lvm' in cinder_storage.backend %}
         lvm:
           volume_group: {{ cinder_storage.volume_group }}
-          driver: cinder.volume.drivers.lvm.LVMISCSIDriver
-          backend_name: LVM_iSCSI
+          volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+          volume_backend_name: LVM_iSCSI
 {% endif %}
 {% if 'netapp' in cinder_storage.backend %}
         netapp:
@@ -126,8 +126,8 @@ storage_hosts:
           netapp_server_port: 80
           netapp_login: {{ cinder_storage.netapp.username }}
           netapp_password: {{ cinder_storage.netapp.password }}
-          driver: cinder.volume.drivers.netapp.common.NetAppDriver
-          backend_name: NETAPP_iSCSI
+          volume_driver: cinder.volume.drivers.netapp.common.NetAppDriver
+          volume_backend_name: NETAPP_iSCSI
 {% endif %}
 {% endfor %}
 
