@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-version: 1.1
 component_skel:
   cinder_api:
     belongs_to:
@@ -22,7 +21,6 @@ component_skel:
     belongs_to:
     - cinder_all
   cinder_volume:
-    storage_net: true
     belongs_to:
     - cinder_all
   elasticsearch:
@@ -32,7 +30,6 @@ component_skel:
     belongs_to:
     - galera_all
   glance_api:
-    storage_net: true
     belongs_to:
     - glance_all
   glance_registry:
@@ -72,7 +69,6 @@ component_skel:
     belongs_to:
     - neutron_all
   neutron_linuxbridge_agent:
-    tunnel_address: true
     belongs_to:
     - neutron_all
   neutron_metering_agent:
@@ -96,9 +92,10 @@ component_skel:
   nova_api_os_compute:
     belongs_to:
     - nova_all
+  nova_cert:
+    belongs_to:
+    - nova_all
   nova_compute:
-    tunnel_address: true
-    storage_net: true
     belongs_to:
     - nova_all
   nova_conductor:
@@ -214,6 +211,11 @@ container_skel:
     - infra_containers
     contains:
     - nova_api_os_compute
+  nova_cert_container:
+    belongs_to:
+    - infra_containers
+    contains:
+    - nova_cert
   nova_compute_container:
     is_metal: true
     belongs_to:
