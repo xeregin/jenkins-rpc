@@ -87,28 +87,28 @@ global_overrides:
 infra_hosts:
 {% for host in infra %}
   {{ host }}:
-    ip: {{ ansible_ssh_host }}
+    ip: {{ host.ansible_ssh_host }}
 {% endfor %}
 
 # User defined Network Hosts, this should be a required group
 network_hosts:
 {% for host in network %}
   {{ host }}:
-    ip: {{ ansible_ssh_host }}
+    ip: {{ host.ansible_ssh_host }}
 {% endfor %}
 
 # User defined Compute Hosts, this should be a required group
 compute_hosts:
 {% for host in compute %}
   {{ host }}:
-    ip: {{ ansible_ssh_host }}
+    ip: {{ host.ansible_ssh_host }}
 {% endfor %}
 
 # User defined Cinder Hosts, this should be a required group
 storage_hosts:
 {% for host in cinder %}
   {{ host }}:
-    ip: {{ ansible_ssh_host }}
+    ip: {{ host.ansible_ssh_host }}
     container_vars:
       cinder_backends:
         limit_container_types: cinder_volume
@@ -135,7 +135,7 @@ storage_hosts:
 log_hosts:
 {% for host in logger %}
   {{ host }}:
-    ip: {{ ansible_ssh_host }}
+    ip: {{ host.ansible_ssh_host }}
 {% endfor %}
 
 {% if haproxy is defined %}
@@ -143,6 +143,6 @@ log_hosts:
 haproxy_hosts:
 {% for host in haproxy %}
   {{ host }}:
-    ip: {{ ansible_ssh_host }}
+    ip: {{ host.ansible_ssh_host }}
 {% endfor %}
 {% endif %}
