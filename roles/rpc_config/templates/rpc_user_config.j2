@@ -7,15 +7,28 @@
 {% if 'haproxy' in groups %}
 {% set haproxy = groups['haproxy'] %}
 {% endif %}
-# Cidr used in the Management network
-mgmt_cidr: {{ rpc_user_config.mgmt_cidr }}
 
-# Cider used for the private vm network
-tunnel_cidr: {{ rpc_user_config.vxlan_cidr }}
+# This is the md5 of the environment file
+# this will ensure consistency when deploying.
+environment_version: {{ environment_version.stat.md5 }}
+
+# User defined CIDR used for containers
+# Global cidr/s used for everything.
+cidr_networks:
+  # Cidr used in the Management network
+  container: {{ rpc_user_config.container_cidr }}
+
+  # Cider used for the VM network
+  tunnel: {{ rpc_user_config.tunnel_cidr }}
+
+{% if rpc_user_config.service_cidr is defined %}
+  # Cidr used for the service network
+  snet: {{ rpc_user_config.service_cidr}}
+{% endif %}
 
 {% if rpc_user_config.storage_cidr is defined %}
-# Cidr used for the storage network
-storage_cidr: {{ rpc_user_config.storage_cidr }}
+  # Cidr used for the storage network
+  storage: {{ rpc_user_config.storage_cidr }}
 {% endif %}
 
 {% if rpc_user_config.used_ips is defined %}
@@ -37,12 +50,7 @@ global_overrides:
   tunnel_bridge: "{{ rpc_user_config.tunnel_bridge }}"
 
   # Bridged interface to build containers with
-  container_bridge: "{{ rpc_user_config.container_bridge }}"
-
-  # Netmask for container interfaces
-{% if rpc_user_config.container_netmask is defined %}
-  container_netmask: {{ rpc_user_config.container_netmask }}
-{% endif %}
+  management_bridge: "{{ rpc_user_config.container_bridge }}"
 
   # Define your neutron netowrks.
   provider_networks:
@@ -53,8 +61,11 @@ global_overrides:
           - {{ group_bind }}
 {% endfor %}
         container_bridge: "{{ network.bridge }}"
-        container_interface: "{{ network.iface }}"
+        container_interface: "{{ network.container_interface }}"
         type: "{{ network.type }}"
+{% if network.ip_from_q is defined %}
+        ip_from_q: "{{ network.ip_from_q }}"
+{% endif %}
 {% if network.address is defined %}
         interface_address: "{{ network.address }}"
 {% endif %}
@@ -75,39 +86,39 @@ global_overrides:
 # User defined Infrastructure Hosts, this should be a required group
 infra_hosts:
 {% for host in infra %}
-  infra{{ loop.index }}:
-    ip: {{ host }}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
 {% endfor %}
 
 # User defined Network Hosts, this should be a required group
 network_hosts:
 {% for host in network %}
-  network{{ loop.index }}:
-    ip: {{ host }}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
 {% endfor %}
 
 # User defined Compute Hosts, this should be a required group
 compute_hosts:
 {% for host in compute %}
-  compute{{ loop.index }}:
-    ip: {{ host }}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
 {% endfor %}
 
 # User defined Cinder Hosts, this should be a required group
 storage_hosts:
 {% for host in cinder %}
-  cinder{{ loop.index }}:
-    ip: {{ host }}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
     container_vars:
       cinder_backends:
         limit_container_types: cinder_volume
-{% if 'lvm' in cinder_storage.backend %}
+{% if 'lvm' in cinder_storage.backends %}
         lvm:
           volume_group: {{ cinder_storage.volume_group }}
-          driver: cinder.volume.drivers.lvm.LVMISCSIDriver
-          backend_name: LVM_iSCSI
+          volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+          volume_backend_name: LVM_iSCSI
 {% endif %}
-{% if 'netapp' in cinder_storage.backend %}
+{% if 'netapp' in cinder_storage.backends %}
         netapp:
           netapp_storage_family: ontap_7mode
           netapp_storage_protocol: iscsi
@@ -115,23 +126,23 @@ storage_hosts:
           netapp_server_port: 80
           netapp_login: {{ cinder_storage.netapp.username }}
           netapp_password: {{ cinder_storage.netapp.password }}
-          driver: cinder.volume.drivers.netapp.common.NetAppDriver
-          backend_name: NETAPP_iSCSI
+          volume_driver: cinder.volume.drivers.netapp.common.NetAppDriver
+          volume_backend_name: NETAPP_iSCSI
 {% endif %}
 {% endfor %}
 
 # User defined Logger Hosts, this should be a required group
 log_hosts:
 {% for host in logger %}
-  logger{{ loop.index }}:
-    ip: {{ host }}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
 {% endfor %}
 
 {% if haproxy is defined %}
 # User defined HAProxy Hosts
 haproxy_hosts:
 {% for host in haproxy %}
-  haproxy{{ loop.index }}:
-    ip: {{ host }}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
 {% endfor %}
 {% endif %}

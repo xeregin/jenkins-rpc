@@ -1,67 +1,89 @@
-mgmt_cidr: 192.168.2.0/24
-vmnet_cidr: 172.31.2.0/24
-internal_lb_vip_address:
-external_lb_vip_address:
-cinder:
+rpc_user_config:
+    container_cidr: 192.168.100.0/22
+    tunnel_cidr:  172.29.100.0/22
+    used_ips:
+        - "192.168.100.1,192.168.100.15"
+        - "192.168.100.132,192.168.100.155"
+        - "172.29.100.132,172.29.100.155"
+    internal_lb_vip_address: 192.168.100.10
+    external_lb_vip_address: 
+    tunnel_bridge: br-vxlan
+    container_bridge: br-mgmt
+    lb_name:
+    networking:
+        - name: container
+          bridge: br-mgmt
+          container_bridge: br-mgmt
+          container_interface: eth1
+          ip_from_q: container
+          type: raw
+          group_binds:
+            - all_containers
+            - hosts
+        - name: provider
+          bridge: br-vlan
+          container_interface: eth11
+          type: vlan
+          address: tunnel_address
+          range: 410:410
+          net_name: public
+          group_binds:
+            - neutron_linuxbridge_agent
+        - name: tenant
+          bridge: br-vxlan
+          container_interface: eth10
+          ip_from_q: tunnel
+          type: vxlan
+          range: 1:1000
+          net_name: private
+          group_binds:
+            - neutron_linuxbridge_agent
+cinder_storage:
   volume_group: cinder-volumes
-  backend: netapp
-  netapp:
-    hostname: test
-    username: test
-    password: test
+  physical_drive: /dev/sdb
+  backend: lvm
 nova:
   branch: nova_stable_icehouse
-github_user_keys:
-  - cjoelrun
-  - xeregin
-  - jacobwagner
-  - jpmontez
-  - schofield
-  - cloudnull
-  - jcourtois
-  - xeregin
-  - Apsu
+add_ssh_keys_from_github:
+  usernames:
+    - jacobwagner
+    - jpmontez
+    - jcourtois
+    - xeregin
 networking:
     - name: lo
       type: loopback
-    - name: eth0
+    - name: em1
       type: manual
       directives:
         - "bond-master bond0"
-        - "bond-primary eth0"
-    - name: eth2
+        - "bond-primary em1"
+    - name: em3
       type: manual
       directives:
-        - "bond master bond0"
+        - "bond-master bond0"
+    - name: p1p1
+      type: manual
+      directives:
+        - "bond-master bond1"
+        - "bond-primary p1p1"
+    - name: p3p1
+      type: manual
+      directives:
+        - "bond-master bond1"
     - name: bond0
-      type: manual
+      type: static
       directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
         - "bond-slaves none"
         - "bond-mode active-backup"
         - "bond-miimon 100"
         - "bond-downdelay 200"
         - "bond-updelay 200"
-    - name: br-mgmt
-      type: static
-      directives:
         - "address {{ ansible_default_ipv4.address }}"
-        - "gateway {{ ansible_default_ipv4.gateway }}"
         - "netmask {{ ansible_default_ipv4.netmask }}"
+        - "gateway {{ ansible_default_ipv4.gateway }}"
         - "dns-nameservers 8.8.8.8 8.8.4.4"
-        - "dns-search sat6.lab"
-        - "ip addr add {{ container_ip_address }} dev $IFACE || true "
-        - "bridge-ports bond0"
-    - name: eth4
-      type: manual
-      directives:
-        - "bond-master bond1"
-        - "bond-primary eth4"
-    - name: eth6
-      type: manual
-      directives:
-        - "bond-master bond1"
+        - "dns-search rcb.rackspace.com"
     - name: bond1
       type: manual
       directives:
@@ -70,27 +92,39 @@ networking:
         - "bond-slaves none"
         - "bond-mode active-backup"
         - "bond-miimon 100"
-        - "bond-downdelay 200"
-        - "bond-updelay 200
-    - name: bond1.30:
+        - "bond-downdelay 250"
+        - "bond-updelay 250"
+    - name: bond0.XXX
+      type: manual
       directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
-    - name: bond1.40:
+        - "vlan-raw-device bond0"
+    - name: bond1.XXX
+      type: manual
       directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
-    - name: br-vlan
+        - "vlan-raw-device bond1"
+    - name: br-mgmt
       type: static
       directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
-        - "bridge_ports bond1.40"
         - "bridge_stp off"
+        - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge_maxwait 0"
+        - "bridge-ports bond0.801"
+        - "address {{ container_address.stdout|replace('\n','') }}"
+        - "dns-nameservers 8.8.8.8 8.8.4.4"
     - name: br-vxlan
       type: static
       directives:
-        - "address {{ vxlan_cidr_address }}"
-        - "bridge_ports bond1.30"
+        - "bridge_stp off"
+        - "bridge_waitport 0"
+        - "bridge_fd 0"
+        - "bridge_ports bond1.XXX"
+        - "address {{ vxlan_address.stdout|replace('\n','') }}"
+    - name: br-vlan
+      type: manual
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bridge_stp off"
+        - "bridge_fd 0"
+        - "bridge_maxwait 0"
+        - "bridge_ports bond1"
