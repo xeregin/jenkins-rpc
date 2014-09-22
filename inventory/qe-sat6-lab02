@@ -1,25 +1,24 @@
 [deployment]
-10.127.101.22
+node89 ansible_ssh_host=10.127.101.113 ansible_ssh_user=root
 
 [infra]
-10.127.101.22
-10.127.101.17
-10.127.101.24
+node89 ansible_ssh_host=10.127.101.113 ansible_ssh_user=root
+node92 ansible_ssh_host=10.127.101.111 ansible_ssh_user=root
+node116 ansible_ssh_host=10.127.101.110 ansible_ssh_user=root
 
 [network]
-10.127.101.22
-10.127.101.17
-10.127.101.24
+node92 ansible_ssh_host=10.127.101.111 ansible_ssh_user=root
+node116 ansible_ssh_host=10.127.101.110 ansible_ssh_user=root
 
 [compute]
-10.127.101.6
-10.127.101.9
+node120 ansible_ssh_host=10.127.101.102 ansible_ssh_user=root
+node94 ansible_ssh_host=10.127.101.95 ansible_ssh_user=root
 
 [cinder]
-10.127.101.40
+node101 ansible_ssh_host=10.127.101.121 ansible_ssh_user=root
 
 [logger]
-10.127.101.15
+node113 ansible_ssh_host=10.127.101.85 ansible_ssh_user=root
 
 [haproxy]
-10.127.101.63
+node118 ansible_ssh_host=10.127.101.124 ansible_ssh_user=root

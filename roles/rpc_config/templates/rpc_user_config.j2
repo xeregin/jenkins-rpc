@@ -112,13 +112,13 @@ storage_hosts:
     container_vars:
       cinder_backends:
         limit_container_types: cinder_volume
-{% if 'lvm' in cinder_storage.backend %}
+{% if 'lvm' in cinder_storage.backends %}
         lvm:
           volume_group: {{ cinder_storage.volume_group }}
           volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
           volume_backend_name: LVM_iSCSI
 {% endif %}
-{% if 'netapp' in cinder_storage.backend %}
+{% if 'netapp' in cinder_storage.backends %}
         netapp:
           netapp_storage_family: ontap_7mode
           netapp_storage_protocol: iscsi
