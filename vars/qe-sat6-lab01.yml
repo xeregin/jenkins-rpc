@@ -1,12 +1,14 @@
 rpc_user_config:
-    container_cidr: 192.168.96.0/22
-    tunnel_cidr:  172.29.96.0/22
+    container_cidr: 172.29.236.0/22
+    tunnel_cidr:  172.29.240.0/22
+    storage_cidr:  172.29.244.0/22
     used_ips:
-        - "192.168.96.1,192.168.96.15"
-        - "192.168.96.132,192.168.96.155"
-        - "172.29.241.132,172.29.241.155"
-    internal_lb_vip_address: 192.168.96.10
-    external_lb_vip_address: 
+        - "172.29.236.1,172.29.236.15"
+        - "172.29.236.83,172.29.236.127"
+        - "172.29.240.83,172.29.240.127"
+        - "172.29.244.83,172.29.244.127"
+    internal_lb_vip_address: 172.29.236.10
+    external_lb_vip_address: 10.127.101.27
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     lb_name:
@@ -25,7 +27,7 @@ rpc_user_config:
           container_interface: eth11
           type: vlan
           address: tunnel_address
-          range: 410:410
+          range: 2010:2010
           net_name: public
           group_binds:
             - neutron_linuxbridge_agent
@@ -38,12 +40,22 @@ rpc_user_config:
           net_name: private
           group_binds:
             - neutron_linuxbridge_agent
+        - name: storage
+          bridge: br-storage
+          container_interface: eth2
+          ip_from_q: storage
+          type: raw
+          range: 1:1000
+          net_name: private
+          group_binds:
+            - glance_api
+            - cinder_api
+            - cinder_volume
+            - nova_compute
 cinder_storage:
   volume_group: cinder-volumes
   physical_drive: /dev/sdb
   backend: lvm
-nova:
-  branch: nova_stable_icehouse
 add_ssh_keys_from_github:
   usernames:
     - jacobwagner
@@ -94,21 +106,35 @@ networking:
         - "bond-miimon 100"
         - "bond-downdelay 250"
         - "bond-updelay 250"
-    - name: bond0.XXX
+    - name: bond2
+      type: manual
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bond-slaves none"
+        - "bond-mode active-backup"
+        - "bond-miimon 100"
+        - "bond-downdelay 250"
+        - "bond-updelay 250"
+    - name: bond0.2002
       type: manual
       directives:
         - "vlan-raw-device bond0"
-    - name: bond1.XXX
+    - name: bond1.2003
       type: manual
       directives:
         - "vlan-raw-device bond1"
+    - name: bond2.2004
+      type: manual
+      directives:
+        - "vlan-raw-device bond2"
     - name: br-mgmt
       type: static
       directives:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge-ports bond0.801"
+        - "bridge-ports bond0.2002"
         - "address {{ container_address.stdout|replace('\n','') }}"
         - "dns-nameservers 8.8.8.8 8.8.4.4"
     - name: br-vxlan
@@ -117,7 +143,7 @@ networking:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge_ports bond1.XXX"
+        - "bridge_ports bond1.2003"
         - "address {{ vxlan_address.stdout|replace('\n','') }}"
     - name: br-vlan
       type: manual
@@ -128,3 +154,11 @@ networking:
         - "bridge_fd 0"
         - "bridge_maxwait 0"
         - "bridge_ports bond1"
+    - name: br-storage
+      type: static
+      directives:
+        - "bridge_stp off"
+        - "bridge_waitport 0"
+        - "bridge_fd 0"
+        - "bridge-ports bond2.2004"
+        - "address {{ storage_address.stdout|replace('\n','') }}"
