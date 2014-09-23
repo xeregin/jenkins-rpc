@@ -19,3 +19,8 @@ deployment:
 target:
     - lsof
     - tcpdump
+
+## Packages to install for pip
+pip:
+    - argh
+
