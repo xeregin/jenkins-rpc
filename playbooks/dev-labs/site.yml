@@ -5,3 +5,5 @@
   roles:
     - dev-packages
     - dev-networking
+  vars:
+    cluster_number: "{{lookup('env', 'EXECUTOR_NUMBER')}}"

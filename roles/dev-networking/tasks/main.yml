@@ -31,13 +31,24 @@
     src=iface.j2
     dest=/etc/network/interfaces.d/{{item.name}}.cfg
   with_items:
-    - name: "em1.216"
+    - name: "em1.2{{cluster_number}}00"
+      type: "manual"
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: "em1.2{{cluster_number}}01"
+      type: "manual"
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: "em1.2{{cluster_number}}02"
       type: "manual"
       directives:
         - "up ip link set $IFACE up"
         - "down ip link set $IFACE down"
 
 - name: Bring up new interfaces
-  command: ifup {{item.name}}
-  with_items:
-    - name: "em1.216"
+  command: ifup -a
+  # command: ifup {{item.name}}
+  # with_items:
+  #   - name: "em1.216"
