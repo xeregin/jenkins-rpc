@@ -23,4 +23,5 @@ target:
 ## Packages to install for pip
 pip:
     - argh
+    - netaddr
 

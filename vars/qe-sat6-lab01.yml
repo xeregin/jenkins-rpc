@@ -53,9 +53,11 @@ rpc_user_config:
             - cinder_volume
             - nova_compute
 cinder_storage:
-  volume_group: cinder-volumes
-  physical_drive: /dev/sdb
-  backend: lvm
+  backends:
+    netapp:
+      username: test
+      hostname: test
+      password: test
 add_ssh_keys_from_github:
   usernames:
     - jacobwagner
