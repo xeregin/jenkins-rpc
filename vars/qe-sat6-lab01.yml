@@ -79,10 +79,19 @@ networking:
       directives:
         - "bond-master bond1"
         - "bond-primary p1p1"
+    - name: p1p2
+      type: manual
+      directives:
+        - "bond-master bond2"
+        - "bond-primary p1p2"
     - name: p3p1
       type: manual
       directives:
         - "bond-master bond1"
+    - name: p3p2
+      type: manual
+      directives:
+        - "bond-master bond2"
     - name: bond0
       type: static
       directives:
