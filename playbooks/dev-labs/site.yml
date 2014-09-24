@@ -5,3 +5,11 @@
   roles:
     - dev-packages
     - dev-networking
+  vars:
+    cluster_number: "{{lookup('env', 'EXECUTOR_NUMBER')}}"
+
+- name: Provision dev cluster
+  hosts: "{{hosts}}[0]"
+  gather_facts: True
+  roles:
+    - dev-setup-rpc
