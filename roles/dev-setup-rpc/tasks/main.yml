@@ -1,4 +1,17 @@
 ---
+- name: Add ssh keys
+  tags: rpc
+  copy: >
+    src={{item}}
+    dest=~/.ssh/{{item|basename}}
+  with_fileglob:
+    - id_*
+
+- name: Delete RPC repo
+  tags: rpc
+  command:
+    rm -rf ~/ansible-lxc-rpc
+
 - name: Clone RPC repo
   tags: rpc
   git: >
@@ -19,7 +32,7 @@
     git fetch origin
     chdir=~/ansible-lxc-rpc
 
-- name: Fetch origin
+- name: Checkout PR
   tags: rpc
   command: >
     git checkout pr/{{pullRequestID}}
@@ -31,10 +44,21 @@
 
 - name: Copy rpc_deploy directory
   tags: rpc
-  copy: >
-    dest=~/rpc_deploy
-    src=~/ansible-lxc-rpc/etc/rpc_deploy
-    directory_mode=yes
+  command: >
+    cp -a ~/ansible-lxc-rpc/etc/rpc_deploy ~/rpc_deploy
+    creates=~/rpc_deploy
+
+- name: Set environment_md5 fact for template
+  tags: rpc
+  stat: >
+    path=~/rpc_deploy/rpc_environment.yml
+  register: st
+
+- name: Set facts for template
+  tags: rpc
+  set_fact:
+    cluster_hosts: "{{groups[hosts]}}"
+    environment_md5: "{{st.stat.md5}}"
 
 - name: Render rpc_user_config template
   tags: rpc
@@ -47,16 +71,10 @@
   command: >
     ~/ansible-lxc-rpc/scripts/pw-token-gen.py --file ~/rpc_deploy/user_variables.yml
 
-#- name: Copy rpc_environment.yml
-#  tags: rpc
-#  command: >
-#    cp ~/ansible-lxc-rpc/etc/rpc_deploy/rpc_environment.yml ~/rpc_deploy/rpc_environment.yml
-#    creates=~/rpc_deploy/rpc_environment.yml
-
 - name: Set virt_type to kvm
   tags: rpc
   lineinfile: >
-    dest=~/ansible-lxc-rpc/rpc_deployment/vars/user_variables.yml
+    dest=~/rpc_deploy/user_variables.yml
     regexp="^virt_type"
     line="virt_type: kvm"
 
