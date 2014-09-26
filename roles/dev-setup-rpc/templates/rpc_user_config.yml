@@ -15,7 +15,7 @@ used_ips:
 
 global_overrides:
   internal_lb_vip_address: 172.29.236.1
-  external_lb_vip_address: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
+  external_lb_vip_address: {{hostvars[cluster_hosts[0]]["ansible_ssh_host"]}}
   tunnel_bridge: br-vxlan
   management_bridge: br-mgmt
   lb_name: lb_name_in_core
@@ -70,7 +70,7 @@ infra_hosts:
 {% set count = host_count|int %}
 {% endif -%}
 {% for index in range(count) %}
-  {{groups.hosts[index]}}:
+  {{cluster_hosts[index]}}:
 {% if count < 3 %}
     affinity:
 {% if count < 2 %}
@@ -81,16 +81,16 @@ infra_hosts:
       rabbitmq_container: 2
 {% endif %}
 {% endif %}
-    ip: {{hostvars[groups.hosts[index]]["ansible_ssh_host"]}}
+    ip: {{hostvars[cluster_hosts[index]]["ansible_ssh_host"]}}
 {% endfor %}
 
 compute_hosts:
-  {{groups.hosts[3 % host_count|int]}}:
-    ip: {{hostvars[groups.hosts[3 % host_count|int]]["ansible_ssh_host"]}}
+  {{cluster_hosts[3 % host_count|int]}}:
+    ip: {{hostvars[cluster_hosts[3 % host_count|int]]["ansible_ssh_host"]}}
 
 storage_hosts:
-  {{groups.hosts[4 % host_count|int]}}:
-    ip: {{hostvars[groups.hosts[4 % host_count|int]]["ansible_ssh_host"]}}
+  {{cluster_hosts[4 % host_count|int]}}:
+    ip: {{hostvars[cluster_hosts[4 % host_count|int]]["ansible_ssh_host"]}}
     container_vars:
       cinder_backends:
         limit_container_types: cinder_volume
@@ -100,13 +100,13 @@ storage_hosts:
           volume_backend_name: LVM_iSCSI
 
 log_hosts:
-  {{groups.hosts[5 % host_count|int]}}:
-    ip: {{hostvars[groups.hosts[5 % host_count|int]]["ansible_ssh_host"]}}
+  {{cluster_hosts[5 % host_count|int]}}:
+    ip: {{hostvars[cluster_hosts[5 % host_count|int]]["ansible_ssh_host"]}}
 
 network_hosts:
-  {{groups.hosts[6 % host_count|int]}}:
-    ip: {{hostvars[groups.hosts[6 % host_count|int]]["ansible_ssh_host"]}}
+  {{cluster_hosts[6 % host_count|int]}}:
+    ip: {{hostvars[cluster_hosts[6 % host_count|int]]["ansible_ssh_host"]}}
 
 haproxy_hosts:
-  {{groups.hosts[0]}}:
-    ip: {{hostvars[groups.hosts[0]]["ansible_ssh_host"]}}
+  {{cluster_hosts[0]}}:
+    ip: {{hostvars[cluster_hosts[0]]["ansible_ssh_host"]}}
