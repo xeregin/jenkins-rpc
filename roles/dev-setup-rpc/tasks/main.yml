@@ -17,8 +17,6 @@
   git: >
     repo=https://github.com/rcbops/ansible-lxc-rpc
     dest=~/ansible-lxc-rpc
-    #key_file=~/.ssh/id_rsa
-    #accept_hostkey=true
 
 - name: Update remotes for PR ref
   tags: rpc
