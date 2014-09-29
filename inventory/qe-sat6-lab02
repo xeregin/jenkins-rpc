@@ -19,6 +19,3 @@ node101 ansible_ssh_host=10.127.101.121 ansible_ssh_user=root
 
 [logger]
 node113 ansible_ssh_host=10.127.101.85 ansible_ssh_user=root
-
-[haproxy]
-node118 ansible_ssh_host=10.127.101.124 ansible_ssh_user=root

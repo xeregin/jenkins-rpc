@@ -1,14 +1,14 @@
 rpc_user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
-    storage_cidr:  172.29.244.0/22
+    storage_cidr:  172.29.248.0/22
     used_ips:
         - "172.29.236.1,172.29.236.15"
         - "172.29.236.83,172.29.236.127"
         - "172.29.240.83,172.29.240.127"
-        - "172.29.244.83,172.29.244.127"
+        - "172.29.248.83,172.29.248.127"
     internal_lb_vip_address: 172.29.236.10
-    external_lb_vip_address: 10.127.101.126
+    external_lb_vip_address: 10.127.101.127
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     lb_name:
@@ -26,9 +26,8 @@ rpc_user_config:
           bridge: br-vlan
           container_interface: eth11
           type: vlan
-          address: tunnel_address
-          range: 2010:2010
-          net_name: public
+          range: 2030:2030
+          net_name: vlan
           group_binds:
             - neutron_linuxbridge_agent
         - name: tenant
@@ -37,7 +36,7 @@ rpc_user_config:
           ip_from_q: tunnel
           type: vxlan
           range: 1:1000
-          net_name: private
+          net_name: vxlan
           group_binds:
             - neutron_linuxbridge_agent
         - name: storage
@@ -45,8 +44,6 @@ rpc_user_config:
           container_interface: eth2
           ip_from_q: storage
           type: raw
-          range: 1:1000
-          net_name: private
           group_binds:
             - glance_api
             - cinder_api
@@ -58,6 +55,10 @@ cinder_storage:
       username: test
       hostname: test
       password: test
+    lvm:
+      volume_group: vg_storage
+      volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+      volume_backend_name:LVM_iSCSI
 add_ssh_keys_from_github:
   usernames:
     - jacobwagner
@@ -128,15 +129,15 @@ networking:
         - "bond-miimon 100"
         - "bond-downdelay 250"
         - "bond-updelay 250"
-    - name: bond0.2002
+    - name: bond0.2022
       type: manual
       directives:
         - "vlan-raw-device bond0"
-    - name: bond1.2003
+    - name: bond1.2023
       type: manual
       directives:
         - "vlan-raw-device bond1"
-    - name: bond2.2004
+    - name: bond2.2024
       type: manual
       directives:
         - "vlan-raw-device bond2"
@@ -146,7 +147,7 @@ networking:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge-ports bond0.2002"
+        - "bridge-ports bond0.2022"
         - "address {{ container_address.stdout|replace('\n','') }}"
         - "dns-nameservers 8.8.8.8 8.8.4.4"
     - name: br-vxlan
@@ -155,7 +156,7 @@ networking:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge_ports bond1.2003"
+        - "bridge_ports bond1.2023"
         - "address {{ vxlan_address.stdout|replace('\n','') }}"
     - name: br-vlan
       type: manual
@@ -172,5 +173,5 @@ networking:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge-ports bond2.2004"
+        - "bridge-ports bond2.2024"
         - "address {{ storage_address.stdout|replace('\n','') }}"
