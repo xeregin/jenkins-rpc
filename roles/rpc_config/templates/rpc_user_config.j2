@@ -114,7 +114,7 @@ storage_hosts:
         limit_container_types: cinder_volume
 {% if cinder_storage.backends.lvm is defined %}
         lvm:
-          volume_group: {{ cinder_storage.volume_group }}
+          volume_group: {{ cinder_storage.lvm.volume_group }}
           volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
           volume_backend_name: LVM_iSCSI
 {% endif %}

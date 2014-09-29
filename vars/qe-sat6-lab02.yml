@@ -57,8 +57,6 @@ cinder_storage:
       password: test
     lvm:
       volume_group: vg_storage
-      volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
-      volume_backend_name: LVM_iSCSI
 add_ssh_keys_from_github:
   usernames:
     - jacobwagner
