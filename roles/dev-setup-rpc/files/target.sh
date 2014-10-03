@@ -9,4 +9,6 @@ export ANSIBLE_FORCE_COLOR=1
 pushd ansible-lxc-rpc/rpc_deployment
 ansible-playbook -e @/root/rpc_deploy/user_variables.yml playbooks/infrastructure/haproxy-install.yml
 ansible-playbook -e @/root/rpc_deploy/user_variables.yml playbooks/setup-everything.yml
+ansible-playbook -e @/root/rpc_deploy/user_variables.yml playbooks/openstack/tempest.yml
+ansible "utility_all[0]" -m shell -a /root/rpc_tempest_gate.sh
 popd
