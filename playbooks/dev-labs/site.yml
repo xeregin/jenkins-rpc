@@ -5,3 +5,9 @@
   roles:
     - dev-packages
     - dev-networking
+
+- name: Provision dev cluster
+  hosts: "{{hosts}}[0]"
+  gather_facts: True
+  roles:
+    - dev-setup-rpc

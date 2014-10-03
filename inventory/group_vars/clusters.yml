@@ -1,0 +1,3 @@
+---
+host_count: "{{lookup('env', 'BUILD_COUNT')}}"
+cluster_number: "{{lookup('env', 'EXECUTOR_NUMBER')}}"
