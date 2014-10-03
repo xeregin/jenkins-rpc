@@ -149,10 +149,12 @@ networking:
         - "bridge_maxwait 0"
         - "bridge_ports bond1"
     - name: br-snet
-      type: manual
+      type: static
       directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
         - "bridge_stp off"
         - "bridge_fd 0"
         - "bridge_maxwait 0"
+        - "bridge_ports none"
+        - "address 172.29.236.1"
+        - "netmask 255.255.252.0"
+
