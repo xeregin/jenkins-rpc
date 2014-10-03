@@ -1,38 +1,38 @@
 [deployment]
-10.4.213.132
+578078-infra01 ansible_ssh_host=10.4.213.132 ansible_ssh_user=root
 
 [infra]
-10.4.213.132
-10.4.213.133
-10.4.213.134
+578078-infra01 ansible_ssh_host=10.4.213.132 ansible_ssh_user=root
+578079-infra02 ansible_ssh_host=10.4.213.133 ansible_ssh_user=root
+578080-infra03 ansible_ssh_host=10.4.213.134 ansible_ssh_user=root
 
 [network]
-10.4.213.133
-10.4.213.134
+578079-infra02 ansible_ssh_host=10.4.213.133 ansible_ssh_user=root
+578080-infra03 ansible_ssh_host=10.4.213.134 ansible_ssh_user=root
 
 [compute]
-10.4.213.135
-10.4.213.136
-10.4.213.137
-10.4.213.138
-10.4.213.139
-10.4.213.140
-10.4.213.141
-10.4.213.142
-10.4.213.143
-10.4.213.144
-10.4.213.145
-10.4.213.146
-10.4.213.147
-10.4.213.148
-10.4.213.149
-10.4.213.150
-10.4.213.151
-10.4.213.153
+578097-compute01 ansible_ssh_host=10.4.213.135 ansible_ssh_user=root
+578081-compute02 ansible_ssh_host=10.4.213.136 ansible_ssh_user=root
+578082-compute03 ansible_ssh_host=10.4.213.137 ansible_ssh_user=root
+578083-compute04 ansible_ssh_host=10.4.213.138 ansible_ssh_user=root
+578084-compute05 ansible_ssh_host=10.4.213.139 ansible_ssh_user=root
+578085-compute06 ansible_ssh_host=10.4.213.140 ansible_ssh_user=root
+578086-compute07 ansible_ssh_host=10.4.213.141 ansible_ssh_user=root
+578087-compute08 ansible_ssh_host=10.4.213.142 ansible_ssh_user=root
+578088-compute09 ansible_ssh_host=10.4.213.143 ansible_ssh_user=root
+578089-compute10 ansible_ssh_host=10.4.213.144 ansible_ssh_user=root
+578090-compute11 ansible_ssh_host=10.4.213.145 ansible_ssh_user=root
+578091-compute12 ansible_ssh_host=10.4.213.146 ansible_ssh_user=root
+578092-compute13 ansible_ssh_host=10.4.213.147 ansible_ssh_user=root
+578093-compute14 ansible_ssh_host=10.4.213.148 ansible_ssh_user=root
+578094-compute15 ansible_ssh_host=10.4.213.149 ansible_ssh_user=root
+578095-compute16 ansible_ssh_host=10.4.213.150 ansible_ssh_user=root
+578096-compute17 ansible_ssh_host=10.4.213.151 ansible_ssh_user=root
+578099-compute18 ansible_ssh_host=10.4.213.153 ansible_ssh_user=root
 
 [cinder]
-10.4.213.154
-10.4.213.155
+578100-cinder01 ansible_ssh_host=10.4.213.154 ansible_ssh_user=root
+578101-cinder02 ansible_ssh_host=10.4.213.155 ansible_ssh_user=root
 
 [logger]
-10.4.213.152
+578098-logger01 ansible_ssh_host=10.4.213.152 ansible_ssh_user=root

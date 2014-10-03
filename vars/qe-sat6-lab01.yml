@@ -58,6 +58,8 @@ cinder_storage:
       username: test
       hostname: test
       password: test
+    lvm:
+      volume_group: vg_storage
 add_ssh_keys_from_github:
   usernames:
     - jacobwagner

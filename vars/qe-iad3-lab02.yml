@@ -6,6 +6,7 @@ rpc_user_config:
         - "192.168.100.1,192.168.100.15"
         - "192.168.100.132,192.168.100.155"
         - "172.29.241.132,172.29.241.155"
+        - "172.29.100.1"
     internal_lb_vip_address: 192.168.100.10
     external_lb_vip_address: 10.4.213.180
     tunnel_bridge: br-vxlan
@@ -49,9 +50,11 @@ rpc_user_config:
             - nova_compute
             - neutron_linuxbridge_agent
 cinder_storage:
-  volume_group: cinder-volumes
-  physical_drive: /dev/sdb
-  backend: lvm
+  backends:
+    lvm:
+      volume_group: cinder-volumes
+    lvm_ssd:
+      volume_group: cinder-volumes
 nova:
   branch: nova_stable_icehouse
 add_ssh_keys_from_github:
@@ -60,7 +63,6 @@ add_ssh_keys_from_github:
     - jpmontez
     - jcourtois
     - xeregin
-    - devgrega
     - besanradwan
 networking:
     - name: lo
@@ -147,10 +149,12 @@ networking:
         - "bridge_maxwait 0"
         - "bridge_ports bond1"
     - name: br-snet
-      type: manual
+      type: static
       directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
         - "bridge_stp off"
         - "bridge_fd 0"
         - "bridge_maxwait 0"
+        - "bridge_ports none"
+        - "address 172.29.236.1"
+        - "netmask 255.255.252.0"
+

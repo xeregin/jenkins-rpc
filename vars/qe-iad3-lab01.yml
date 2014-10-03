@@ -50,9 +50,11 @@ rpc_user_config:
             - nova_compute
             - neutron_linuxbridge_agent
 cinder_storage:
-  volume_group: cinder-volumes
-  physical_drive: /dev/sdb
-  backend: lvm
+  backends:
+    lvm:
+      volume_group: cinder-volumes
+    lvm_ssd:
+      volume_group: cinder-volumes
 nova:
   branch: nova_stable_icehouse
 add_ssh_keys_from_github:
@@ -61,7 +63,6 @@ add_ssh_keys_from_github:
     - jpmontez
     - jcourtois
     - xeregin
-    - devgrega
     - besanradwan
 networking:
     - name: lo
