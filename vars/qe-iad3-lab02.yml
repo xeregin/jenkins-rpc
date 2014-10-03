@@ -28,7 +28,7 @@ rpc_user_config:
           type: vlan
           address: tunnel_address
           range: 410:410
-          net_name: public
+          net_name: vlan
           group_binds:
             - neutron_linuxbridge_agent
         - name: tenant
@@ -37,7 +37,7 @@ rpc_user_config:
           ip_from_q: tunnel
           type: vxlan
           range: 1:1000
-          net_name: private
+          net_name: vxlan
           group_binds:
             - neutron_linuxbridge_agent
         - name: service
