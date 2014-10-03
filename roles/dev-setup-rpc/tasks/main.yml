@@ -33,7 +33,7 @@
 - name: Checkout PR
   tags: rpc
   command: >
-    git checkout pr/{{pullRequestID}}
+    git checkout origin/pr/{{pullRequestID}}
     chdir=~/ansible-lxc-rpc
 
 - name: Install pip requirements
