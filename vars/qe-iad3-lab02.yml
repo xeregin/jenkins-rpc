@@ -76,7 +76,7 @@ networking:
       type: static
       directives:
       - "netmask {{ ansible_em3.ipv4.netmask }}"
-      - "post-up ip route add 10.191.192.0/18 via 10.136.93.65 dev em3"
+      - "post-up ip route add 10.191.192.0/18 via 10.136.93.97 dev em3"
       - "address {{ ansible_em3.ipv4.address }}"
     - name: em4
       type: manual
