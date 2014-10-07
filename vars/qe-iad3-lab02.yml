@@ -1,12 +1,12 @@
 rpc_user_config:
     container_cidr: 192.168.100.0/22
     tunnel_cidr:  172.29.241.0/22
-    service_cidr: 172.29.100.0/22
+    service_cidr: 172.29.236.0/22
     used_ips:
         - "192.168.100.1,192.168.100.15"
         - "192.168.100.132,192.168.100.155"
         - "172.29.241.132,172.29.241.155"
-        - "172.29.100.1"
+        - "172.29.236.1"
     internal_lb_vip_address: 192.168.100.10
     external_lb_vip_address: 10.4.213.180
     tunnel_bridge: br-vxlan
@@ -157,4 +157,3 @@ networking:
         - "bridge_ports none"
         - "address 172.29.236.1"
         - "netmask 255.255.252.0"
-
