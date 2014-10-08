@@ -55,7 +55,7 @@ pushd jenkins-rpc
 # Fire up the ansibles
 export PYTHONUNBUFFERED=1
 export ANSIBLE_FORCE_COLOR=1
-case STAGE
+case $STAGE in
   BUILD)
     ansible-playbook -i inventory/dev-sat6-lab01 -e hosts=cluster${EXECUTOR_NUMBER} -e pullRequestID=${ghprbPullId} playbooks/dev-labs/site.yml & wait %1
     ;;

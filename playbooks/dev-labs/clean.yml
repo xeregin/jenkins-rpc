@@ -4,7 +4,7 @@
   gather_facts: False
   vars:
     cluster: "dev_sat6_jenkins_{{ CLUSTER_NUMBER }}"
-    djeep_url: "{{ DJEEP_URL|default("http://10.127.52.2:8000") }}"
+    djeep_url: "{{ DJEEP_URL|default('http://10.127.52.2:8000') }}"
   tasks:
     - name: Rekick Cluster via Djeep
       shell: "curl -X BREW {{ djeep_url }}/api/clusterbyname/{{ cluster }}"
