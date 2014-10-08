@@ -12,13 +12,15 @@
 - name: Wait for nodes to go down
   gather_facts: False
   hosts: localhost
-  pause:
-    minutes: 2
+  tasks:
+    - pause:
+        minutes: 2
 
 - name: Wait for nodes to become available
   gather_facts: False
   hosts: localhost
-  wait_for:
-    host: "{{item}}"
-    port: 22
-  with_items: groups["cluster{{ CLUSTER_NUMBER }}"]
+  tasks:
+    - wait_for:
+        host: "{{item}}"
+        port: 22
+      with_items: groups["cluster{{ CLUSTER_NUMBER }}"]
