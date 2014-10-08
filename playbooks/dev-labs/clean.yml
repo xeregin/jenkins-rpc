@@ -1,0 +1,24 @@
+---
+- name: Initiate Cluster Rekick via Djeep
+  hosts: localhost
+  gather_facts: False
+  vars:
+    cluster: "dev_sat6_jenkins_{{ CLUSTER_NUMBER }}"
+    djeep_url: "{{ DJEEP_URL|default("http://10.127.52.2:8000") }}"
+  tasks:
+    - name: Rekick Cluster via Djeep
+      shell: "curl -X BREW {{ djeep_url }}/api/clusterbyname/{{ cluster }}"
+
+- name: Wait for nodes to go down
+  gather_facts: False
+  hosts: localhost
+  pause:
+    minutes: 2
+
+- name: Wait for nodes to become available
+  gather_facts: False
+  hosts: localhost
+  wait_for:
+    host: "{{item}}"
+    port: 22
+  with_items: groups["cluster{{ CLUSTER_NUMBER }}"]

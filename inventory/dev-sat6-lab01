@@ -1,32 +1,32 @@
-[cluster0]
+[cluster1]
 node05 ansible_ssh_host=10.127.52.5 ansible_ssh_user=root member_number=1
 node06 ansible_ssh_host=10.127.52.6 ansible_ssh_user=root member_number=2
 node07 ansible_ssh_host=10.127.52.7 ansible_ssh_user=root member_number=3
 node08 ansible_ssh_host=10.127.52.8 ansible_ssh_user=root member_number=4
 node09 ansible_ssh_host=10.127.52.9 ansible_ssh_user=root member_number=5
 
-[cluster1]
+[cluster2]
 node10 ansible_ssh_host=10.127.52.10 ansible_ssh_user=root member_number=1
 node13 ansible_ssh_host=10.127.52.13 ansible_ssh_user=root member_number=2
 node14 ansible_ssh_host=10.127.52.14 ansible_ssh_user=root member_number=3
 node15 ansible_ssh_host=10.127.52.15 ansible_ssh_user=root member_number=4
 node16 ansible_ssh_host=10.127.52.16 ansible_ssh_user=root member_number=5
 
-[cluster2]
+[cluster3]
 node17 ansible_ssh_host=10.127.52.17 ansible_ssh_user=root member_number=1
 node18 ansible_ssh_host=10.127.52.18 ansible_ssh_user=root member_number=2
 node20 ansible_ssh_host=10.127.52.20 ansible_ssh_user=root member_number=3
 node21 ansible_ssh_host=10.127.52.21 ansible_ssh_user=root member_number=4
 node22 ansible_ssh_host=10.127.52.22 ansible_ssh_user=root member_number=5
 
-[cluster3]
+[cluster4]
 node23 ansible_ssh_host=10.127.52.23 ansible_ssh_user=root member_number=1
 node24 ansible_ssh_host=10.127.52.24 ansible_ssh_user=root member_number=2
 node25 ansible_ssh_host=10.127.52.25 ansible_ssh_user=root member_number=3
 node26 ansible_ssh_host=10.127.52.26 ansible_ssh_user=root member_number=4
 node27 ansible_ssh_host=10.127.52.27 ansible_ssh_user=root member_number=5
 
-[cluster4]
+[cluster5]
 node28 ansible_ssh_host=10.127.52.28 ansible_ssh_user=root member_number=1
 node29 ansible_ssh_host=10.127.52.29 ansible_ssh_user=root member_number=2
 node36 ansible_ssh_host=10.127.52.36 ansible_ssh_user=root member_number=3
