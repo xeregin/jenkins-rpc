@@ -55,7 +55,14 @@ pushd jenkins-rpc
 # Fire up the ansibles
 export PYTHONUNBUFFERED=1
 export ANSIBLE_FORCE_COLOR=1
-ansible-playbook -i inventory/dev-sat6-lab01 -e hosts=cluster${EXECUTOR_NUMBER} -e pullRequestID=${ghprbPullId} playbooks/dev-labs/site.yml & wait %1
+case STAGE
+  BUILD)
+    ansible-playbook -i inventory/dev-sat6-lab01 -e hosts=cluster${EXECUTOR_NUMBER} -e pullRequestID=${ghprbPullId} playbooks/dev-labs/site.yml & wait %1
+    ;;
+  CLEAN)
+    ansible-playbook -i inventory/dev-sat6-lab01 -e CLUSTER_NUMBER=${EXECUTOR_NUMBER}  playbooks/dev-labs/clean.yml & wait %1
+    ;;
+esac
 popd
 
 # Skip deployment and trigger success handler
