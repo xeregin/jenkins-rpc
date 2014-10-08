@@ -34,8 +34,8 @@ node37 ansible_ssh_host=10.127.52.37 ansible_ssh_user=root member_number=4
 node38 ansible_ssh_host=10.127.52.38 ansible_ssh_user=root member_number=5
 
 [clusters:children]
-cluster0
 cluster1
 cluster2
 cluster3
 cluster4
+cluster5
