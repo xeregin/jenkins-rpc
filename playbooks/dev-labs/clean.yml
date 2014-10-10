@@ -1,10 +1,4 @@
 ---
-# If facts aren't gathered here, then IPs arent available in the post-rekick wait_for
-- name: Get Facts
-  hosts: "cluster{{ CLUSTER_NUMBER }}"
-  tasks:
-    ping
-
 - name: Initiate Cluster Rekick via Djeep
   hosts: localhost
   gather_facts: False
@@ -28,7 +22,7 @@
   tasks:
     - name: wait for nodes to come up
       wait_for:
-        host: "{{ hostvars[item]['ansible_default_ipv4']['address'] }}"
+        host: "{{ hostvars[item]['ansible_ssh_host'] }}"
         port: 22
         timeout: 1200
       with_items: groups["cluster{{ CLUSTER_NUMBER }}"]
