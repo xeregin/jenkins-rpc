@@ -30,7 +30,7 @@
     git config --global user.email "jenkins@propter.net";
     git config --global user.name "Jenkins"
   args:
-    chdir=~/ansible-lxc-rpc
+    chdir: "~/ansible-lxc-rpc"
 
 - name: Fetch origin
   tags: rpc
