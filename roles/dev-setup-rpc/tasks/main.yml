@@ -24,6 +24,14 @@
     git config --add remote.origin.fetch "+refs/pull/*/head:refs/remotes/origin/pr/*"
     chdir=~/ansible-lxc-rpc
 
+- name: Configure git identity
+  tags: rpc
+  shell: >
+    git config --global user.email "jenkins@propter.net";
+    git config --global user.name "Jenkins"
+  args:
+    chdir=~/ansible-lxc-rpc
+
 - name: Fetch origin
   tags: rpc
   command: >
