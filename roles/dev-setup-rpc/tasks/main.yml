@@ -30,10 +30,10 @@
     git fetch origin
     chdir=~/ansible-lxc-rpc
 
-- name: Checkout PR
+- name: Merge PR
   tags: rpc
   command: >
-    git checkout origin/pr/{{pullRequestID}}
+    git merge --no-edit origin/pr/{{pullRequestID}}
     chdir=~/ansible-lxc-rpc
 
 - name: Install pip requirements
