@@ -1,8 +1,0 @@
----
-- name: update apt cache
-  apt: update_cache=yes
-
-- name: update to latest release
-  command: do-release-upgrade -d -f DistUpgradeViewNonInteractive
-  async: 3600
-  poll: 30
