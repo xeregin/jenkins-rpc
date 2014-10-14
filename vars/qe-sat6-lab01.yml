@@ -65,6 +65,8 @@ add_ssh_keys_from_github:
     - jpmontez
     - jcourtois
     - xeregin
+    - cloudnull
+    - apsu
 networking:
     - name: lo
       type: loopback
