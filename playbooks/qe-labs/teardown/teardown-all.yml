@@ -1,5 +1,6 @@
 ---
 - include: infrastructure.yml
-- include: compute.yml
+- include: network.yml
 - include: cinder.yml
 - include: logging.yml
+- include: compute.yml
