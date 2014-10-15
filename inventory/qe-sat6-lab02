@@ -1,7 +1,7 @@
 [deployment]
 node89 ansible_ssh_host=10.127.101.113 ansible_ssh_user=root
 
-[infra]
+[infrastructure]
 node89 ansible_ssh_host=10.127.101.113 ansible_ssh_user=root
 node92 ansible_ssh_host=10.127.101.111 ansible_ssh_user=root
 node116 ansible_ssh_host=10.127.101.110 ansible_ssh_user=root
