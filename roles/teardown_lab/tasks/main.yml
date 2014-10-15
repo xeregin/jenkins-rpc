@@ -1,4 +1,0 @@
----
-- include: destroy_containers.yml
-- include: nova_compute.yml
-- include: neutron_lb_agent.yml
