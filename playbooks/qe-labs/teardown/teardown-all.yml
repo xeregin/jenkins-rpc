@@ -2,3 +2,4 @@
 - include: infrastructure.yml
 - include: compute.yml
 - include: cinder.yml
+- include: logging.yml

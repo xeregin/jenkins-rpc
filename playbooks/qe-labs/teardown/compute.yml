@@ -1,5 +1,5 @@
 ---
-hosts: compute
-user: root
-roles: 
-  - compute_node_teardown
+- hosts: compute
+  user: root
+  roles: 
+    - compute_node_teardown
