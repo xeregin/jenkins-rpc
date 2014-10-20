@@ -1,7 +1,7 @@
 ---
 - name: Create cinder vg
   lvg:
-    vg: cinder
+    vg: "cinder-volumes"
     pvs: "{{ cinder_vg_dev|default('/dev/sda5') }}"
 
 - name: Create lxc vg
