@@ -1,0 +1,10 @@
+---
+- name: Create cinder vg
+  lvg:
+    vg: cinder
+    pvs: "{{ cinder_vg_dev|default('/dev/sda5') }}"
+
+- name: Create lxc vg
+  lvg:
+    vg: lxc
+    pvs: "{{ lxc_vg_dev|default('/dev/sda6') }}"

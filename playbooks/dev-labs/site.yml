@@ -3,6 +3,7 @@
   hosts: "{{hosts}}"
   gather_facts: True
   roles:
+    - dev-lvm
     - dev-packages
     - dev-networking
 
