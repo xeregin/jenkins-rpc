@@ -1,7 +1,7 @@
 [deployment]
 578078-infra01 ansible_ssh_host=10.4.213.132 ansible_ssh_user=root
 
-[infra]
+[infrastructure]
 578078-infra01 ansible_ssh_host=10.4.213.132 ansible_ssh_user=root
 578079-infra02 ansible_ssh_host=10.4.213.133 ansible_ssh_user=root
 578080-infra03 ansible_ssh_host=10.4.213.134 ansible_ssh_user=root
