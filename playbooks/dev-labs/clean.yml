@@ -8,6 +8,6 @@
       rekick:
         host_ip: "{{ ansible_ssh_host }}"
         host_name: "{{ inventory_hostname }}"
-        kick_wait: 1200
+        kick_wait: 2400
         kick_tries: 2
         djeep_url: "http://10.127.52.2:8000/api"
