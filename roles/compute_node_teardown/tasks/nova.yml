@@ -22,6 +22,7 @@
 
 - name: Uninstall nova python dependencies
   pip: requirements=/opt/{{ nova_dir.stdout }}/requirements.txt state=absent
+  ignore_errors: yes
 
 - name: Uninstall nova and python-neutronclient
   pip: name={{ item }} state=absent

@@ -1,13 +1,16 @@
 ---
 - name: Stop neutron-linuxbridge-agent
   command: service neutron-linuxbridge-agent stop
+  ignore_errors: yes
 
 - name: Get neutron directory
   shell: ls /opt/ | grep neutron
   register: neutron_dir
+  ignore_errors: yes
 
 - name: Uninstall neutron python dependencies
   pip: requirements=/opt/{{ neutron_dir.stdout }}/requirements.txt state=absent
+  ignore_errors: yes
 
 - name: Uninstall neutron and python-novaclient
   pip: name={{ item }} state=absent
