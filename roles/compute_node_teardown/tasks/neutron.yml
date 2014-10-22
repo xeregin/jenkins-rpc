@@ -3,19 +3,6 @@
   command: service neutron-linuxbridge-agent stop
   ignore_errors: yes
 
-- name: Get neutron directory
-  shell: ls /opt/ | grep neutron
-  register: neutron_dir
-  ignore_errors: yes
-
-- name: Uninstall neutron python dependencies
-  pip: requirements=/opt/{{ neutron_dir.stdout }}/requirements.txt state=absent
-  when: neutron_dir.stdout is defined
-
-- name: Remove neutron directory
-  file: path=/opt/{{ neutron_dir.stdout }} state=absent
-  when: neutron_dir.stdout is defined
-
 - name: Uninstall neutron and python-novaclient
   pip: name={{ item }} state=absent
   with_items:
@@ -25,6 +12,7 @@
 - name: Remove neutron directories
   file: path={{ item }} state=absent
   with_items:
+    - /opt/neutron*
     - /etc/neutron
     - /var/log/neutron
     - /var/lib/neutron

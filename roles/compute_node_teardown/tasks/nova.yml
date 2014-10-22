@@ -15,19 +15,6 @@
   virt: name={{ item }} command=destroy
   with_items: instances.stdout_lines
 
-- name: Get nova directory
-  shell: ls /opt/ | grep nova
-  register: nova_dir
-  ignore_errors: yes
-
-- name: Uninstall nova python dependencies
-  pip: requirements=/opt/{{ nova_dir.stdout }}/requirements.txt state=absent
-  when: nova_dir.stdout is defined
-
-- name: Remove nova directory
-  file: path=/opt/{{ nova_dir.stdout }} state=absent
-  when: nova_dir.stdout is defined
-
 - name: Uninstall nova and python-neutronclient
   pip: name={{ item }} state=absent
   with_items:
@@ -37,6 +24,7 @@
 - name: Remove nova directories
   file: path={{ item }} state=absent
   with_items:
+    - /opt/nova*
     - /etc/nova
     - /var/log/nova
     - /var/lib/nova
