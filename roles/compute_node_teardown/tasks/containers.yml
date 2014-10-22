@@ -14,3 +14,6 @@
 - name: Remove all containers from /etc/hosts
   lineinfile: dest=/etc/hosts regexp="{{ item }}" state=absent
   with_items: running_containers.stdout_lines
+
+- name: Recursive delete of /openstack directory
+  command: rm -rf /openstack/*
