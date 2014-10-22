@@ -18,6 +18,7 @@
 - name: Get nova directory
   shell: ls /opt/ | grep nova
   register: nova_dir
+  ignore_errors: yes
 
 - name: Uninstall nova python dependencies
   pip: requirements=/opt/{{ nova_dir.stdout }}/requirements.txt state=absent
