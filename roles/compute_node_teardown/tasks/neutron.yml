@@ -10,11 +10,11 @@
 
 - name: Uninstall neutron python dependencies
   pip: requirements=/opt/{{ neutron_dir.stdout }}/requirements.txt state=absent
-  when: neutron_dir is defined
+  when: neutron_dir.stdout is defined
 
 - name: Remove neutron directory
   file: path=/opt/{{ neutron_dir.stdout }} state=absent
-  when: neutron_dir is defined
+  when: neutron_dir.stdout is defined
 
 - name: Uninstall neutron and python-novaclient
   pip: name={{ item }} state=absent

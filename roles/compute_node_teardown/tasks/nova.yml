@@ -22,11 +22,11 @@
 
 - name: Uninstall nova python dependencies
   pip: requirements=/opt/{{ nova_dir.stdout }}/requirements.txt state=absent
-  when: nova_dir is defined
+  when: nova_dir.stdout is defined
 
 - name: Remove nova directory
   file: path=/opt/{{ nova_dir.stdout }} state=absent
-  when: nova_dir is defined
+  when: nova_dir.stdout is defined
 
 - name: Uninstall nova and python-neutronclient
   pip: name={{ item }} state=absent
