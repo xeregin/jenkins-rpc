@@ -8,7 +8,7 @@
   register: instances
 
 - name: Stop all running instances
-  virt: name={{ item }} command=stop
+  virt: name={{ item }} command=shutdown
   with_items: instances.stdout_lines
 
 - name: Destroy all instances
