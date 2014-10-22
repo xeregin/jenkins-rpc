@@ -16,4 +16,4 @@
   with_items: running_containers.stdout_lines
 
 - name: Recursive delete of /openstack directory
-  command: rm -rf /openstack/*
+  shell: rm -rf /openstack/*
