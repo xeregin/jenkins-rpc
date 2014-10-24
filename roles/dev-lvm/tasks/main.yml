@@ -1,10 +1,17 @@
 ---
+
+# /dev/sda (gpt)
+# 1 - boot
+# 2 - cinder-volumes-pv
+# 3 - lxc-pv
+# 4 - os-pv
+
 - name: Create cinder vg
   lvg:
     vg: "cinder-volumes"
-    pvs: "{{ cinder_vg_dev|default('/dev/sda5') }}"
+    pvs: "{{ cinder_vg_dev|default('/dev/sda2') }}"
 
 - name: Create lxc vg
   lvg:
     vg: lxc
-    pvs: "{{ lxc_vg_dev|default('/dev/sda6') }}"
+    pvs: "{{ lxc_vg_dev|default('/dev/sda3') }}"
