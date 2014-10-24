@@ -41,6 +41,7 @@ cleanup() {
   trap - INT TERM ERR
 
   # Rekick the nodes in preperation for the next run.
+  [ -e playbooks ] || pushd jenkins-rpc
   ansible-playbook -i inventory/dev-sat6-lab01 -e CLUSTER_NUMBER=${EXECUTOR_NUMBER}  playbooks/dev-labs/clean.yml ||:
 
   # Exit
