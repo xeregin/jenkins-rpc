@@ -42,7 +42,7 @@ cleanup() {
 
   # Rekick the nodes in preperation for the next run.
   [ -e playbooks ] || pushd jenkins-rpc
-  ansible-playbook -i inventory/dev-sat6-lab01 -e CLUSTER_NUMBER=${EXECUTOR_NUMBER}  playbooks/dev-labs/clean.yml ||:
+  [[ $REKICK == "yes" ]] &&  ansible-playbook -i inventory/dev-sat6-lab01 -e CLUSTER_NUMBER=${EXECUTOR_NUMBER}  playbooks/dev-labs/clean.yml ||:
 
   # Exit
   exit $retval
@@ -60,11 +60,11 @@ pushd jenkins-rpc
 # Run the lab prep playbook
 export PYTHONUNBUFFERED=1
 export ANSIBLE_FORCE_COLOR=1
-ansible-playbook -i inventory/dev-sat6-lab01 -e hosts=cluster${EXECUTOR_NUMBER} -e pullRequestID=${ghprbPullId} playbooks/dev-labs/site.yml & wait %1
+[[ $BUILD == "yes" ]] && ansible-playbook -i inventory/dev-sat6-lab01 -e hosts=cluster${EXECUTOR_NUMBER} -e pullRequestID=${ghprbPullId} playbooks/dev-labs/site.yml & wait %1
 popd
 
 # Skip deployment and trigger success handler
-[[ $BUILD_SKIP == "yes" ]] && cleanup 0
+[[ $BUILD != "yes" ]] && cleanup 0
 
 # Connect to target and run script - this will kickoff ansible-lxc-rpc
 ssh $(<target.ip) ./target.sh & wait %1
