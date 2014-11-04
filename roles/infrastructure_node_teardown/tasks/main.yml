@@ -11,13 +11,8 @@
   command: lxc-destroy -f -n {{ item }}
   with_items: active_local_containers.stdout_lines
 
-- name: Register all deployment containers
-  command: python container_labels.py
-  register: deployment_containers
-
 - name: Remove all containers from /etc/hosts
-  lineinfile: dest=/etc/hosts regexp="{{ item }}" state=absent
-  with_items: deployment_containers.stdout_lines
+  lineinfile: dest=/etc/hosts regexp="container" state=absent
 
 - name: Recursive delete of /openstack directory
   shell: rm -rf /openstack/*
