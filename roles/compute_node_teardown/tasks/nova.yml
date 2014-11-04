@@ -1,25 +1,19 @@
 ---
 - name: Stop nova-compute service
   command: service nova-compute stop
+  ignore_errors: yes
 
 - name: Get all running vms
-  shell: virsh list | grep instance | awk '{print \$2}'
+  shell: "virsh list | grep instance | awk '{print $2}'"
   register: instances
 
 - name: Stop all running instances
-  virt: name={{ item }} command=stop
+  virt: name={{ item }} command=shutdown
   with_items: instances.stdout_lines
 
 - name: Destroy all instances
   virt: name={{ item }} command=destroy
   with_items: instances.stdout_lines
-
-- name: Get nova directory
-  shell: ls /opt/ | grep nova
-  register: nova_dir
-
-- name: Uninstall nova python dependencies
-  pip: requirements=/opt/{{ nova_dir.stdout }}/requirements.txt state=absent
 
 - name: Uninstall nova and python-neutronclient
   pip: name={{ item }} state=absent
@@ -30,7 +24,7 @@
 - name: Remove nova directories
   file: path={{ item }} state=absent
   with_items:
-    - /opt/{{ nova_dir.stdout }}
+    - /opt/nova*
     - /etc/nova
     - /var/log/nova
     - /var/lib/nova
