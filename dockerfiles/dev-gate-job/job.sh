@@ -3,6 +3,8 @@
 set -e
 set -x
 
+env
+
 # Set HOME to /root
 export HOME=/root
 
