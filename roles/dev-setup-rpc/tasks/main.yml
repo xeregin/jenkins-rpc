@@ -38,6 +38,12 @@
     git fetch origin
     chdir=~/ansible-lxc-rpc
 
+- name: Checkout target branch
+  tags: rpc
+  command: >
+    git checkout {{targetBranch}}
+    chdir=~/ansible-lxc-rpc
+
 - name: Merge PR
   tags: rpc
   command: >
