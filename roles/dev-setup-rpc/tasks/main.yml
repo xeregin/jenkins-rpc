@@ -50,6 +50,10 @@
     git merge --no-edit origin/pr/{{pullRequestID}}
     chdir=~/ansible-lxc-rpc
 
+- name: Install pip
+  tags: rpc
+  shell: "curl https://bootstrap.pypa.io/get-pip.py|python"
+
 - name: Install pip requirements
   tags: rpc
   pip: requirements=~/ansible-lxc-rpc/requirements.txt
