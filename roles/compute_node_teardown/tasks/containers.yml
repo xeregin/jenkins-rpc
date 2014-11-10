@@ -1,7 +1,7 @@
 ---
-- name: Collect all running containers
+- name: Catalog active local containers
   command: lxc-ls
-  register: running_containers
+  register: active_local_containers
 
 - name: Stop local containers
   command: lxc-stop -k -n {{ item }}
