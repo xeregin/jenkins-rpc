@@ -12,7 +12,6 @@
 # this will ensure consistency when deploying.
 environment_version: {{ environment_version.stat.md5 }}
 
-rpc_repo_url: "{{ rpc_repo_url }}"
 
 # User defined CIDR used for containers
 # Global cidr/s used for everything.
@@ -42,6 +41,9 @@ used_ips:
 
 # overrides anything else any where.
 global_overrides:
+  # Repo for pip wheels.
+  rpc_repo_url: "{{ rpc_repo_url }}"
+
   # Internal Management vip address
   internal_lb_vip_address: {{ rpc_user_config.internal_lb_vip_address }}
 
