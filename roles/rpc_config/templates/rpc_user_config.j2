@@ -12,6 +12,8 @@
 # this will ensure consistency when deploying.
 environment_version: {{ environment_version.stat.md5 }}
 
+rpc_repo_url: "{{ rpc_repo_url }}"
+
 # User defined CIDR used for containers
 # Global cidr/s used for everything.
 cidr_networks:
