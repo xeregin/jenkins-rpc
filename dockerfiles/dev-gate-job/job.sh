@@ -70,6 +70,7 @@ then
     -e hosts=cluster${EXECUTOR_NUMBER} \
     -e pullRequestID=${ghprbPullId} \
     -e targetBranch=${ghprbTargetBranch} \
+    -e RPC_REPO_URL=${RPC_REPO_URL} \
     playbooks/dev-labs/site.yml & wait %1
 
   popd
