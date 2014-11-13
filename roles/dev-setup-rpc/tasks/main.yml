@@ -7,6 +7,16 @@
   with_fileglob:
     - id_*
 
+- name: Create /var/creds
+  file:
+    path: /var/creds
+    state: directory
+
+- name: Drop cloud10 openrc (for glance-swift)
+  copy:
+    src: /var/creds/cloud10
+    dest: /var/creds/cloud10
+
 - name: Delete RPC repo
   tags: rpc
   command:
@@ -58,6 +68,10 @@
   tags: rpc
   pip: requirements=~/ansible-lxc-rpc/requirements.txt
 
+- name: Install turbolift
+  pip:
+    name: turbolift
+
 - name: Copy rpc_deploy directory
   tags: rpc
   command: >
@@ -86,6 +100,44 @@
   tags: rpc
   command: >
     ~/ansible-lxc-rpc/scripts/pw-token-gen.py --file ~/rpc_deploy/user_variables.yml
+
+- name: Clear glance swift container
+  tags: rpc
+  shell: ". /var/creds/cloud10; turbolift delete -c jenkins_cluster_{{cluster_number}}"
+
+- name: Set glance swift backend user variables
+  tags: rpc
+  lineinfile:
+    dest: ~/rpc_deploy/user_variables.yml
+    regexp: "^{{item.key}}"
+    line: "{{item.key}}: {{item.value}}"
+  with_items:
+    - key: glance_default_store
+      value: swift
+
+    - key: rackspace_cloud_auth_url
+      value: "{{lookup('env', 'OS_AUTH_URL')}}"
+
+    - key: rackspace_cloud_tenant_id
+      value: "{{lookup('env', 'OS_TENANT_NAME')}}"
+
+    - key: rackspace_cloud_username
+      value: "{{lookup('env', 'OS_USERNAME')}}"
+
+    - key: rackspace_cloud_password
+      value: "{{lookup('env', 'OS_PASSWORD')}}"
+
+    - key: rackspace_cloud_api_key
+      value: "{{lookup('env', 'OS_API_KEY')}}"
+
+    - key: glance_swift_store_container
+      value: "jenkins_cluster_{{cluster_number}}"
+
+    - key: glance_swift_store_endpoint_type
+      value: publicURL
+
+    - key: glance_swift_store_region
+      value: "{{lookup('env', 'OS_REGION_NAME')}}"
 
 - name: Set virt_type to kvm
   tags: rpc
