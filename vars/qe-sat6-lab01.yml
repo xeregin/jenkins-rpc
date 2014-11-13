@@ -67,6 +67,7 @@ add_ssh_keys_from_github:
     - xeregin
     - cloudnull
     - apsu
+    - busterswt
 networking:
     - name: lo
       type: loopback

@@ -66,6 +66,7 @@ add_ssh_keys_from_github:
     - galstrom21
     - cloudnull
     - apsu
+    - busterswt
 networking:
     - name: lo
       type: loopback
