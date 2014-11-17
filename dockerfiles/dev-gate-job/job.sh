@@ -62,6 +62,11 @@ then
   # Move into jenkins-rpc
   pushd jenkins-rpc
 
+  # Read creds for cloud account, used for glance-swift
+  # /var/creds is mounted from the host using -v
+  # when the docker instance is started.
+  source /var/creds/cloud10
+
   # Prepare the lab
   export PYTHONUNBUFFERED=1
   export ANSIBLE_FORCE_COLOR=1
