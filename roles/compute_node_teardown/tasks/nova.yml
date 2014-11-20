@@ -28,3 +28,4 @@
     - /etc/nova
     - /var/log/nova
     - /var/lib/nova
+  ignore_errors: yes

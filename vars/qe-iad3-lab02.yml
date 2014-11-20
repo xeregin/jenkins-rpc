@@ -65,6 +65,14 @@ add_ssh_keys_from_github:
     - besanradwan
     - cloudnull
     - apsu
+    - andymcc
+    - matt416
+    - hughsaunders
+    - mancdaz
+    - d34dh0r53
+    - claco
+    - busterswt
+    - galstrom21
 networking:
     - name: lo
       type: loopback
