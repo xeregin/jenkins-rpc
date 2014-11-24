@@ -26,7 +26,6 @@ rpc_user_config:
           bridge: br-vlan
           container_interface: eth11
           type: vlan
-          address: tunnel_address
           range: 2010:2010
           net_name: vlan
           group_binds:
