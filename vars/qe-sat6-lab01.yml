@@ -26,7 +26,6 @@ rpc_user_config:
           bridge: br-vlan
           container_interface: eth11
           type: vlan
-          address: tunnel_address
           range: 2010:2010
           net_name: vlan
           group_binds:
@@ -76,6 +75,7 @@ add_ssh_keys_from_github:
     - claco
     - busterswt
     - galstrom21
+    - irtermite
 networking:
     - name: lo
       type: loopback
