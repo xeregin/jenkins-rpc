@@ -74,6 +74,7 @@ add_ssh_keys_from_github:
     - claco
     - busterswt
     - galstrom21
+    - irtermite
 networking:
     - name: lo
       type: loopback
