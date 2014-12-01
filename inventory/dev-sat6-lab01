@@ -1,41 +1,41 @@
-[cluster0]
-node05 ansible_ssh_host=10.127.52.5 ansible_ssh_user=root
-node06 ansible_ssh_host=10.127.52.6 ansible_ssh_user=root
-node07 ansible_ssh_host=10.127.52.7 ansible_ssh_user=root
-node08 ansible_ssh_host=10.127.52.8 ansible_ssh_user=root
-node09 ansible_ssh_host=10.127.52.9 ansible_ssh_user=root
-
 [cluster1]
-node10 ansible_ssh_host=10.127.52.10 ansible_ssh_user=root
-node13 ansible_ssh_host=10.127.52.13 ansible_ssh_user=root
-node14 ansible_ssh_host=10.127.52.14 ansible_ssh_user=root
-node15 ansible_ssh_host=10.127.52.15 ansible_ssh_user=root
-node16 ansible_ssh_host=10.127.52.16 ansible_ssh_user=root
+node05 ansible_ssh_host=10.127.52.5 ansible_ssh_user=root member_number=1 djeep_id=4
+node06 ansible_ssh_host=10.127.52.6 ansible_ssh_user=root member_number=2 djeep_id=6
+node07 ansible_ssh_host=10.127.52.7 ansible_ssh_user=root member_number=3 djeep_id=7
+node08 ansible_ssh_host=10.127.52.8 ansible_ssh_user=root member_number=4 djeep_id=8
+node09 ansible_ssh_host=10.127.52.9 ansible_ssh_user=root member_number=5 djeep_id=34
 
 [cluster2]
-node17 ansible_ssh_host=10.127.52.17 ansible_ssh_user=root
-node18 ansible_ssh_host=10.127.52.18 ansible_ssh_user=root
-node20 ansible_ssh_host=10.127.52.20 ansible_ssh_user=root
-node21 ansible_ssh_host=10.127.52.21 ansible_ssh_user=root
-node22 ansible_ssh_host=10.127.52.22 ansible_ssh_user=root
+node10 ansible_ssh_host=10.127.52.10 ansible_ssh_user=root member_number=1 djeep_id=35
+node13 ansible_ssh_host=10.127.52.13 ansible_ssh_user=root member_number=2 djeep_id=9
+node14 ansible_ssh_host=10.127.52.14 ansible_ssh_user=root member_number=3 djeep_id=10
+node15 ansible_ssh_host=10.127.52.15 ansible_ssh_user=root member_number=4 djeep_id=11
+node16 ansible_ssh_host=10.127.52.16 ansible_ssh_user=root member_number=5 djeep_id=12
 
 [cluster3]
-node23 ansible_ssh_host=10.127.52.23 ansible_ssh_user=root
-node24 ansible_ssh_host=10.127.52.24 ansible_ssh_user=root
-node25 ansible_ssh_host=10.127.52.25 ansible_ssh_user=root
-node26 ansible_ssh_host=10.127.52.26 ansible_ssh_user=root
-node27 ansible_ssh_host=10.127.52.27 ansible_ssh_user=root
+node17 ansible_ssh_host=10.127.52.17 ansible_ssh_user=root member_number=1 djeep_id=13
+node18 ansible_ssh_host=10.127.52.18 ansible_ssh_user=root member_number=2 djeep_id=14
+node20 ansible_ssh_host=10.127.52.20 ansible_ssh_user=root member_number=3 djeep_id=15
+node21 ansible_ssh_host=10.127.52.21 ansible_ssh_user=root member_number=4 djeep_id=16
+node22 ansible_ssh_host=10.127.52.22 ansible_ssh_user=root member_number=5 djeep_id=17
 
 [cluster4]
-node28 ansible_ssh_host=10.127.52.28 ansible_ssh_user=root
-node29 ansible_ssh_host=10.127.52.29 ansible_ssh_user=root
-node36 ansible_ssh_host=10.127.52.36 ansible_ssh_user=root
-node37 ansible_ssh_host=10.127.52.37 ansible_ssh_user=root
-node38 ansible_ssh_host=10.127.52.38 ansible_ssh_user=root
+node23 ansible_ssh_host=10.127.52.23 ansible_ssh_user=root member_number=1 djeep_id=18
+node24 ansible_ssh_host=10.127.52.24 ansible_ssh_user=root member_number=2 djeep_id=19
+node25 ansible_ssh_host=10.127.52.25 ansible_ssh_user=root member_number=3 djeep_id=20
+node26 ansible_ssh_host=10.127.52.26 ansible_ssh_user=root member_number=4 djeep_id=21
+node27 ansible_ssh_host=10.127.52.27 ansible_ssh_user=root member_number=5 djeep_id=22
+
+[cluster5]
+node28 ansible_ssh_host=10.127.52.28 ansible_ssh_user=root member_number=1 djeep_id=23
+node29 ansible_ssh_host=10.127.52.29 ansible_ssh_user=root member_number=2 djeep_id=24
+node36 ansible_ssh_host=10.127.52.36 ansible_ssh_user=root member_number=3 djeep_id=2
+node37 ansible_ssh_host=10.127.52.37 ansible_ssh_user=root member_number=4 djeep_id=25
+node38 ansible_ssh_host=10.127.52.38 ansible_ssh_user=root member_number=5 djeep_id=26
 
 [clusters:children]
-cluster0
 cluster1
 cluster2
 cluster3
 cluster4
+cluster5

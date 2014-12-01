@@ -26,9 +26,8 @@ rpc_user_config:
           bridge: br-vlan
           container_interface: eth11
           type: vlan
-          address: tunnel_address
           range: 2010:2010
-          net_name: public
+          net_name: vlan
           group_binds:
             - neutron_linuxbridge_agent
         - name: tenant
@@ -37,7 +36,7 @@ rpc_user_config:
           ip_from_q: tunnel
           type: vxlan
           range: 1:1000
-          net_name: private
+          net_name: vxlan
           group_binds:
             - neutron_linuxbridge_agent
         - name: storage
@@ -46,7 +45,6 @@ rpc_user_config:
           ip_from_q: storage
           type: raw
           range: 1:1000
-          net_name: private
           group_binds:
             - glance_api
             - cinder_api
@@ -58,12 +56,26 @@ cinder_storage:
       username: test
       hostname: test
       password: test
+    lvm:
+      volume_group: vg_storage
 add_ssh_keys_from_github:
   usernames:
     - jacobwagner
     - jpmontez
     - jcourtois
     - xeregin
+    - besanradwan
+    - cloudnull
+    - apsu
+    - andymcc
+    - matt416
+    - hughsaunders
+    - mancdaz
+    - d34dh0r53
+    - claco
+    - busterswt
+    - galstrom21
+    - irtermite
 networking:
     - name: lo
       type: loopback

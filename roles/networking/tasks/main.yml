@@ -22,7 +22,6 @@
   register: container_address
   when: rpc_user_config.container_cidr is defined
 
-
 - name: retrieve vxlan ip address
   local_action: script cidr.py {{ rpc_user_config.tunnel_cidr }} {{ansible_default_ipv4.address }}
   register: vxlan_address

@@ -1,5 +1,5 @@
 ---
-{% set infra = groups['infra'] %}
+{% set infra = groups['infrastructure'] %}
 {% set network = groups['network'] %}
 {% set compute = groups['compute'] %}
 {% set cinder = groups['cinder'] %}
@@ -11,6 +11,7 @@
 # This is the md5 of the environment file
 # this will ensure consistency when deploying.
 environment_version: {{ environment_version.stat.md5 }}
+
 
 # User defined CIDR used for containers
 # Global cidr/s used for everything.
@@ -40,6 +41,9 @@ used_ips:
 
 # overrides anything else any where.
 global_overrides:
+  # Repo for pip wheels.
+  rpc_repo_url: "{{ rpc_repo_url }}"
+
   # Internal Management vip address
   internal_lb_vip_address: {{ rpc_user_config.internal_lb_vip_address }}
 
@@ -114,9 +118,15 @@ storage_hosts:
         limit_container_types: cinder_volume
 {% if cinder_storage.backends.lvm is defined %}
         lvm:
-          volume_group: {{ cinder_storage.volume_group }}
+          volume_group: {{ cinder_storage.backends.lvm.volume_group }}
           volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
           volume_backend_name: LVM_iSCSI
+{% endif %}
+{% if cinder_storage.backends.lvm_ssd is defined %}
+        lvm_ssd:
+          volume_group: {{ cinder_storage.backends.lvm.volume_group }}
+          volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+          volume_backend_name: LVM_SSD_iSCSI
 {% endif %}
 {% if cinder_storage.backends.netapp is defined %}
         netapp:

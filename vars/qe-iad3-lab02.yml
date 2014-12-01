@@ -1,13 +1,14 @@
 rpc_user_config:
     container_cidr: 192.168.100.0/22
     tunnel_cidr:  172.29.241.0/22
-    service_cidr: 172.29.100.0/22
+    service_cidr: 172.29.236.0/22
     used_ips:
         - "192.168.100.1,192.168.100.15"
         - "192.168.100.132,192.168.100.155"
         - "172.29.241.132,172.29.241.155"
+        - "172.29.236.1"
     internal_lb_vip_address: 192.168.100.10
-    external_lb_vip_address: 10.4.213.180
+    external_lb_vip_address: 204.232.187.80
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     lb_name:
@@ -25,9 +26,8 @@ rpc_user_config:
           bridge: br-vlan
           container_interface: eth11
           type: vlan
-          address: tunnel_address
           range: 410:410
-          net_name: public
+          net_name: vlan
           group_binds:
             - neutron_linuxbridge_agent
         - name: tenant
@@ -36,7 +36,7 @@ rpc_user_config:
           ip_from_q: tunnel
           type: vxlan
           range: 1:1000
-          net_name: private
+          net_name: vxlan
           group_binds:
             - neutron_linuxbridge_agent
         - name: service
@@ -49,9 +49,11 @@ rpc_user_config:
             - nova_compute
             - neutron_linuxbridge_agent
 cinder_storage:
-  volume_group: cinder-volumes
-  physical_drive: /dev/sdb
-  backend: lvm
+  backends:
+    lvm:
+      volume_group: cinder-volumes
+    lvm_ssd:
+      volume_group: cinder-volumes
 nova:
   branch: nova_stable_icehouse
 add_ssh_keys_from_github:
@@ -60,8 +62,17 @@ add_ssh_keys_from_github:
     - jpmontez
     - jcourtois
     - xeregin
-    - devgrega
     - besanradwan
+    - cloudnull
+    - apsu
+    - andymcc
+    - matt416
+    - hughsaunders
+    - mancdaz
+    - d34dh0r53
+    - claco
+    - busterswt
+    - galstrom21
 networking:
     - name: lo
       type: loopback
@@ -74,7 +85,7 @@ networking:
       type: static
       directives:
       - "netmask {{ ansible_em3.ipv4.netmask }}"
-      - "post-up ip route add 10.191.192.0/18 via 10.136.93.65 dev em3"
+      - "post-up ip route add 10.191.192.0/18 via 10.136.93.97 dev em3"
       - "address {{ ansible_em3.ipv4.address }}"
     - name: em4
       type: manual
@@ -147,10 +158,11 @@ networking:
         - "bridge_maxwait 0"
         - "bridge_ports bond1"
     - name: br-snet
-      type: manual
+      type: static
       directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
         - "bridge_stp off"
         - "bridge_fd 0"
         - "bridge_maxwait 0"
+        - "bridge_ports none"
+        - "address 172.29.236.1"
+        - "netmask 255.255.252.0"

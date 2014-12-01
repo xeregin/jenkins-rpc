@@ -1,0 +1,4 @@
+---
+- include: containers.yml
+- include: nova.yml
+- include: neutron.yml

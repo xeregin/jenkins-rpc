@@ -1,0 +1,169 @@
+#!/usr/bin/env python
+# Copyright 2014, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+DOCUMENTATION = '''
+---
+module: rekick
+short_description: Rekick nodes via djeep
+description:
+    - This module uses djeep to rekick and and check for servers to come up
+version_added: "1.4"
+author: Hugh Saunders
+requirements:
+    - A djeep server setup
+    - python requests
+options:
+    djeep_url:
+        description:
+            - url for the djeep api
+        required: True
+    host_name:
+        description:
+            - name of server to be rekicked
+        required: true
+    host_ip:
+        description:
+            - ip of server to rekicked (can be hostname if that resolves on the machine running ansible)
+        required: true
+    kick_wait:
+        description:
+            - how long to wait in seconds for a server to rekick or reboot
+        required: true
+    kick_tries:
+        description:
+            - how many times to retry the kicking and rebooting
+        required: true
+'''
+
+EXAMPLES = '''
+# rekick server
+rekick:
+    djeep_url: http://djeep:5000/api
+    host_name: node1
+    host_ip: 1.2.3.4
+    kick_wait: 1200
+    kick_tries: 2
+'''
+
+#stdlib imports
+import datetime
+import re
+import socket
+import syslog
+import time
+
+#pypi imports
+import requests
+
+
+class Kicker(object):
+  def __init__(self, module):
+    self.module = module
+    self.tries = int(module.params['kick_tries'])
+    self.wait = int(module.params['kick_wait'])
+    self.host_name = module.params['host_name']
+    self.host_ip = module.params['host_ip']
+    self.djeep_url = module.params['djeep_url']
+    self.ssh_re = re.compile(pattern='SSH', flags=re.IGNORECASE)
+
+  def check_ssh(self, host, port=22, timeout=5):
+    syslog.syslog("checking for ssh at %(host)s:%(port)s"
+                  % dict(host=host, port=port))
+    try:
+      sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+      sock.settimeout(timeout)
+      sock.connect((host, port))
+      banner = sock.recv(1024)
+      syslog.syslog("Read '%(banner)s' from %(host)s:%(port)s"
+                    % dict(host=host, port=port, banner=banner))
+      sock.close()
+      match = bool(self.ssh_re.search(banner))
+      syslog.syslog("Read '%(banner)s' from %(host)s:%(port)s match=%(m)s"
+                    % dict(host=host, port=port, banner=banner,
+                           m=match))
+      return match
+    except Exception as e:
+      syslog.syslog("Error checking for ssh: %(err)s"
+                    % dict(err=str(e)))
+      try:
+        sock.close()
+      except Exception:
+        return False
+      return False
+
+  def wait_ssh(self, host, timeout):
+    start_time = datetime.datetime.now()
+    while ((not self.check_ssh(host=host))
+            and ((datetime.datetime.now()-start_time).seconds < timeout)):
+        time.sleep(15)
+    return self.check_ssh(host=host)
+
+  def reboot(self, tries=5):
+    for attempt in xrange(tries):
+
+        # reboot via djeep
+        requests.post('%(djeep_api)s/hostbyname/%(host_name)s/reboot'
+                    % dict(djeep_api=self.djeep_url,
+                           host_name=self.host_name))
+
+        # wait for node to go down
+        time.sleep(120)
+
+        # wait for node to come back up
+        if self.wait_ssh(host=self.host_ip, timeout=self.wait):
+           return True
+    return False
+
+  def kick(self):
+    for attempt in xrange(self.tries):
+        syslog.syslog("rekicking %(node)s %(attempt)s/%(tries)s"
+                      % dict(node=self.host_name,
+                             attempt=attempt,
+                             tries=self.tries))
+        # initialise rekick
+        requests.post('%(djeep_api)s/hostbyname/%(host_name)s/rekick'
+                    % dict(djeep_api=self.djeep_url,
+                           host_name=self.host_name))
+
+        # wait for node to go down
+        time.sleep(120)
+
+        # wait for node to come back up
+        if self.wait_ssh(host=self.host_ip, timeout=self.wait):
+            self.module.exit_json(changed=True)
+        else:
+            if self.reboot(tries=self.tries):
+                self.module.exit_json(changed=True)
+    self.module.fail_json(err='Failed to rekick', rc=2,
+                          msg='Failed to rekick')
+
+
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            host_ip=dict(required=True),
+            host_name=dict(required=True),
+            kick_wait=dict(required=True),
+            kick_tries=dict(required=True),
+            djeep_url=dict(required=True)
+        ),
+        supports_check_mode=False
+    )
+    kicker = Kicker(module)
+    kicker.kick()
+
+from ansible.module_utils.basic import *
+if __name__ == '__main__':
+    main()

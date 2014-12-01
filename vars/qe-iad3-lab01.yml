@@ -8,7 +8,7 @@ rpc_user_config:
         - "172.29.240.132,172.29.240.155"
         - "172.29.236.1"
     internal_lb_vip_address: 192.168.96.10
-    external_lb_vip_address: 10.17.255.180
+    external_lb_vip_address: 204.232.187.32
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     lb_name:
@@ -26,9 +26,8 @@ rpc_user_config:
           bridge: br-vlan
           container_interface: eth11
           type: vlan
-          address: tunnel_address
-          range: 231:231
-          net_name: public
+          range: 280:280
+          net_name: vlan
           group_binds:
             - neutron_linuxbridge_agent
         - name: tenant
@@ -37,7 +36,7 @@ rpc_user_config:
           ip_from_q: tunnel
           type: vxlan
           range: 1:1000
-          net_name: private
+          net_name: vxlan
           group_binds:
             - neutron_linuxbridge_agent
         - name: service
@@ -50,9 +49,11 @@ rpc_user_config:
             - nova_compute
             - neutron_linuxbridge_agent
 cinder_storage:
-  volume_group: cinder-volumes
-  physical_drive: /dev/sdb
-  backend: lvm
+  backends:
+    lvm:
+      volume_group: cinder-volumes
+    lvm_ssd:
+      volume_group: cinder-volumes
 nova:
   branch: nova_stable_icehouse
 add_ssh_keys_from_github:
@@ -61,8 +62,17 @@ add_ssh_keys_from_github:
     - jpmontez
     - jcourtois
     - xeregin
-    - devgrega
     - besanradwan
+    - cloudnull
+    - apsu
+    - andymcc
+    - matt416
+    - hughsaunders
+    - mancdaz
+    - d34dh0r53
+    - claco
+    - busterswt
+    - galstrom21
 networking:
     - name: lo
       type: loopback

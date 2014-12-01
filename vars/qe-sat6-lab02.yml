@@ -3,11 +3,12 @@ rpc_user_config:
     tunnel_cidr:  172.29.240.0/22
     storage_cidr:  172.29.248.0/22
     used_ips:
-        - "192.168.100.1,192.168.100.15"
-        - "192.168.100.132,192.168.100.155"
-        - "172.29.100.132,172.29.100.155"
-    internal_lb_vip_address: 192.168.100.10
-    external_lb_vip_address: 
+        - "172.29.236.1,172.29.236.15"
+        - "172.29.236.83,172.29.236.127"
+        - "172.29.240.83,172.29.240.127"
+        - "172.29.248.83,172.29.248.127"
+    internal_lb_vip_address: 172.29.236.10
+    external_lb_vip_address: 10.127.101.127
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     lb_name:
@@ -25,9 +26,8 @@ rpc_user_config:
           bridge: br-vlan
           container_interface: eth11
           type: vlan
-          address: tunnel_address
-          range: 410:410
-          net_name: public
+          range: 2030:2030
+          net_name: vlan
           group_binds:
             - neutron_linuxbridge_agent
         - name: tenant
@@ -36,21 +36,45 @@ rpc_user_config:
           ip_from_q: tunnel
           type: vxlan
           range: 1:1000
-          net_name: private
+          net_name: vxlan
           group_binds:
             - neutron_linuxbridge_agent
+        - name: storage
+          bridge: br-storage
+          container_interface: eth2
+          ip_from_q: storage
+          type: raw
+          group_binds:
+            - glance_api
+            - cinder_api
+            - cinder_volume
+            - nova_compute
 cinder_storage:
-  volume_group: cinder-volumes
-  physical_drive: /dev/sdb
-  backend: lvm
-nova:
-  branch: nova_stable_icehouse
+  backends:
+    netapp:
+      username: test
+      hostname: test
+      password: test
+    lvm:
+      volume_group: vg_storage
 add_ssh_keys_from_github:
   usernames:
     - jacobwagner
     - jpmontez
     - jcourtois
     - xeregin
+    - besanradwan
+    - cloudnull
+    - apsu
+    - andymcc
+    - matt416
+    - hughsaunders
+    - mancdaz
+    - d34dh0r53
+    - claco
+    - busterswt
+    - galstrom21
+    - irtermite
 networking:
     - name: lo
       type: loopback
@@ -68,10 +92,19 @@ networking:
       directives:
         - "bond-master bond1"
         - "bond-primary p1p1"
+    - name: p1p2
+      type: manual
+      directives:
+        - "bond-master bond2"
+        - "bond-primary p1p2"
     - name: p3p1
       type: manual
       directives:
         - "bond-master bond1"
+    - name: p3p2
+      type: manual
+      directives:
+        - "bond-master bond2"
     - name: bond0
       type: static
       directives:
@@ -95,21 +128,35 @@ networking:
         - "bond-miimon 100"
         - "bond-downdelay 250"
         - "bond-updelay 250"
-    - name: bond0.XXX
+    - name: bond2
+      type: manual
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bond-slaves none"
+        - "bond-mode active-backup"
+        - "bond-miimon 100"
+        - "bond-downdelay 250"
+        - "bond-updelay 250"
+    - name: bond0.2022
       type: manual
       directives:
         - "vlan-raw-device bond0"
-    - name: bond1.XXX
+    - name: bond1.2023
       type: manual
       directives:
         - "vlan-raw-device bond1"
+    - name: bond2.2024
+      type: manual
+      directives:
+        - "vlan-raw-device bond2"
     - name: br-mgmt
       type: static
       directives:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge-ports bond0.801"
+        - "bridge-ports bond0.2022"
         - "address {{ container_address.stdout|replace('\n','') }}"
         - "dns-nameservers 8.8.8.8 8.8.4.4"
     - name: br-vxlan
@@ -118,7 +165,7 @@ networking:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge_ports bond1.XXX"
+        - "bridge_ports bond1.2023"
         - "address {{ vxlan_address.stdout|replace('\n','') }}"
     - name: br-vlan
       type: manual
@@ -129,3 +176,11 @@ networking:
         - "bridge_fd 0"
         - "bridge_maxwait 0"
         - "bridge_ports bond1"
+    - name: br-storage
+      type: static
+      directives:
+        - "bridge_stp off"
+        - "bridge_waitport 0"
+        - "bridge_fd 0"
+        - "bridge-ports bond2.2024"
+        - "address {{ storage_address.stdout|replace('\n','') }}"

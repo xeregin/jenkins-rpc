@@ -42,10 +42,6 @@ cleanup() {
   # Disable trap
   trap - INT TERM ERR
 
-  # Rekick the nodes in preperation for the next run.
-  [ -e playbooks ] || pushd jenkins-rpc
-  [[ $REKICK == "yes" ]] &&  ansible-playbook -i inventory/dev-sat6-lab01 -e CLUSTER_NUMBER=${EXECUTOR_NUMBER}  playbooks/dev-labs/clean.yml ||:
-
   # Exit
   exit $retval
 }
@@ -62,21 +58,14 @@ then
   # Move into jenkins-rpc
   pushd jenkins-rpc
 
-  # Read creds for cloud account, used for glance-swift
-  # /var/creds is mounted from the host using -v
-  # when the docker instance is started.
-  source /var/creds/cloud10
-
   # Prepare the lab
   export PYTHONUNBUFFERED=1
   export ANSIBLE_FORCE_COLOR=1
   ansible-playbook \
-    -i inventory/dev-sat6-lab01 \
-    -e hosts=cluster${EXECUTOR_NUMBER} \
-    -e pullRequestID=${ghprbPullId} \
-    -e targetBranch=${ghprbTargetBranch} \
-    -e RPC_REPO_URL=${RPC_REPO_URL} \
-    playbooks/dev-labs/site.yml & wait %1
+    -i inventory/${LAB_ID} \
+    -e targetBranch=${BRANCH} \
+    -e greenfield=${GREENFIELD} \
+    playbooks/qe-labs/site.yml & wait %1
 
   popd
 
