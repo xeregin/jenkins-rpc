@@ -138,27 +138,16 @@ setup_router() {
     fi
 }
 
-#if [[ `hostname | grep sat6` ]]; then
-#    select_sat6_lab1
-#elif [[ `hostname | grep iad3 | grep qe1` ]]; then
-#    select_iad_lab1
-#elif [[ `hostname | grep iad3 | grep qe2` ]]; then
-#    select_iad_lab2
-#else
-#    print_expected_format
-#    exit
-#fi
-
-#-------
-# Start
-#-------
-
+# SAT6 Lab 01
 if [[ $1 == "sat6" ]]; then
     select_sat6_lab1
+# IAD Lab 01
 elif [[ $1 == "iad" && $2 == "lab01" ]]; then
     select_iad_lab1
+# IAD Lab 02
 elif [[ $1 == "iad" && $2 == "lab02" ]]; then
     select_iad_lab2
+# Invalid Parameters
 else
     print_expected_format
     exit
@@ -166,23 +155,20 @@ fi
 
 print_parameters
 
+# Base Network Setup
 create_public_net_subnet
 create_private_net_subnet
-
 setup_router
-
 set_security_inbound_tcp 22
 set_security_outbound_tcp 22
 set_security_icmp
 
+# Cloud Cafe Environment Prep
 create_keystone_tenants
 create_keystone_users
-
 mkdir qe_images
 cd qe_images
-
 get_cirros_images
 export QE_DEMO_TENANT_UUID=7007261b8eed426a9fbee41766aade6c
 create_glance_images
-
 create_cc_security_group
