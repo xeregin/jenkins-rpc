@@ -160,3 +160,9 @@
   copy: >
     content={{ansible_ssh_host}}
     dest=~/target.ip
+
+- name: Drop ansible timestamp callback plugin
+  tags: rpc
+  copy:
+    src: timestamp.py
+    dest: /usr/local/lib/python2.7/dist-packages/ansible/callback_plugins/timestamp.py
