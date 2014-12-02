@@ -6,6 +6,7 @@
     - dev-lvm
     - dev-packages
     - dev-networking
+    - dev-swift
 
 - name: Provision dev cluster
   hosts: "{{hosts}}[0]"
