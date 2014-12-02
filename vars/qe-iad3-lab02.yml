@@ -73,6 +73,7 @@ add_ssh_keys_from_github:
     - claco
     - busterswt
     - galstrom21
+    - yasminek
 networking:
     - name: lo
       type: loopback
