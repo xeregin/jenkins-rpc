@@ -1,5 +1,5 @@
 [deployment]
-node107 ansible_ssh_host=10.127.101.90 ansible_ssh_user=root
+node89 ansible_ssh_host=10.127.101.113 ansible_ssh_user=root
 
 [infrastructure]
 node107 ansible_ssh_host=10.127.101.90 ansible_ssh_user=root
@@ -22,5 +22,5 @@ node91 ansible_ssh_host=10.127.101.92 ansible_ssh_user=root
 
 [swift]
 node119 ansible_ssh_host=10.127.101.106 ansible_ssh_user=root zone=1
-node89 ansible_ssh_host=10.127.101.113 ansible_ssh_user=root zone=2
+node107 ansible_ssh_host=10.127.101.90 ansible_ssh_user=root zone=2
 node120 ansible_ssh_host=10.127.101.102 ansible_ssh_user=root zone=3
