@@ -7,13 +7,23 @@
   command:
     rm -rf {{rpc_repo_dir}}
 
-- name: Clone RPC repo
+- name: Clone github repo
   tags:
     - rpc
     - git
   git: >
     repo=https://github.com/rcbops/ansible-lxc-rpc
     dest={{rpc_repo_dir}}
+  when: TRIGGER == "github"
+
+- name: Clone stackforge repo
+  tags:
+    - rpc
+    - git
+  git: >
+  repo=https://github.com/stackforge/os-ansible-deployment
+    dest={{rpc_repo_dir}}
+  when: TRIGGER == "gerrit"
 
 - name: Configure git identity
   tags:
