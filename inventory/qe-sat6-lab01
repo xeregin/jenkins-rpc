@@ -1,21 +1,21 @@
 [deployment]
-node119 ansible_ssh_host=10.127.101.106 ansible_ssh_user=root
-
-[infrastructure]
-node119 ansible_ssh_host=10.127.101.106 ansible_ssh_user=root
-node91 ansible_ssh_host=10.127.101.92 ansible_ssh_user=root
-node121 ansible_ssh_host=10.127.101.101 ansible_ssh_user=root
-
-[network]
-node91 ansible_ssh_host=10.127.101.92 ansible_ssh_user=root
-node121 ansible_ssh_host=10.127.101.101 ansible_ssh_user=root
-
-[compute]
-node93 ansible_ssh_host=10.127.101.83 ansible_ssh_user=root
-node107 ansible_ssh_host=10.127.101.90 ansible_ssh_user=root
-
-[cinder]
 node108 ansible_ssh_host=10.127.101.115 ansible_ssh_user=root
 
+[infrastructure]
+node108 ansible_ssh_host=10.127.101.115 ansible_ssh_user=root
+node101 ansible_ssh_host=10.127.101.121 ansible_ssh_user=root
+node98 ansible_ssh_host=10.127.101.126 ansible_ssh_user=root
+
+[network]
+node101 ansible_ssh_host=10.127.101.121 ansible_ssh_user=root
+node98 ansible_ssh_host=10.127.101.126 ansible_ssh_user=root
+
+[compute]
+node121 ansible_ssh_host=10.127.101.101 ansible_ssh_user=root
+node113 ansible_ssh_host=10.127.101.85 ansible_ssh_user=root
+
+[cinder]
+node115 ansible_ssh_host=10.127.101.96 ansible_ssh_user=root
+
 [logger]
-node114 ansible_ssh_host=10.127.101.116 ansible_ssh_user=root
+node112 ansible_ssh_host=10.127.101.112 ansible_ssh_user=root
