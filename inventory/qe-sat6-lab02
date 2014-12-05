@@ -11,7 +11,7 @@ node116 ansible_ssh_host=10.127.101.110 ansible_ssh_user=root
 node94 ansible_ssh_host=10.127.101.95 ansible_ssh_user=root
 
 [compute]
-node118 ansible_ssh_host=10.127.101. ansible_ssh_user=root
+node118 ansible_ssh_host=10.127.101.124 ansible_ssh_user=root
 node92 ansible_ssh_host=10.127.101.111 ansible_ssh_user=root
 
 [cinder]
