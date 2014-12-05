@@ -1,13 +1,4 @@
 ---
-- name: Configure git identity
-  tags:
-    - rpc
-    - git
-  shell: >
-    git config --global user.email "jenkins@propter.net";
-    git config --global user.name "Jenkins"
-  args:
-    chdir: "{{rpc_repo_dir}}"
 
 - name: Delete RPC repo
   tags:
@@ -24,6 +15,16 @@
     repo=https://github.com/rcbops/ansible-lxc-rpc
     dest={{rpc_repo_dir}}
 
+- name: Configure git identity
+  tags:
+    - rpc
+    - git
+  shell: >
+    git config --global user.email "jenkins@propter.net";
+    git config --global user.name "Jenkins"
+  args:
+    chdir: "{{rpc_repo_dir}}"
+
 - name: "Install git-review"
   pip:
     name: git-review
@@ -33,9 +34,12 @@
   tags:
     - rpc
     - git
-  command:
+  shell:
     git-review -d {{GERRIT_CHANGE_NUMBER}}
+  args:
+    chdir: "{{rpc_repo_dir}}"
   when: TRIGGER == "gerrit"
+
 
 - name: Add github remote refs
   tags:
