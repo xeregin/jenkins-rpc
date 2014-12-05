@@ -21,7 +21,7 @@
     - rpc
     - git
   git: >
-  repo=https://github.com/stackforge/os-ansible-deployment
+    repo=https://github.com/stackforge/os-ansible-deployment
     dest={{rpc_repo_dir}}
   when: TRIGGER == "gerrit"
 
