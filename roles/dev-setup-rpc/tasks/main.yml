@@ -19,7 +19,7 @@
 
 - name: Install pip requirements
   tags: rpc
-  pip: requirements=~{{rpc_repo_dir}}/requirements.txt
+  pip: requirements=~/{{rpc_repo_dir}}/requirements.txt
 
 - name: Install turbolift
   pip:
