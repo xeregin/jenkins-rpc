@@ -51,12 +51,12 @@ rpc_user_config:
             - cinder_volume
             - nova_compute
 swift_config:
-  part_power:
-  weight:
-  min_part_hours:
-  repl_number:
-  storage_network:
-  replication_network:
+  part_power: 8
+  weight: 100
+  min_part_hours: 1
+  repl_number: 3
+  storage_network: 'br-storage' 
+  replication_network: 'br-repl'
   drives:
     - name: sdb
   mount_point: /mnt
