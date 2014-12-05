@@ -33,33 +33,11 @@ global_overrides:
 {% endif %}
 {% endfor %}
 
-## Specify the swift-proxy_hosts - these will typically be your infra nodes and are where your swift_proxy containers will be created.
-## All that is required is the IP address of the host that ansible will connect to.
-
 swift_proxy_hosts:
 {% for host in infra %}
     {{ host }}:
         ip: {{ hostvars[host]["ansible_ssh_host"] }}
 {% endfor %}
-
-## Specify the swift_hosts which will be the swift storage nodes.
-##
-## The ip is the address of the host that ansible will connect to.
-##
-## all swift settings are set under swift_vars.
-##
-## The storage_ip and repl_ip represent the IP that will go in the ring for storage and replication.
-## These will be pulled from the server's interface (specified by storage_network & replication_network), but can be overriden by specifying them at the node or drive level.
-## If only the storage_ip is specified then the repl_ip will default to the storage_ip
-## If only the repl_ip is specified then the storage_ip will default to the host ip above.
-## If neither are specified both will default to the host ip above.
-##
-## zone and region can be specified for swift when building the ring.
-##
-## groups can be set to list which rings a host's drive should belong to. This can be set on a per drive basis which will override the host setting.
-##
-## swift-node5 is an example of overriding the values. Where the groups are set, and overridden on drive sdb. The weight is overriden for the host, and specifically adjusted on drive sdb, and the storage/repl_ip's are different for sdb.
-##
 
 swift_hosts:
 {% for host in swift %}
