@@ -19,7 +19,7 @@
 
 - name: Install pip requirements
   tags: rpc
-  pip: requirements=~/ansible-lxc-rpc/requirements.txt
+  pip: requirements=~{{rpc_repo_dir}}/requirements.txt
 
 - name: Install turbolift
   pip:
@@ -28,7 +28,7 @@
 - name: Copy rpc_deploy directory
   tags: rpc
   command: >
-    cp -a ~/ansible-lxc-rpc/etc/rpc_deploy ~/rpc_deploy
+    cp -a ~/{{rpc_repo_dir}}/etc/rpc_deploy ~/rpc_deploy
     creates=~/rpc_deploy
 
 - name: Set environment_md5 fact for template
@@ -52,7 +52,7 @@
 - name: Generate passphrases
   tags: rpc
   command: >
-    ~/ansible-lxc-rpc/scripts/pw-token-gen.py --file ~/rpc_deploy/user_variables.yml
+    ~/{{rpc_repo_dir}}/scripts/pw-token-gen.py --file ~/rpc_deploy/user_variables.yml
 
 - name: Clear glance swift container
   tags: rpc
