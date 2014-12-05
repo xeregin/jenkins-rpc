@@ -1,0 +1,4 @@
+---
+- hosts: deployment
+  roles:
+    - swift_config

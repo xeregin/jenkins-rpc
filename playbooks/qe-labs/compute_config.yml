@@ -1,4 +1,4 @@
 ---
 - hosts: deployment
   roles:
-    - rpc_config
+    - compute_config
