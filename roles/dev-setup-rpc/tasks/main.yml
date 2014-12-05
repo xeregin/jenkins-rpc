@@ -17,53 +17,6 @@
     src: /var/creds/cloud10
     dest: /var/creds/cloud10
 
-- name: Delete RPC repo
-  tags: rpc
-  command:
-    rm -rf ~/ansible-lxc-rpc
-
-- name: Clone RPC repo
-  tags: rpc
-  git: >
-    repo=https://github.com/rcbops/ansible-lxc-rpc
-    dest=~/ansible-lxc-rpc
-
-- name: Update remotes for PR ref
-  tags: rpc
-  command: >
-    git config --add remote.origin.fetch "+refs/pull/*/head:refs/remotes/origin/pr/*"
-    chdir=~/ansible-lxc-rpc
-
-- name: Configure git identity
-  tags: rpc
-  shell: >
-    git config --global user.email "jenkins@propter.net";
-    git config --global user.name "Jenkins"
-  args:
-    chdir: "~/ansible-lxc-rpc"
-
-- name: Fetch origin
-  tags: rpc
-  command: >
-    git fetch origin
-    chdir=~/ansible-lxc-rpc
-
-- name: Checkout target branch
-  tags: rpc
-  command: >
-    git checkout {{targetBranch}}
-    chdir=~/ansible-lxc-rpc
-
-- name: Merge PR
-  tags: rpc
-  command: >
-    git merge --no-edit origin/pr/{{pullRequestID}}
-    chdir=~/ansible-lxc-rpc
-
-- name: Install pip
-  tags: rpc
-  shell: "curl https://bootstrap.pypa.io/get-pip.py|python"
-
 - name: Install pip requirements
   tags: rpc
   pip: requirements=~/ansible-lxc-rpc/requirements.txt

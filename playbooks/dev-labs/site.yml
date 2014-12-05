@@ -11,4 +11,5 @@
   hosts: "{{hosts}}[0]"
   gather_facts: True
   roles:
+    - dev-setup-git
     - dev-setup-rpc

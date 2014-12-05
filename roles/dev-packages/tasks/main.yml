@@ -13,3 +13,7 @@
 
 - name: Install bridge-utils
   apt: pkg=bridge-utils state=latest
+
+- name: Install pip
+  tags: rpc
+  shell: "curl https://bootstrap.pypa.io/get-pip.py|python"
