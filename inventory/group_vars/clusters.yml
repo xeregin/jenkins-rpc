@@ -2,3 +2,4 @@
 host_count: "{{lookup('env', 'BUILD_COUNT')}}"
 cluster_number: "{{lookup('env', 'EXECUTOR_NUMBER')}}"
 rpc_repo_url: "{{lookup('env', 'RPC_REPO_URL')}}"
+rpc_repo_dir: rpc_repo
