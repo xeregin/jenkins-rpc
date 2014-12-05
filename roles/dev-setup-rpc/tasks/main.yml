@@ -99,12 +99,12 @@
     regexp="^virt_type"
     line="virt_type: kvm"
 
-- name: Copy target.sh to host[0]
+- name: "template target.sh on host[0]"
   tags: rpc
-  copy: >
-    src=target.sh
-    dest=~/target.sh
-    mode=0755
+  template:
+    src: target.sh.j2
+    dest: "~/target.sh"
+    mode: 0755
 
 - name: Dump host[0] IP to local file
   tags: rpc

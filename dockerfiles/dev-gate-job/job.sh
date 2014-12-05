@@ -77,7 +77,7 @@ then
     -e targetBranch=${TARGET_BRANCH} \
     -e RPC_REPO_URL=${RPC_REPO_URL} \
     -e TRIGGER=${TRIGGER}\
-    -e GERRIT_CHANGE_NUMBER=${GERRIT_CHANGE_NUMBER}\
+    -e GERRIT_REFSPEC=${GERRIT_REFSPEC}\
     playbooks/dev-labs/site.yml & wait %1
 
   popd

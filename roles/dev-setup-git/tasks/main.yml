@@ -1,4 +1,11 @@
 ---
+- name: Configure git identity
+  tags:
+    - rpc
+    - git
+  shell: >
+    git config --global user.email "jenkins@propter.net";
+    git config --global user.name "Jenkins"
 
 - name: Delete RPC repo
   tags:
@@ -25,32 +32,6 @@
     dest={{rpc_repo_dir}}
   when: TRIGGER == "gerrit"
 
-- name: Configure git identity
-  tags:
-    - rpc
-    - git
-  shell: >
-    git config --global user.email "jenkins@propter.net";
-    git config --global user.name "Jenkins"
-  args:
-    chdir: "{{rpc_repo_dir}}"
-
-- name: "Install git-review"
-  pip:
-    name: git-review
-  when: TRIGGER == "gerrit"
-
-- name: Get change from gerrit
-  tags:
-    - rpc
-    - git
-  shell:
-    git-review -d {{GERRIT_CHANGE_NUMBER}}
-  args:
-    chdir: "{{rpc_repo_dir}}"
-  when: TRIGGER == "gerrit"
-
-
 - name: Add github remote refs
   tags:
     - rpc
@@ -67,7 +48,6 @@
   command: >
     git fetch origin
     chdir={{rpc_repo_dir}}
-  when: TRIGGER == "github"
 
 - name: Checkout target branch
   tags:
@@ -76,7 +56,6 @@
   command: >
     git checkout {{targetBranch}}
     chdir={{rpc_repo_dir}}
-  when: TRIGGER == "github"
 
 - name: Merge PR
   tags:
@@ -86,3 +65,22 @@
     git merge --no-edit origin/pr/{{pullRequestID}}
     chdir={{rpc_repo_dir}}
   when: TRIGGER == "github"
+
+- name: Get change from gerrit
+  tags:
+    - rpc
+    - git
+  shell:
+    git fetch https://review.openstack.org/stackforge/os-ansible-deployment {{GERRIT_REFSPEC}}
+  args:
+    chdir: "{{rpc_repo_dir}}"
+  when: TRIGGER == "gerrit"
+
+- name: Merge Review
+  tags:
+    - rpc
+    - git
+  command: >
+    git merge FETCH_HEAD
+    chdir={{rpc_repo_dir}}
+  when: TRIGGER == "gerrit"
