@@ -88,5 +88,5 @@ swift_hosts:
 		ip: {{ hostvars[host]["ansible_ssh_host"] }}
 		container_vars:
 			swift_vars:
-				zone: {{ host_vars[host]["zone"] }}
+				zone: {{ hostvars[host]["zone"] }}
 {% endfor %}
