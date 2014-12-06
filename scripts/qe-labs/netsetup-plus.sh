@@ -146,7 +146,7 @@ setup_router() {
 }
 
 # SAT6 Lab 01
-if [[ $1 == "sat6" && $2 == "lab01"]]; then
+if [[ $1 == "sat6" && $2 == "lab01" ]]; then
     select_sat6_lab1
 # SAT6 Lab 02
 elif [[ $1 == "sat6" && $2 == "lab02" ]]; then
