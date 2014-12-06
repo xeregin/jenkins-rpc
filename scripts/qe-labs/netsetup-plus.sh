@@ -101,6 +101,13 @@ select_sat6_lab1() {
     GATEWAY_IP=10.127.101.129
 }
 
+select_sat6_lab2() {
+    #SAT6 LAB 02
+    SEGID=2030
+    GATEWAY_CIDR=10.127.102.128/25
+    GATEWAY_IP=10.127.102.129
+}
+
 set_security_icmp() {
     if [[ `neutron security-group-show default | grep icmp | grep ingress` ]]; then
         echo "Ping ingress rule already exists! Skipping..."
