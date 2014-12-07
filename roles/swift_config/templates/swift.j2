@@ -33,7 +33,7 @@ global_overrides:
 {% endif %}
 {% endfor %}
 
-swift_proxy_hosts:
+swift-proxy_hosts:
 {% for host in infra %}
     {{ host }}:
         ip: {{ hostvars[host]["ansible_ssh_host"] }}
