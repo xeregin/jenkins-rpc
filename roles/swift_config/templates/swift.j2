@@ -7,8 +7,8 @@ global_overrides:
         weight: {{ swift_config.weight }}
         min_part_hours: {{ swift_config.min_part_hours }}
         repl_number: {{ swift_config.min_part_hours }}
-        storage_network: {{ swift_config.storage_network }}
-        replication_network: {{ swift_config.replication_network }}
+        storage_network: '{{ swift_config.storage_network }}'
+        replication_network: '{{ swift_config.replication_network }}'
         drives:
 {% for drive in swift_config.drives %}
             - name: {{ drive.name }}
