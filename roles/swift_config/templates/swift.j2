@@ -1,7 +1,6 @@
 ---
 {% set infra = groups['infrastructure'] %}
 {% set swift = groups['swift'] %}
-
 global_overrides:
     swift:
         part_power: {{ swift_config.part_power }}
