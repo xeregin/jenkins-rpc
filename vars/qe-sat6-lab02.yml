@@ -1,7 +1,9 @@
 rpc_user_config:
+    rpc_repo_url: http://rpc.cloudnull.io/
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
     storage_cidr:  172.29.248.0/22
+    repl_cidr: 172.30.248.0/22
     used_ips:
         - "172.29.236.1,172.29.236.15"
         - "172.29.236.83,172.29.236.127"
@@ -50,12 +52,12 @@ rpc_user_config:
             - cinder_volume
             - nova_compute
 swift_config:
-  part_power:
-  weight:
-  min_part_hours:
-  repl_number:
-  storage_network:
-  replication_network:
+  part_power: 8
+  weight: 100
+  min_part_hours: 1
+  repl_number: 3
+  storage_network: 'br-storage' 
+  replication_network: 'br-repl'
   drives:
     - name: sdb
   mount_point: /mnt
@@ -170,6 +172,10 @@ networking:
       type: manual
       directives:
         - "vlan-raw-device bond2"
+    - name: bond2.2025
+      type: manual
+      directives:
+        - "vlan-raw-device bond2"
     - name: br-mgmt
       type: static
       directives:
@@ -204,3 +210,11 @@ networking:
         - "bridge_fd 0"
         - "bridge-ports bond2.2024"
         - "address {{ storage_address.stdout|replace('\n','') }}"
+    - name: br-repl
+      type: static
+      directives:
+        - "bridge_stp off"
+        - "bridge_waitport 0"
+        - "bridge_fd 0"
+        - "bridge-ports bond2.2025"
+        - "address {{ repl_address.stdout|replace('\n','') }}"

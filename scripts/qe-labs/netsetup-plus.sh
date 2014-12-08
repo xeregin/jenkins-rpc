@@ -101,6 +101,13 @@ select_sat6_lab1() {
     GATEWAY_IP=10.127.101.129
 }
 
+select_sat6_lab2() {
+    #SAT6 LAB 02
+    SEGID=2030
+    GATEWAY_CIDR=10.127.102.128/25
+    GATEWAY_IP=10.127.102.129
+}
+
 set_security_icmp() {
     if [[ `neutron security-group-show default | grep icmp | grep ingress` ]]; then
         echo "Ping ingress rule already exists! Skipping..."
@@ -139,8 +146,11 @@ setup_router() {
 }
 
 # SAT6 Lab 01
-if [[ $1 == "sat6" ]]; then
+if [[ $1 == "sat6" && $2 == "lab01" ]]; then
     select_sat6_lab1
+# SAT6 Lab 02
+elif [[ $1 == "sat6" && $2 == "lab02" ]]; then
+    select_sat6_lab2
 # IAD Lab 01
 elif [[ $1 == "iad" && $2 == "lab01" ]]; then
     select_iad_lab1

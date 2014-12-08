@@ -32,6 +32,11 @@
   register: storage_address
   when: rpc_user_config.storage_cidr is defined
 
+- name: retrieve replication ip address
+  local_action: script cidr.py {{ rpc_user_config.repl_cidr }} {{ansible_default_ipv4.address }}
+  register: repl_address
+  when: rpc_user_config.repl_cidr is defined
+
 - name: ensure /etc/network/interfaces.d exists
   file: path=/etc/network/interfaces.d state=directory owner=root mode=0655
 
