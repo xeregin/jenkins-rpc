@@ -28,9 +28,9 @@
 573963-compute15 ansible_ssh_host=10.17.255.147 ansible_ssh_user=root
 
 [swift]
-573964-swift01 ansible_ssh_host=10.17.255.148 ansible_ssh_user=root
-573965-swift02 ansible_ssh_host=10.17.255.149 ansible_ssh_user=root
-573970-swift03 ansible_ssh_host=10.17.255.150 ansible_ssh_user=root
+573964-swift01 ansible_ssh_host=10.17.255.148 ansible_ssh_user=root zone=1
+573965-swift02 ansible_ssh_host=10.17.255.149 ansible_ssh_user=root zone=2
+573970-swift03 ansible_ssh_host=10.17.255.150 ansible_ssh_user=root zone=3
 
 [cinder]
 569058-cinder01 ansible_ssh_host=10.17.255.154 ansible_ssh_user=root
