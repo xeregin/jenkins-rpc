@@ -92,6 +92,9 @@
     - key: glance_swift_store_region
       value: "{{lookup('env', 'OS_REGION_NAME')}}"
 
+    - key: haproxy_timeout
+      value: 300
+
 - name: Set virt_type to kvm
   tags: rpc
   lineinfile: >
