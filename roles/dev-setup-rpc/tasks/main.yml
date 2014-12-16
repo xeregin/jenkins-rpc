@@ -93,7 +93,7 @@
       value: "{{lookup('env', 'OS_REGION_NAME')}}"
 
     - key: haproxy_timeout
-      value: 300
+      value: "300s"
 
 - name: Set virt_type to kvm
   tags: rpc
