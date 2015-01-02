@@ -114,6 +114,9 @@
     - key: virt_type
       value: kvm
 
+    - key: container_start_timeout
+      value: 600
+
 - name: "template target.sh on host[0]"
   tags: rpc
   template:
