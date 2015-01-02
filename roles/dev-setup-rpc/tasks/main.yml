@@ -21,6 +21,17 @@
   tags: rpc
   pip: requirements=~/{{rpc_repo_dir}}/requirements.txt
 
+- name: clone ansible
+  git:
+    repo: https://github.com/hughsaunders/ansible
+    dest: ~/ansible
+    version: ssh_retry
+
+- name: install ansible
+  shell: pip install -U .
+  args:
+    chdir: ~/ansible
+
 - name: Install turbolift
   pip:
     name: turbolift
@@ -49,6 +60,11 @@
     src=rpc_user_config.yml
     dest=~/rpc_deploy/rpc_user_config.yml
 
+- name: Render ansible.cfg template
+  template:
+    src: ansible.cfg.j2
+    dest: ~/{{rpc_repo_dir}}/rpc_deployment/ansible.cfg
+
 - name: Generate passphrases
   tags: rpc
   command: >
@@ -58,7 +74,7 @@
   tags: rpc
   shell: ". /var/creds/cloud10; turbolift delete -c jenkins_cluster_{{cluster_number}}"
 
-- name: Set glance swift backend user variables
+- name: Set user variables
   tags: rpc
   lineinfile:
     dest: ~/rpc_deploy/user_variables.yml
@@ -95,12 +111,8 @@
     - key: haproxy_timeout
       value: "300s"
 
-- name: Set virt_type to kvm
-  tags: rpc
-  lineinfile: >
-    dest=~/rpc_deploy/user_variables.yml
-    regexp="^virt_type"
-    line="virt_type: kvm"
+    - key: virt_type
+      value: kvm
 
 - name: "template target.sh on host[0]"
   tags: rpc
