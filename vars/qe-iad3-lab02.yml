@@ -60,7 +60,6 @@ add_ssh_keys_from_github:
   usernames:
     - jacobwagner
     - jpmontez
-    - jcourtois
     - xeregin
     - besanradwan
     - cloudnull
