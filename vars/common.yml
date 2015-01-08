@@ -25,10 +25,3 @@ pip:
     - argh
     - netaddr
 
-## Swift service names
-swift:
-  service_names:
-    - swift-object
-    - swift-account
-    - swift-container
-    - swift-proxy

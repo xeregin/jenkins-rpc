@@ -2,4 +2,4 @@
 - hosts: swift
   user: root
   roles:
-    - swift-node-teardown
+    - role: swift-node-teardown
