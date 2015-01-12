@@ -8,7 +8,7 @@ node98 ansible_ssh_host=10.127.101.126 ansible_ssh_user=root
 
 [network]
 node101 ansible_ssh_host=10.127.101.121 ansible_ssh_user=root
-node98 ansible_ssh_host=10.127.101.126 ansible_ssh_user=root
+node98 ansible_ssh_host=10.127.101.98 ansible_ssh_user=root
 
 [compute]
 node121 ansible_ssh_host=10.127.101.101 ansible_ssh_user=root
