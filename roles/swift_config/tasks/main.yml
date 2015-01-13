@@ -1,9 +1,9 @@
 ---
 - name: create rpc deploy conf.d folder
-  file: path=/etc/rpc_deploy/conf.d state=directory owner=root mode=0755
+  file: path=~/rpc_deploy/conf.d state=directory owner=root mode=0755
 
 - name: create rpc environment file
-  template: src=rpc_environment.j2 dest=/etc/rpc_deploy/rpc_environment.yml owner=root mode=0644
+  template: src=rpc_environment.j2 dest=~/rpc_deploy/rpc_environment.yml owner=root mode=0644
 
 - name: create and configure the swift.yml file
-  template: src=swift.j2 dest=/etc/rpc_deploy/conf.d/swift.yml owner=root mode=0644
+  template: src=swift.j2 dest=~/rpc_deploy/conf.d/swift.yml owner=root mode=0644

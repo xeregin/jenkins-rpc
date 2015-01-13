@@ -6,7 +6,7 @@
   git: repo=https://github.com/rcbops/ansible-lxc-rpc dest=~/ansible-lxc-rpc
 
 - name: Checkout target branch
-  command: git checkout {{targetBranch}} 
+  command: git checkout {{targetBranch}}
   args: chdir=~/ansible-lxc-rpc
 
 - name: Install pip
@@ -16,13 +16,13 @@
   pip: requirements=~/ansible-lxc-rpc/requirements.txt
 
 - name: Get environment_md5 fact for user config
-  stat: path=/etc/rpc_deploy/rpc_environment.yml
+  stat: path=~/rpc_deploy/rpc_environment.yml
   register: st
 
 - name: Set environment version
   lineinfile: >
-  	dest=/etc/rpc_deploy/rpc_user_config.yml
-  	regexp="^environment_version" 
+  	dest=~/rpc_deploy/rpc_user_config.yml
+  	regexp="^environment_version"
   	line="environment_version: {{st.stat.md5}}"
 
 - name: Set virt_type to kvm
