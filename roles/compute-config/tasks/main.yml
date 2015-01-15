@@ -3,12 +3,16 @@
   command: rm -rf "{{ lookup('env', 'HOME') }}/os-ansible-deployment"
   ignore_errors: yes
 
-- name: Clone os-ansible-deployment repo
-  git: repo=https://github.com/stackforge/os-ansible-deployment dest="{{ lookup('env', 'HOME') }}/os-ansible-deployment"
+- name: create os-ansible-deployment folder
+  file: path="{{ lookup('env', 'HOME') }}/os-ansible-deployment" 
+        state=directory 
+        owner="{{ lookup('env', 'USER') }}" 
+        mode=0755
 
-- name: Checkout target branch
-  command: git checkout {{targetBranch}}
-  args: chdir="{{ lookup('env', 'HOME') }}/os-ansible-deployment"
+- name: Clone os-ansible-deployment repo
+  git: repo=https://github.com/stackforge/os-ansible-deployment 
+       dest="{{ lookup('env', 'HOME') }}/os-ansible-deployment"
+       version={{targetBranch}}
 
 - name: Install pip
   shell: "curl https://bootstrap.pypa.io/get-pip.py|python"
