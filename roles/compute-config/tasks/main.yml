@@ -8,7 +8,7 @@
        version={{ targetBranch | default(master) }}
 
 - name: change owner of os-ansible-deployment to current user
-  file: src="{{ lookup('env', 'HOME') }}/os-ansible-deployment"
+  file: path="{{ lookup('env', 'HOME') }}/os-ansible-deployment"
         state=directory
         recurse=yes
         owner="{{ lookup('env', 'USER') }}" 
