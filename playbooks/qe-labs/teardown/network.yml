@@ -2,4 +2,4 @@
 - hosts: network
   user: root
   roles: 
-    - network_node_teardown
+    - network-node-teardown
