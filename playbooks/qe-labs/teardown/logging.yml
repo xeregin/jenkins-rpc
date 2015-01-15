@@ -2,4 +2,4 @@
 - hosts: logger
   user: root
   roles: 
-    - logging_node_teardown
+    - logging-node-teardown

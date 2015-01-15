@@ -2,4 +2,4 @@
 - hosts: compute
   user: root
   roles: 
-    - compute_node_teardown
+    - compute-node-teardown

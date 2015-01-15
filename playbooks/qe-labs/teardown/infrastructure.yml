@@ -2,4 +2,4 @@
 - hosts: infrastructure
   user: root
   roles:
-    - infrastructure_node_teardown
+    - infrastructure-node-teardown
