@@ -5,7 +5,6 @@
 - name: Clone os-ansible-deployment repo
   git: repo=https://github.com/stackforge/os-ansible-deployment 
        dest="{{ lookup('env', 'HOME') }}/os-ansible-deployment"
-       version={{ targetBranch | default('master') }}
 
 - name: change owner of os-ansible-deployment to current user
   file: path="{{ lookup('env', 'HOME') }}/os-ansible-deployment"
