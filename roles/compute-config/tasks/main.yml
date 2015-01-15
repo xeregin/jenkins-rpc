@@ -1,18 +1,18 @@
 ---
 - name: Delete os-ansible-deployment repo
   command: rm -rf "{{ lookup('env', 'HOME') }}/os-ansible-deployment"
-  ignore_errors: yes
-
-- name: create os-ansible-deployment folder
-  file: path="{{ lookup('env', 'HOME') }}/os-ansible-deployment" 
-        state=directory 
-        owner="{{ lookup('env', 'USER') }}" 
-        mode=0755
 
 - name: Clone os-ansible-deployment repo
   git: repo=https://github.com/stackforge/os-ansible-deployment 
        dest="{{ lookup('env', 'HOME') }}/os-ansible-deployment"
-       version={{targetBranch}}
+       version={{ targetBranch | default(master) }}
+
+- name: change owner of os-ansible-deployment to current user
+  file: src="{{ lookup('env', 'HOME') }}/os-ansible-deployment"
+        state=directory
+        recurse=yes
+        owner="{{ lookup('env', 'USER') }}" 
+        mode=0755
 
 - name: Install pip
   shell: "curl https://bootstrap.pypa.io/get-pip.py|python"
@@ -27,17 +27,17 @@
         mode=0755
 
 - name: install rpc environment file
-  copy: src={{ lookup('env', 'HOME') }}/os-ansible-deployment/etc/rpc_deploy/rpc_environment.yml"
-        dest={{ lookup('env', 'HOME') }}/rpc_deploy/rpc_environment.yml 
+  copy: src="{{ lookup('env', 'HOME') }}/os-ansible-deployment/etc/rpc_deploy/rpc_environment.yml"
+        dest="{{ lookup('env', 'HOME') }}/rpc_deploy/rpc_environment.yml"
         owner="{{ lookup('env', 'USER') }}" 
         mode=0644
 
 - name: get environment version md5sum
-  stat: path={{ lookup('env', 'HOME') }}/rpc_deploy/rpc_environment.yml
+  stat: path="{{ lookup('env', 'HOME') }}/rpc_deploy/rpc_environment.yml"
   register: environment_version
 
 - name: install rpc user config file
   template: src=rpc_user_config.j2 
-            dest={{ lookup('env', 'HOME') }}/rpc_deploy/rpc_user_config.yml 
+            dest="{{ lookup('env', 'HOME') }}/rpc_deploy/rpc_user_config.yml"
             owner="{{ lookup('env', 'USER') }}" 
             mode=0644
