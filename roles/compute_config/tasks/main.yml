@@ -1,13 +1,13 @@
 ---
 - name: create rpc deploy folder
-  file: path="{{ lookup('env', 'USER_HOME') }}/rpc_deploy" 
+  file: path="{{ lookup('env', 'HOME') }}/rpc_deploy" 
         state=directory 
         owner="{{ lookup('env', 'USER') }}" 
         mode=0755
 
 - name: install rpc environment file
   template: src=rpc_environment.j2 
-            dest={{ lookup('env', 'USER_HOME') }}/rpc_deploy/rpc_environment.yml 
+            dest={{ lookup('env', 'HOME') }}/rpc_deploy/rpc_environment.yml 
             owner="{{ lookup('env', 'USER') }}" 
             mode=0644
 
@@ -17,6 +17,6 @@
 
 - name: install rpc user config file
   template: src=rpc_user_config.j2 
-            dest={{ lookup('env', 'USER_HOME') }}/rpc_deploy/rpc_user_config.yml 
+            dest={{ lookup('env', 'HOME') }}/rpc_deploy/rpc_user_config.yml 
             owner="{{ lookup('env', 'USER') }}" 
             mode=0644
