@@ -1,32 +1,33 @@
 ---
-- name: Delete RPC repo
-  command: rm -rf ~/os-ansible-deployment
+- name: Delete os-ansible-deployment repo
+  command: rm -rf "{{ lookup('env', 'HOME') }}/os-ansible-deployment"
+  ignore_errors: yes
 
-- name: Clone RPC repo
-  git: repo=https://github.com/rcbops/os-ansible-deployment dest=~/os-ansible-deployment
+- name: Clone os-ansible-deployment repo
+  git: repo=https://github.com/stackforge/os-ansible-deployment dest="{{ lookup('env', 'HOME') }}/os-ansible-deployment"
 
 - name: Checkout target branch
   command: git checkout {{targetBranch}}
-  args: chdir=~/os-ansible-deployment
+  args: chdir="{{ lookup('env', 'HOME') }}/os-ansible-deployment"
 
 - name: Install pip
   shell: "curl https://bootstrap.pypa.io/get-pip.py|python"
 
 - name: Install pip requirements
-  pip: requirements=~/os-ansible-deployment/requirements.txt
+  pip: requirements="{{ lookup('env', 'HOME') }}/os-ansible-deployment/requirements.txt"
 
 - name: Get environment_md5 fact for user config
-  stat: path=~/rpc_deploy/rpc_environment.yml
+  stat: path="{{ lookup('env', 'HOME') }}/rpc_deploy/rpc_environment.yml"
   register: st
 
 - name: Set environment version
   lineinfile: >
-  	dest=~/rpc_deploy/rpc_user_config.yml
+  	dest="{{ lookup('env', 'HOME') }}/rpc_deploy/rpc_user_config.yml"
   	regexp="^environment_version"
   	line="environment_version: {{st.stat.md5}}"
 
 - name: Set virt_type to kvm
   lineinfile: >
-    dest=~/rpc_deploy/user_variables.yml
+    dest="{{ lookup('env', 'HOME') }}/rpc_deploy/user_variables.yml"
     regexp="^virt_type"
     line="virt_type: kvm"
