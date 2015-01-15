@@ -1,19 +1,19 @@
 ---
 - name: Delete RPC repo
-  command: rm -rf ~/ansible-lxc-rpc
+  command: rm -rf ~/os-ansible-deployment
 
 - name: Clone RPC repo
-  git: repo=https://github.com/rcbops/ansible-lxc-rpc dest=~/ansible-lxc-rpc
+  git: repo=https://github.com/rcbops/os-ansible-deployment dest=~/os-ansible-deployment
 
 - name: Checkout target branch
   command: git checkout {{targetBranch}}
-  args: chdir=~/ansible-lxc-rpc
+  args: chdir=~/os-ansible-deployment
 
 - name: Install pip
   shell: "curl https://bootstrap.pypa.io/get-pip.py|python"
 
 - name: Install pip requirements
-  pip: requirements=~/ansible-lxc-rpc/requirements.txt
+  pip: requirements=~/os-ansible-deployment/requirements.txt
 
 - name: Get environment_md5 fact for user config
   stat: path=~/rpc_deploy/rpc_environment.yml
