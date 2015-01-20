@@ -34,6 +34,7 @@ ansible-playbook $ANSIBLE_OPTIONS playbooks/openstack/horizon-all.yml; arc
 ansible-playbook $ANSIBLE_OPTIONS playbooks/openstack/utility-all.yml; arc
 ansible-playbook $ANSIBLE_OPTIONS playbooks/openstack/rpc-support-all.yml; arc
 ansible-playbook $ANSIBLE_OPTIONS playbooks/infrastructure/rsyslog-config.yml; arc
+ansible-playbook $ANSIBLE_OPTIONS playbooks/openstack/swift-all.yml; arc
 ansible-playbook $ANSIBLE_OPTIONS playbooks/openstack/tempest.yml; arc
 ansible "utility_all[0]" -m shell -a /root/rpc_tempest_gate.sh; arc
 popd
