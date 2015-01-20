@@ -169,10 +169,6 @@ networking:
       type: manual
       directives:
         - "vlan-raw-device bond2"
-    - name: bond2.XXXX
-      type: manual
-      directives:
-        - "vlan-raw-device bond2"
     - name: br-mgmt
       type: static
       directives:
@@ -207,11 +203,3 @@ networking:
         - "bridge_fd 0"
         - "bridge-ports bond2.2004"
         - "address {{ storage_address.stdout|replace('\n','') }}"
-    - name: br-repl
-      type: static
-      directives:
-        - "bridge_stp off"
-        - "bridge_waitport 0"
-        - "bridge_fd 0"
-        - "bridge-ports bond2.XXXX"
-        - "address {{ replication_address.stdout|replace('\n','') }}"
