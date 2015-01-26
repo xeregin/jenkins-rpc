@@ -1,6 +1,0 @@
---
-- hosts: deployment
-  roles:
-    - openldap_server
-  vars_file:
-    - vars/openldap_server.yml

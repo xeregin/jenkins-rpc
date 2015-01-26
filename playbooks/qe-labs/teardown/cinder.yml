@@ -2,4 +2,4 @@
 - hosts: cinder
   user: root
   roles: 
-    - cinder_node_teardown
+    - cinder-node-teardown
