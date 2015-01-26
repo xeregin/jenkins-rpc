@@ -28,8 +28,8 @@ def main(config=None, mod=None):
         print "IP mod required"
         sys.exit(0)
     command = ("cat " + config + \
-                   " | sed 's/\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*[:]*[0-9]*\)/\\1%" + \
-                   mod + "/'")
+                   " | sed 's/\([0-9]*\.[0-9]*\.[0-9]*\.[0-9]*\)/\\1%" + \
+                   mod + "/'  | sed 's/\(0\.0\.0\.0\)/\\1%" + mod + "/'")
     run_cmd(command)
 
 argh.dispatch_command(main)
