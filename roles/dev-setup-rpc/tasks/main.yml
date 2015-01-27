@@ -26,6 +26,7 @@
     repo: https://github.com/hughsaunders/ansible
     dest: ~/ansible
     version: ssh_retry
+    track_submodules: no
 
 - name: install ansible
   shell: pip install -U .
