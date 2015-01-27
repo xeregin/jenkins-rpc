@@ -61,6 +61,11 @@
       directives:
         - "bridge_ports em1.2{{cluster_number}}02"
         - "address 172.29.244.{{member_number}}/22"
+    - name: "br-vlan"
+      type: "static"
+      directives:
+        - "bridge_ports em1.2{{cluster_number}}03"
+        - "address 172.29.248.{{member_number}}/22"
 
 - name: Bring up new interfaces
   command: ifup -a
