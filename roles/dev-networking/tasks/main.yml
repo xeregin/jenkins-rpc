@@ -61,6 +61,11 @@
       directives:
         - "bridge_ports em1.2{{cluster_number}}02"
         - "address 172.29.244.{{member_number}}/22"
+    - name: "em1.2{{cluster_number}}03"
+      type: "manual"
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
     - name: "br-vlan"
       type: "static"
       directives:
