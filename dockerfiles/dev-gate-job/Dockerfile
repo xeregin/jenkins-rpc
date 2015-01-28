@@ -10,7 +10,8 @@ RUN apt-get upgrade -y
 RUN apt-get install -y curl git python python-pip python-dev ssh-client
 
 # Install ansible
-RUN pip install ansible
+RUN git clone --recursive --branch v1.8.2 https://github.com/ansible/ansible
+RUN cd ansible; pip install . ; cd ..
 
 # Add entrypoint script
 ADD job.sh /root/job.sh
