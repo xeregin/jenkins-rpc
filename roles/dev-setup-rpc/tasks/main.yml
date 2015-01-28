@@ -127,8 +127,7 @@
 
 - name: Dump host[0] IP to local file
   tags: rpc
-  connection: local
-  delegate_to: local
+  delegate_to: localhost
   copy: >
     content={{ansible_ssh_host}}
     dest=~/target.ip
