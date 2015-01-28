@@ -22,11 +22,7 @@
   pip: requirements=~/{{rpc_repo_dir}}/requirements.txt
 
 - name: clone ansible
-  git:
-    repo: https://github.com/hughsaunders/ansible
-    dest: ~/ansible
-    version: ssh_retry
-    track_submodules: no
+  shell: rm -rf ansible||:; git clone --recursive --branch ssh_retry https://github.com/hughsaunders/ansible
 
 - name: install ansible
   shell: pip install -U .
