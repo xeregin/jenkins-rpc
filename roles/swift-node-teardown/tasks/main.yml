@@ -7,8 +7,6 @@
 - name: Remove Swift packages and dependencies
   shell: pip freeze | xargs pip uninstall -y
 
-- debug: var={{ swift_config }}
-
 - name: Remove all files and directories within Swift drives
   command: rm -rf /mnt/{{ item.name }}/*
   with_items: swift_config.drives
