@@ -21,9 +21,6 @@
   tags: rpc
   pip: requirements=~/{{rpc_repo_dir}}/requirements.txt
 
-- name: clone ansible
-  shell: rm -rf ansible||:; git clone --recursive --branch jenkins https://github.com/hughsaunders/ansible
-
 - name: install ansible
   shell: pip install -U .
   args:
