@@ -1,0 +1,5 @@
+---
+- hosts: compute
+  user: root
+  roles: 
+    - compute-node-teardown
