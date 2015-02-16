@@ -21,11 +21,6 @@
   tags: rpc
   pip: requirements=~/{{rpc_repo_dir}}/requirements.txt
 
-- name: install ansible
-  shell: pip install -U .
-  args:
-    chdir: ~/ansible
-
 - name: Install turbolift
   pip:
     name: turbolift
