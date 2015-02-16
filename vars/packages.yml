@@ -1,0 +1,12 @@
+## Packages to install on all hosts
+packages:
+   - bridge-utils
+   - lldpd
+   - lsof
+   - ntp
+   - ntpdate
+   - ssh
+   - sudo
+   - tcpdump
+   - vim
+   - vlan

@@ -1,5 +1,0 @@
----
-- hosts: logger
-  user: root
-  roles: 
-    - logging-node-teardown

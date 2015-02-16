@@ -1,0 +1,6 @@
+---
+- name: Rekick lab
+  gather_facts: False
+  hosts: all
+  roles:
+    - rekick-lab

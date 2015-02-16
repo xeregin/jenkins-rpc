@@ -1,5 +1,0 @@
----
-- hosts: cinder
-  user: root
-  roles: 
-    - cinder-node-teardown

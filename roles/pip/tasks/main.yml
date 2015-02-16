@@ -1,0 +1,8 @@
+---
+- name: Install pip
+  tags: rpc
+  shell: "curl https://bootstrap.pypa.io/get-pip.py|python"
+
+- name: install all required pip packages
+  pip: name={{ item }} state=latest
+  with_items: pip

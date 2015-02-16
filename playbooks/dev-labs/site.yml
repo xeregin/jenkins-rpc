@@ -3,8 +3,8 @@
   hosts: "{{hosts}}"
   gather_facts: True
   roles:
-    - dev-lvm
-    - dev-packages
+    - lvm
+    - packages
     - dev-networking
     - dev-swift
 
@@ -12,5 +12,5 @@
   hosts: "{{hosts}}[0]"
   gather_facts: True
   roles:
-    - dev-setup-git
+    - setup-git
     - dev-setup-rpc

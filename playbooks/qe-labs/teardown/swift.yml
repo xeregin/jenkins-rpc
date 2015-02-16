@@ -1,5 +1,0 @@
----
-- hosts: swift
-  user: root
-  roles:
-    - role: swift-node-teardown

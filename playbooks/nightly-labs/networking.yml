@@ -1,4 +1,5 @@
 ---
 - hosts: all
+  user: root
   roles:
     - networking

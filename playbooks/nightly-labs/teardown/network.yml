@@ -1,5 +1,0 @@
----
-- hosts: network
-  user: root
-  roles: 
-    - network-node-teardown
