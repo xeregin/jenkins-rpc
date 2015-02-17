@@ -1,7 +1,7 @@
 ---
 - hosts: all
   user: root
-  vars:
+  vars_files:
     - vars/pip.yml
   roles:
     - pip

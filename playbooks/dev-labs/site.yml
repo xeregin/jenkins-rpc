@@ -2,7 +2,7 @@
 - name: Provision dev cluster
   hosts: "{{hosts}}"
   gather_facts: True
-  vars:
+  vars_files:
     - vars/packages.yml
   roles:
     - lvm
