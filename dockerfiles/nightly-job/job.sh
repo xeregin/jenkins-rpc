@@ -25,7 +25,7 @@ then
   ansible-playbook \
     -i inventory/$LAB \
     -e @vars/$LAB \
-    playbooks/nightly-labs/preconfigure-hosts.yml & wait %1
+    playbooks/nightly-labs/configure-hosts.yml & wait %1
 
   popd
 fi
