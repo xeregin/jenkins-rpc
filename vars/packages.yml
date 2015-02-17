@@ -1,4 +1,3 @@
-## Packages to install on all hosts
 packages:
    - bridge-utils
    - lldpd
