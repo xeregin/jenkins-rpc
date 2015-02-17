@@ -54,25 +54,6 @@ cinder_storage:
       volume_group: cinder-volumes
     lvm_ssd:
       volume_group: cinder-volumes
-nova:
-  branch: nova_stable_icehouse
-add_ssh_keys_from_github:
-  usernames:
-    - jacobwagner
-    - jpmontez
-    - xeregin
-    - besanradwan
-    - cloudnull
-    - apsu
-    - andymcc
-    - matt416
-    - hughsaunders
-    - mancdaz
-    - d34dh0r53
-    - claco
-    - busterswt
-    - galstrom21
-    - yasminek
 networking:
     - name: lo
       type: loopback
