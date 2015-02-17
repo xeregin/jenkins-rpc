@@ -1,6 +1,7 @@
 ---
 - name: Delete os-ansible-deployment repo
   command: rm -rf "{{ lookup('env', 'HOME') }}/os-ansible-deployment"
+  ignore_errors: yes
 
 - name: Clone os-ansible-deployment repo
   git: repo=https://github.com/stackforge/os-ansible-deployment 
@@ -55,3 +56,8 @@
         dest="{{ lookup('env', 'HOME') }}/rpc_deploy/user_variables.yml"
         owner="{{ lookup('env', 'USER') }}" 
         mode=0644
+
+- name: "template target.sh"
+  template: src=target.sh.j2 
+            dest="{{ lookup('env', 'HOME') }}/target.sh" 
+            mode=0755

@@ -1,1 +1,6 @@
 ---
+- hosts: "{{ infrastructure }}[0]"
+  user: root
+  roles:
+    - configure-rpc-compute.yml
+    - configure-rpc-swift.yml
