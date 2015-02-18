@@ -9,3 +9,4 @@ packages:
    - tcpdump
    - vim
    - vlan
+   - python-dev

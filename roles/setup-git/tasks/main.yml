@@ -1,4 +1,7 @@
 ---
+- name: install git
+  apt: pkg=git state=latest
+
 - name: Configure git identity
   tags:
     - rpc
@@ -31,6 +34,15 @@
     repo=https://github.com/stackforge/os-ansible-deployment
     dest={{rpc_repo_dir}}
   when: TRIGGER == "gerrit"
+
+- name: Clone stackforge repo
+  tags:
+    - rpc
+    - git
+  git: >
+    repo=https://github.com/stackforge/os-ansible-deployment
+    dest={{rpc_repo_dir}}
+  when: TRIGGER == "nightly"
 
 - name: Add github remote refs
   tags:

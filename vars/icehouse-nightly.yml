@@ -1,3 +1,5 @@
+rpc_repo_dir: rpc_repo
+targetBranch: icehouse
 rpc_user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
@@ -49,6 +51,14 @@ rpc_user_config:
             - cinder_api
             - cinder_volume
             - nova_compute
+cinder_storage:
+  backends:
+    netapp:
+      username: test
+      hostname: test
+      password: test
+    lvm:
+      volume_group: vg_storage
 networking:
     - name: lo
       type: loopback

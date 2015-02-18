@@ -1,12 +1,12 @@
 ---
 - name: create rpc deploy conf.d folder
-  file: path="{{ lookup('env', 'HOME') }}/rpc_deploy/conf.d" 
-        state=directory 
-        owner="{{ lookup('env', 'USER') }}"
+  file: path=~/rpc_deploy/conf.d 
+        state=directory
         mode=0755
+  when: swift_config is defined
 
 - name: create and configure the swift.yml file
   template: src=swift.j2
-            dest="{{ lookup('env', 'HOME') }}/rpc_deploy/conf.d/swift.yml"
-            owner="{{ lookup('env', 'USER') }}"
+            dest=~/rpc_deploy/conf.d/swift.yml
             mode=0644
+  when: swift_config is defined
