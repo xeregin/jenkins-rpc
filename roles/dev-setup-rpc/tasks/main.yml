@@ -2,8 +2,8 @@
 - name: Add ssh keys
   tags: rpc
   copy: >
-    src={{item}}
-    dest=~/.ssh/{{item|basename}}
+    src={{ item }}
+    dest=~/.ssh/{{ item|basename }}
   with_fileglob:
     - id_*
 

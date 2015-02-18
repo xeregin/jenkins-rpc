@@ -1,4 +1,10 @@
 ---
+- name: Add ssh keys
+  copy: src={{item}} 
+        dest=~/.ssh/{{item|basename}}
+  with_fileglob:
+    - id_*
+
 - name: Install pip requirements
   pip: requirements=~/{{rpc_repo_dir}}/requirements.txt
 
