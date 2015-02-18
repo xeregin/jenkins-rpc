@@ -19,10 +19,10 @@
 
 - name: "template target.sh"
   template: src=target.sh.j2 
-            dest="{{ lookup('env', 'HOME') }}/target.sh" 
+            dest=~/target.sh 
             mode=0755
 
 - name: Dump deployment host IP to local file
   delegate_to: localhost
   copy: content={{ ansible_ssh_host }}
-        dest="{{ lookup('env', 'HOME') }}/target.ip"
+        dest=~/target.ip
