@@ -1,0 +1,57 @@
+---
+
+## --------- [ Prepare Cluster ] ---------------
+- include: packages.yml
+  tags: prepare
+- include: pip.yml
+  tags: prepare
+- include: networking.yml
+  tags: prepare
+- include: lvm.yml
+  tags: prepare
+
+- hosts: all
+  tasks:
+    - name: Create cinder volumes vg
+      lvg:
+        vg: "{{item.name}}"
+        pvs: "{{item.device}}"
+      with_items: vgs
+
+- hosts: infrastructure[0]
+  tags: prepare
+  user: root
+  roles:
+
+    - role: lvm_vg
+      vg_name: cinder-volumes
+      pv: /dev/sda2
+
+    - role: lvm_vg
+      vg_name: lxc
+      pv: /dev/sda3
+
+    - configure-rpc-swift-lvs
+    - setup-git
+
+    - role: run-script-from-os-ansible-deployment
+      script_name: bootstrap-ansible
+
+    - configure-rpc-compute
+    - configure-rpc-swift
+
+## --------- [ Run os-ansible-deployment ] ---------------
+- hosts: infrastructure[0]
+  tags: run
+  roles:
+    - role: run-script-from-os-ansible-deployment
+      script_name: run-playbooks
+      script_env:
+        DEPLOY_TEMPEST: yes
+
+## --------- [ Test with tempest ] ---------------
+- hosts: infrastructure[0]
+  tags: test
+  roles:
+    - role: run-script-from-os-ansible-deployment
+      script_name: run-tempest

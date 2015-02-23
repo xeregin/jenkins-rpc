@@ -1,0 +1,7 @@
+---
+- name: Run script from os-ansible-deloyment
+  environment: script_env
+  shell: "scripts/{{script_name}}.sh"
+    args:
+      chdir: "{{rpc_repo_dir}}"
+
