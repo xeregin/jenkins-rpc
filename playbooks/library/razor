@@ -1,0 +1,507 @@
+#!/usr/bin/env python
+# Copyright 2014, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# stdlib imports
+import datetime
+import re
+import socket
+import syslog
+import time
+
+# pypi imports
+import requests
+
+# ansible imports
+from ansible.module_utils.basic import *
+
+DOCUMENTATION = '''
+---
+module: razor
+short_description:
+    - Manage razor server and nodes
+description:
+    - This module uses razor to manage a cluster of servers
+version_added: "1.6.2"
+author: Solomon Wagner
+requirements:
+    - A razor server
+    - python requests
+options:
+    url:
+        description:
+            - url for the razor api
+        required: True
+'''
+
+COMMAND_MAP = {
+    'list-brokers': {
+        'extension': '/collections/brokers',
+        'variables': None
+    },
+    'list-commands': {
+        'extension': '/collections/commands',
+        'variables': None
+    },
+    'list-events': {
+        'extension': '/collections/events',
+        'variables': None
+    },
+    'list-hooks': {
+        'extension': '/collections/hooks',
+        'variables': None
+    },
+    'list-nodes': {
+        'extension': '/collections/nodes',
+        'variables': None
+    },
+    'list-policies': {
+        'extension': '/collections/policies',
+        'variables': None
+    },
+    'list-repos': {
+        'extension': '/collections/repos',
+        'variables': None
+    },
+    'list-tags': {
+        'extension': '/collections/tags',
+        'variables': None
+    },
+    'get-broker': {
+        'extension': '/collections/brokers/%(name)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'get-command': {
+        'extension': '/collections/command/%(name)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'get-event': {
+        'extension': '/collections/event/%(name)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'get-hook': {
+        'extension': '/collections/hook/%(name)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'get-node': {
+        'extension': '/collections/node/%(name)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'get-policy': {
+        'extension': '/collections/policies/%(name)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'get-repo': {
+        'extension': '/collections/repos/%(name)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'get-tag': {
+        'extension': '/collections/tags/%(name)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'get-task': {
+        'extension': '/collections/tasks/%(name)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'add-policy-tag': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'tag',
+            'rule'
+        ]
+    },
+    'create-broker': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'broker-type',
+            'configuration'
+        ]
+    },
+    'create-hook': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'hook-type',
+            'configuration'
+        ]
+    },
+    'create-policy': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'hostname',
+            'root-password',
+            'enabled',
+            'max-count',
+            'before',
+            'after',
+            'tags',
+            'repo',
+            'broker',
+            'task',
+            'node-metadata'
+        ]
+    },
+    'create-repo': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'url',
+            'iso-url',
+            'no-content',
+            'task'
+        ]
+    },
+    'create-tag': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'rule'
+        ]
+    },
+    'create-task': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'os',
+            'template',
+            'boot-seq'
+        ]
+    },
+    'delete-broker': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'delete-hook': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'delete-node': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'delete-policy': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'delete-repo': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'delete-tag': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'force'
+        ]
+    },
+    'disable-policy': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'enable-policy': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'modify-node-metadata': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'node',
+            'update',
+            'remove',
+            'clear',
+            'no-replace'
+        ]
+    },
+    'modify-policy-max-count': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'max-count'
+        ]
+    },
+    'move-policy': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'before',
+            'after'
+        ]
+    },
+    'reboot-node': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'register-node': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'installed',
+            'hw-info'
+        ]
+    },
+    'reinstall-node': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name'
+        ]
+    },
+    'remove-node-metadata': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'node',
+            'key',
+            'all'
+        ]
+    },
+    'remove-policy-tag': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'tag'
+        ]
+    },
+    'set-node-desired-power-state': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'to'
+        ]
+    },
+    'set-node-hw-info': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'node',
+            'hw-info'
+        ]
+    },
+    'set-node-ipmi-credentials': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'ipmi-hostname',
+            'ipmi-username',
+            'ipmi-password'
+        ]
+    },
+    'update-node-metadata': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'node',
+            'key',
+            'value',
+            'no-replace'
+        ]
+    },
+    'update-tag-rule': {
+        'extension': '/commands/%(command)s',
+        'variables': [
+            'name',
+            'rule',
+            'force'
+        ]
+    }
+}
+
+
+class ManageRazor(object):
+
+    def __init__(self, module):
+        """ Manage Razor via Ansible """
+        self.state_change = False
+        self.url = None
+
+        # Load Ansible Module
+        self.module = module
+
+    def command_router(self):
+        """ Run the command as its provided to the module """
+        command_name = self.module.params['command']
+        if command_name not in COMMAND_MAP:
+            self.failure(
+                error='No Command Found',
+                rc=2,
+                msg='Command [ %s ] was not found.' % command_name
+                )
+
+        action_command = COMMAND_MAP[command_name]
+        if hasattr(self, '%s' % command_name):
+            action = getattr(self, '%s' % command_name)
+            facts = action(variables=action_command['variables'])
+            if facts is None:
+                self.module.exit_json(changed=self.state_change)
+            else:
+                self.module.exit_json(
+                    changed=self.state_change,
+                    ansible_facts=facts
+                )
+        else:
+            self.failure(
+                error='Command not in ManageRazor class',
+                rc=2,
+                msg='Method [ %s ] was not found.' % command_name
+            )
+
+    @staticmethod
+    def _facts(facts):
+        """Return a dict for our Ansible facts.
+
+        :param facts: ``dict``  Dict with data to return
+        """
+        return {'razor_facts': facts}
+
+    def _get_vars(self, variables, required=None):
+        """Return a dict of all variables as found within the module.
+
+        :param variables: ``list``  List of all variables that are
+                                    available to use within the
+                                    Razor Command.
+        :param required: ``list``  Name of variables that are required.
+        """
+        return_dict = {}
+        for variable in variables:
+            return_dict[variable] = self.module.params.get(variable)
+        else:
+            if isinstance(required, list):
+                for var_name in required:
+                    check = return_dict.get(var_name)
+                    if check is None:
+                        self.failure(
+                            error='Missing [ %s ] from Task or found a'
+                                  'None value' % var_name,
+                            rc=000,
+                            msg='variables %s - available params [ %s ]'
+                                % (variables, self.module.params)
+                        )
+            return return_dict
+
+    def failure(self, error, rc, msg):
+        """Return a Failure when running an Ansible command.
+
+        :param error: ``str``  Error that occurred.
+        :param rc: ``int``     Return code while executing an Ansible command.
+        :param msg: ``str``    Message to report.
+        """
+        self.module.fail_json(msg=msg, rc=rc, err=error)
+
+    def check_ssh(self, host, port=22, timeout=5):
+        syslog.syslog("checking for ssh at %(host)s:%(port)s"
+                      % dict(host=host, port=port))
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(timeout)
+            sock.connect((host, port))
+            banner = sock.recv(1024)
+            syslog.syslog(
+                "Read '%(banner)s' from %(host)s:%(port)s"
+                % dict(host=host, port=port, banner=banner)
+            )
+            sock.close()
+            match = bool(self.ssh_re.search(banner))
+            syslog.syslog(
+                "Read '%(banner)s' from %(host)s:%(port)s match=%(m)s"
+                % dict(host=host, port=port, banner=banner, m=match)
+            )
+            return match
+        except Exception as e:
+            syslog.syslog("Error checking for ssh: %(err)s" % dict(err=str(e)))
+        try:
+            sock.close()
+        except Exception:
+            return False
+        return False
+
+    def wait_ssh(self, host, timeout):
+        start_time = datetime.datetime.now()
+        while ((not self.check_ssh(host=host))
+                and ((datetime.datetime.now()-start_time).seconds < timeout)):
+            time.sleep(15)
+        return self.check_ssh(host=host)
+
+    def reinstall_node(self):
+        for attempt in xrange(self.tries):
+            syslog.syslog(
+                "Kicking %(node)s %(attempt)s/%(tries)s"
+                % dict(node=self.host_name, attempt=attempt, tries=self.tries)
+            )
+
+            # initialise rekick
+            request_body = {'name': '%(host_name)s' % self.host_name}
+            requests.post('%(razor_url)s/commands/reinstall-node'
+                          % razor_url=self.djeep_url,
+                          data=json.dumps(request_body))
+
+            # wait for node to go down
+            time.sleep(120)
+
+            # wait for node to come back up
+            if self.wait_ssh(host=self.host_ip, timeout=self.wait):
+                self.module.exit_json(changed=True)
+            else:
+                if self.reboot(tries=self.tries):
+                    self.module.exit_json(changed=True)
+                    self.module.fail_json(err='Failed to rekick',
+                                          rc=2,
+                                          msg='Failed to rekick')
+
+
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            host_ip=dict(required=True),
+            host_name=dict(required=True),
+            kick_wait=dict(required=True),
+            kick_tries=dict(required=True),
+            djeep_url=dict(required=True)
+        ),
+        supports_check_mode=False
+    )
+
+if __name__ == '__main__':
+        main()
