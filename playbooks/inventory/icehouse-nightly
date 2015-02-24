@@ -1,3 +1,6 @@
+[haproxy]
+node108 ansible_ssh_host=10.127.101.108 ansible_ssh_user=root
+
 [infrastructure]
 node108 ansible_ssh_host=10.127.101.108 ansible_ssh_user=root
 node101 ansible_ssh_host=10.127.101.101 ansible_ssh_user=root
