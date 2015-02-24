@@ -51,6 +51,7 @@
     git fetch https://review.openstack.org/stackforge/os-ansible-deployment {{GERRIT_REFSPEC}}
   args:
     chdir: "{{rpc_repo_dir}}"
+  when: GERRIT_REFSPEC is defined
 
 - name: Merge Review
   tags:
@@ -59,3 +60,4 @@
   command: >
     git merge FETCH_HEAD
     chdir={{rpc_repo_dir}}
+  when: GERRIT_REFSPEC is defined
