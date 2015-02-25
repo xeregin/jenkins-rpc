@@ -13,13 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# stdlib imports
-import datetime
-import re
-import socket
-import syslog
-import time
-
 # pypi imports
 import requests
 
@@ -36,103 +29,145 @@ description:
 version_added: "1.6.2"
 author: Solomon Wagner
 requirements:
-    - A razor server
-    - python requests
+    - "razor-server"
+    - "python-requests"
 options:
+    return_code:
+        description:
+            - Allow for return codes other than 0 when executing commands
+            - This is a comma seperated list of acceptable return codes
+        default: 0
     url:
         description:
-            - url for the razor api
+            - the full url for the razor api
         required: True
+        default: http://localhost:8080/api
+    command:
+        description:
+            - Operation for the module to perform, Currently available
+        choices:
+            - reinstall-node
 '''
+
+EXAMPLES = """
+# Get the list of nodes
+- razor:
+    url: http://localhost:8080/api
+    command: list-nodes
+
+# Issue reinstall node command
+- razor:
+    url: http://razor:8080/api
+    command: reinstall-node
+    name: node01
+"""
 
 COMMAND_MAP = {
     'list-brokers': {
+        'command': 'list_brokers',
         'extension': '/collections/brokers',
         'variables': None
     },
     'list-commands': {
+        'command': '',
         'extension': '/collections/commands',
         'variables': None
     },
     'list-events': {
+        'command': '',
         'extension': '/collections/events',
         'variables': None
     },
     'list-hooks': {
+        'command': '',
         'extension': '/collections/hooks',
         'variables': None
     },
     'list-nodes': {
+        'command': 'list_nodes',
         'extension': '/collections/nodes',
         'variables': None
     },
     'list-policies': {
+        'command': '',
         'extension': '/collections/policies',
         'variables': None
     },
     'list-repos': {
+        'command': '',
         'extension': '/collections/repos',
         'variables': None
     },
     'list-tags': {
+        'command': '',
         'extension': '/collections/tags',
         'variables': None
     },
     'get-broker': {
+        'command': '',
         'extension': '/collections/brokers/%(name)s',
         'variables': [
             'name'
         ]
     },
     'get-command': {
+        'command': '',
         'extension': '/collections/command/%(name)s',
         'variables': [
             'name'
         ]
     },
     'get-event': {
+        'command': '',
         'extension': '/collections/event/%(name)s',
         'variables': [
             'name'
         ]
     },
     'get-hook': {
+        'command': '',
         'extension': '/collections/hook/%(name)s',
         'variables': [
             'name'
         ]
     },
     'get-node': {
+        'command': '',
         'extension': '/collections/node/%(name)s',
         'variables': [
             'name'
         ]
     },
     'get-policy': {
+        'command': '',
         'extension': '/collections/policies/%(name)s',
         'variables': [
             'name'
         ]
     },
     'get-repo': {
+        'command': '',
         'extension': '/collections/repos/%(name)s',
         'variables': [
             'name'
         ]
     },
     'get-tag': {
+        'command': '',
         'extension': '/collections/tags/%(name)s',
         'variables': [
             'name'
         ]
     },
     'get-task': {
+        'command': '',
         'extension': '/collections/tasks/%(name)s',
         'variables': [
             'name'
         ]
     },
     'add-policy-tag': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -141,6 +176,7 @@ COMMAND_MAP = {
         ]
     },
     'create-broker': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -149,6 +185,7 @@ COMMAND_MAP = {
         ]
     },
     'create-hook': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -157,6 +194,7 @@ COMMAND_MAP = {
         ]
     },
     'create-policy': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -174,6 +212,7 @@ COMMAND_MAP = {
         ]
     },
     'create-repo': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -184,6 +223,7 @@ COMMAND_MAP = {
         ]
     },
     'create-tag': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -191,6 +231,7 @@ COMMAND_MAP = {
         ]
     },
     'create-task': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -200,36 +241,42 @@ COMMAND_MAP = {
         ]
     },
     'delete-broker': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name'
         ]
     },
     'delete-hook': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name'
         ]
     },
     'delete-node': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name'
         ]
     },
     'delete-policy': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name'
         ]
     },
     'delete-repo': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name'
         ]
     },
     'delete-tag': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -237,18 +284,21 @@ COMMAND_MAP = {
         ]
     },
     'disable-policy': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name'
         ]
     },
     'enable-policy': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name'
         ]
     },
     'modify-node-metadata': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'node',
@@ -259,6 +309,7 @@ COMMAND_MAP = {
         ]
     },
     'modify-policy-max-count': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -266,6 +317,7 @@ COMMAND_MAP = {
         ]
     },
     'move-policy': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -274,12 +326,14 @@ COMMAND_MAP = {
         ]
     },
     'reboot-node': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name'
         ]
     },
     'register-node': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'installed',
@@ -287,12 +341,14 @@ COMMAND_MAP = {
         ]
     },
     'reinstall-node': {
+        'command': 'reinstall_node',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'remove-node-metadata': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'node',
@@ -301,6 +357,7 @@ COMMAND_MAP = {
         ]
     },
     'remove-policy-tag': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -308,6 +365,7 @@ COMMAND_MAP = {
         ]
     },
     'set-node-desired-power-state': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -315,6 +373,7 @@ COMMAND_MAP = {
         ]
     },
     'set-node-hw-info': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'node',
@@ -322,6 +381,7 @@ COMMAND_MAP = {
         ]
     },
     'set-node-ipmi-credentials': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -331,6 +391,7 @@ COMMAND_MAP = {
         ]
     },
     'update-node-metadata': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'node',
@@ -340,6 +401,7 @@ COMMAND_MAP = {
         ]
     },
     'update-tag-rule': {
+        'command': '',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -355,38 +417,10 @@ class ManageRazor(object):
     def __init__(self, module):
         """ Manage Razor via Ansible """
         self.state_change = False
-        self.url = None
+        self.url = module.params['url']
 
         # Load Ansible Module
         self.module = module
-
-    def command_router(self):
-        """ Run the command as its provided to the module """
-        command_name = self.module.params['command']
-        if command_name not in COMMAND_MAP:
-            self.failure(
-                error='No Command Found',
-                rc=2,
-                msg='Command [ %s ] was not found.' % command_name
-                )
-
-        action_command = COMMAND_MAP[command_name]
-        if hasattr(self, '%s' % command_name):
-            action = getattr(self, '%s' % command_name)
-            facts = action(variables=action_command['variables'])
-            if facts is None:
-                self.module.exit_json(changed=self.state_change)
-            else:
-                self.module.exit_json(
-                    changed=self.state_change,
-                    ansible_facts=facts
-                )
-        else:
-            self.failure(
-                error='Command not in ManageRazor class',
-                rc=2,
-                msg='Method [ %s ] was not found.' % command_name
-            )
 
     @staticmethod
     def _facts(facts):
@@ -430,78 +464,144 @@ class ManageRazor(object):
         """
         self.module.fail_json(msg=msg, rc=rc, err=error)
 
-    def check_ssh(self, host, port=22, timeout=5):
-        syslog.syslog("checking for ssh at %(host)s:%(port)s"
-                      % dict(host=host, port=port))
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(timeout)
-            sock.connect((host, port))
-            banner = sock.recv(1024)
-            syslog.syslog(
-                "Read '%(banner)s' from %(host)s:%(port)s"
-                % dict(host=host, port=port, banner=banner)
-            )
-            sock.close()
-            match = bool(self.ssh_re.search(banner))
-            syslog.syslog(
-                "Read '%(banner)s' from %(host)s:%(port)s match=%(m)s"
-                % dict(host=host, port=port, banner=banner, m=match)
-            )
-            return match
-        except Exception as e:
-            syslog.syslog("Error checking for ssh: %(err)s" % dict(err=str(e)))
-        try:
-            sock.close()
-        except Exception:
-            return False
-        return False
+    def command_router(self):
+        """ Run the command as its provided to the module """
+        command_name = self.module.params['command']
 
-    def wait_ssh(self, host, timeout):
-        start_time = datetime.datetime.now()
-        while ((not self.check_ssh(host=host))
-                and ((datetime.datetime.now()-start_time).seconds < timeout)):
-            time.sleep(15)
-        return self.check_ssh(host=host)
+        # check to mae sure the command exists
+        if command_name not in COMMAND_MAP:
+            self.failure(
+                error='No Command Found',
+                rc=2,
+                msg='Command [ %s ] was not found.' % command_name
+                )
 
-    def reinstall_node(self):
-        for attempt in xrange(self.tries):
-            syslog.syslog(
-                "Kicking %(node)s %(attempt)s/%(tries)s"
-                % dict(node=self.host_name, attempt=attempt, tries=self.tries)
-            )
+        action_command = COMMAND_MAP[command_name]['command']
+        if hasattr(self, '%s' % action_command):
 
-            # initialise rekick
-            request_body = {'name': '%(host_name)s' % self.host_name}
-            requests.post('%(razor_url)s/commands/reinstall-node'
-                          % razor_url=self.djeep_url,
-                          data=json.dumps(request_body))
+            # Gather variables / extension for command
+            variables_dict = COMMAND_MAP[command_name]['variables']
+            variables = []
+            required_vars = []
+            if variables_dict is not None:
+                # save the variable keys as a list of variables
+                variables = COMMAND_MAP[command_name]['variables'].keys()
 
-            # wait for node to go down
-            time.sleep(120)
+                # Create required list for command
+                required_vars = []
+                for key, value in variables_dict.iteritems():
+                    if value:
+                        required_vars.append(key)
 
-            # wait for node to come back up
-            if self.wait_ssh(host=self.host_ip, timeout=self.wait):
-                self.module.exit_json(changed=True)
+            # grab api extension to run against
+            extension = COMMAND_MAP[command_name]['extension']
+
+            # get action and run
+            action = getattr(self, '%s' % action_command)
+            facts = action(extension=extension,
+                           variables=variables,
+                           required_vars=required_vars)
+
+            # check return
+            if facts is None:
+                self.module.exit_json(changed=self.state_change)
             else:
-                if self.reboot(tries=self.tries):
-                    self.module.exit_json(changed=True)
-                    self.module.fail_json(err='Failed to rekick',
-                                          rc=2,
-                                          msg='Failed to rekick')
+                self.module.exit_json(
+                    changed=self.state_change,
+                    ansible_facts=facts
+                )
+        else:
+            self.failure(
+                error='Command not in ManageRazor class',
+                rc=2,
+                msg='Method [ %s ] was not found.' % command_name
+            )
+
+    def list_brokers(self, extension, variables=None, required_vars=None):
+        """ Lists all available brokers
+
+        This will return 'None' if no brokers are found.
+
+        :param extension: ``String``   Url extension to execute
+        :param variables: ``List``  List of all variablesthat are available
+                                    with the Razor command.
+        :param required_vars: ``List``  List of razor command
+                                        required variables
+        """
+
+        # issue api request
+        r = requests.get(
+            '%(url)s%(extension)s' % dict(url=self.url, extension=extension)
+        )
+
+        print r.json()
+        return None
+
+    def list_nodes(self, extension, variables=None, required_vars=None):
+        """ Lists all available nodes
+
+        This will return 'None' if no nodes are found.
+
+        :param extension: ``String``   Url extension to execute
+        :param variables: ``List``  List of all variablesthat are available
+                                    with the Razor command.
+        :param required_vars: ``List``  List of razor command
+                                        required variables
+        """
+
+        # issue api request
+        r = requests.get(
+            "%(url)s%(extension)s" % dict(url=self.url, extension=extension)
+        )
+
+        print r.json()
+        return None
+
+    def reinstall_node(self, extension, variables, required_vars):
+        """Issues a reinstall node command
+
+        This will return 'None' if the node is not found.
+
+        :param variables: ``list``  List of all variables that are available
+                                    with the Razor command.
+        :param required_vars: ``list``  List of all required variables for the
+                                        Razor command.
+        """
+        # build out variables body
+        variables_dict = self._get_vars(variables, required=required_vars)
+
+        # issue api request
+        r = requests.post(
+            '%(url)s%(extension)s' % dict(url=self.url, extension=extension),
+            data=variables_dict
+        )
+
+        # add return value work here
+        print r.json()
+        return None
 
 
 def main():
     module = AnsibleModule(
         argument_spec=dict(
-            host_ip=dict(required=True),
-            host_name=dict(required=True),
-            kick_wait=dict(required=True),
-            kick_tries=dict(required=True),
-            djeep_url=dict(required=True)
+            command=dict(
+                required=True
+            ),
+            url=dict(
+                required=True
+            ),
+            return_code=dict(
+                type='str',
+                default=0
+            )
         ),
         supports_check_mode=False
     )
+
+    mr = ManageRazor(module=module)
+    return_code = module.params.get('return_code', '').split(',')
+    module.params['return_code'] = return_code
+    mr.command_router()
 
 if __name__ == '__main__':
         main()

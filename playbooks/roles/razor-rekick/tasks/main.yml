@@ -1,0 +1,5 @@
+---
+- name: get current nodes from razor
+  razor:
+    command: 'list-nodes'
+    url: 'http://10.127.101.82:8080/api'
