@@ -5,31 +5,32 @@ node07 ansible_ssh_host=10.127.52.7 ansible_ssh_user=root member_number=3 djeep_
 node08 ansible_ssh_host=10.127.52.8 ansible_ssh_user=root member_number=4 djeep_id=8
 node09 ansible_ssh_host=10.127.52.9 ansible_ssh_user=root member_number=5 djeep_id=34
 
+[swift]
+node05 zone=1
+node06 zone=2
+node07 zone=3
+node08 zone=4
+node09 zone=5
+
 [infrastructure]
 node05
 node06
 node07
 
-[compute]
-node09
-
-[storage]
-node08
+[haproxy]
+node05
 
 [network]
 node06
 
-[haproxy]
-node05
-
 [logger]
-node06
-
-[swift]
-node05
-node06
 node07
+
+[storage]
 node08
+
+[cinder]
+node08
+
+[compute]
 node09
-
-

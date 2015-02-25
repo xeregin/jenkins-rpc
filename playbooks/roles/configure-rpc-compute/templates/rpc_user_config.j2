@@ -58,7 +58,7 @@ global_overrides:
   # Bridged interface to build containers with
   management_bridge: "{{ rpc_user_config.container_bridge }}"
 
-  # Define your neutron netowrks.
+  # Define your neutron networks.
   provider_networks:
 {% for network in rpc_user_config.networking %}
     - network:

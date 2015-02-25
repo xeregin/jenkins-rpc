@@ -7,8 +7,6 @@
   tags: prepare
 - include: networking.yml
   tags: prepare
-- include: lvm.yml
-  tags: prepare
 
 - hosts: all
   tasks:
@@ -22,14 +20,6 @@
   tags: prepare
   user: root
   roles:
-
-    - role: lvm_vg
-      vg_name: cinder-volumes
-      pv: /dev/sda2
-
-    - role: lvm_vg
-      vg_name: lxc
-      pv: /dev/sda3
 
     - configure-rpc-swift-lvs
     - setup-git
