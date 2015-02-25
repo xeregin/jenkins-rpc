@@ -1,7 +1,6 @@
 ---
 - name: Install pip
-  tags: rpc
-  shell: "curl https://bootstrap.pypa.io/get-pip.py|python"
+  shell: "python /opt/get-pip.py --no-index --find-links={{ repo_url }}/python_packages/{{ targetBranch }}/"
 
 - name: install all required pip packages
   pip: name={{ item }} state=latest
