@@ -1,6 +1,6 @@
 rpc_repo_dir: rpc_repo
 targetBranch: juno
-repo_url: http://mirror.rackspace.com
+repo_url: http://rpc-repo.rackspace.com
 rpc_user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
