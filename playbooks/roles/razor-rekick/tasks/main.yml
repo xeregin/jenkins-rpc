@@ -1,7 +1,7 @@
 ---
 - name: issue reinstall command to razor
   razor:
-    url: 'http://10.127.101.82:8080/api'
+    url: '{{ razor_url }}'
     command: 'reinstall-node'
     name: '{{ inventory_hostname }}'
 
