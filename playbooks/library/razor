@@ -72,17 +72,17 @@ COMMAND_MAP = {
         'variables': None
     },
     'list-commands': {
-        'command': '',
+        'command': 'list_commands',
         'extension': '/collections/commands',
         'variables': None
     },
     'list-events': {
-        'command': '',
+        'command': 'list_events',
         'extension': '/collections/events',
         'variables': None
     },
     'list-hooks': {
-        'command': '',
+        'command': 'list_hooks',
         'extension': '/collections/hooks',
         'variables': None
     },
@@ -92,146 +92,146 @@ COMMAND_MAP = {
         'variables': None
     },
     'list-policies': {
-        'command': '',
+        'command': 'list_policies',
         'extension': '/collections/policies',
         'variables': None
     },
     'list-repos': {
-        'command': '',
+        'command': 'list_repos',
         'extension': '/collections/repos',
         'variables': None
     },
     'list-tags': {
-        'command': '',
+        'command': 'list_tags',
         'extension': '/collections/tags',
         'variables': None
     },
     'get-broker': {
-        'command': '',
+        'command': 'get_broker',
         'extension': '/collections/brokers/%(name)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'get-command': {
-        'command': '',
-        'extension': '/collections/command/%(name)s',
-        'variables': [
-            'name'
-        ]
+        'command': 'get_command',
+        'extension': '/collections/commands/%(name)s',
+        'variables': {
+            'name': True
+        }
     },
     'get-event': {
-        'command': '',
-        'extension': '/collections/event/%(name)s',
-        'variables': [
-            'name'
-        ]
+        'command': 'get_event',
+        'extension': '/collections/events/%(name)s',
+        'variables': {
+            'name': True
+        }
     },
     'get-hook': {
-        'command': '',
-        'extension': '/collections/hook/%(name)s',
-        'variables': [
-            'name'
-        ]
+        'command': 'get_hook',
+        'extension': '/collections/hooks/%(name)s',
+        'variables': {
+            'name': True
+        }
     },
     'get-node': {
-        'command': '',
-        'extension': '/collections/node/%(name)s',
-        'variables': [
-            'name'
-        ]
+        'command': 'get_node',
+        'extension': '/collections/nodes/%(name)s',
+        'variables': {
+            'name': True
+        }
     },
     'get-policy': {
-        'command': '',
+        'command': 'get_policy',
         'extension': '/collections/policies/%(name)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'get-repo': {
-        'command': '',
+        'command': 'get_repo',
         'extension': '/collections/repos/%(name)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'get-tag': {
-        'command': '',
+        'command': 'get_tag',
         'extension': '/collections/tags/%(name)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'get-task': {
-        'command': '',
+        'command': 'get_task',
         'extension': '/collections/tasks/%(name)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'add-policy-tag': {
-        'command': '',
+        'command': 'add_policy_tag',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'tag',
-            'rule'
-        ]
+        'variables': {
+            'name': True,
+            'tag': True,
+            'rule': True
+        }
     },
     'create-broker': {
-        'command': '',
+        'command': 'create_broker',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'broker-type',
-            'configuration'
-        ]
+        'variables': {
+            'name': True,
+            'broker-type': True,
+            'configuration': True
+        }
     },
     'create-hook': {
-        'command': '',
+        'command': 'create_hook',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'hook-type',
-            'configuration'
-        ]
+        'variables': {
+            'name': True,
+            'hook-type': True,
+            'configuration': True
+        }
     },
     'create-policy': {
-        'command': '',
+        'command': 'create_policy',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'hostname',
-            'root-password',
-            'enabled',
-            'max-count',
-            'before',
-            'after',
-            'tags',
-            'repo',
-            'broker',
-            'task',
-            'node-metadata'
-        ]
+        'variables': {
+            'name': True,
+            'hostname': True,
+            'root-password': False,
+            'enabled': False,
+            'max-count': False,
+            'before': False,
+            'after': False,
+            'tags': False,
+            'repo': True,
+            'broker': False,
+            'task': True,
+            'node-metadata': False
+        }
     },
     'create-repo': {
-        'command': '',
+        'command': 'create_repo',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'url',
-            'iso-url',
-            'no-content',
-            'task'
-        ]
+        'variables': {
+            'name': True,
+            'url': True,
+            'iso-url': True,
+            'no-content': False,
+            'task': False
+        }
     },
     'create-tag': {
-        'command': '',
+        'command': 'create_tag',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'rule'
-        ]
+        'variables': {
+            'name': True,
+            'rule': True
+        }
     },
     'create-task': {
         'command': '',
@@ -246,37 +246,37 @@ COMMAND_MAP = {
     'delete-broker': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'delete-hook': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'delete-node': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'delete-policy': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'delete-repo': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'delete-tag': {
         'command': '',
@@ -289,16 +289,16 @@ COMMAND_MAP = {
     'disable-policy': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'enable-policy': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'modify-node-metadata': {
         'command': '',
@@ -320,7 +320,7 @@ COMMAND_MAP = {
         ]
     },
     'move-policy': {
-        'command': '',
+        'command': 'move_policy',
         'extension': '/commands/%(command)s',
         'variables': [
             'name',
@@ -329,14 +329,14 @@ COMMAND_MAP = {
         ]
     },
     'reboot-node': {
-        'command': '',
+        'command': 'reboot_node',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name'
-        ]
+        'variables': {
+            'name': True
+        }
     },
     'register-node': {
-        'command': '',
+        'command': 'register_node',
         'extension': '/commands/%(command)s',
         'variables': [
             'installed',
@@ -345,7 +345,7 @@ COMMAND_MAP = {
     },
     'reinstall-node': {
         'command': 'reinstall_node',
-        'extension': '/commands/reinstall-node',
+        'extension': '/commands/%(command)s',
         'variables': {
             'name': True
         }
@@ -493,13 +493,9 @@ class ManageRazor(object):
                     if value is True:
                         required_vars.append(key)
 
-            # grab api extension to run against
-            extension = COMMAND_MAP[command_name]['extension']
-
             # get action and run
             action = getattr(self, '%s' % action_command)
-            facts = action(extension=extension,
-                           variables=variables,
+            facts = action(variables=variables,
                            required_vars=required_vars)
 
             # check return
@@ -517,7 +513,7 @@ class ManageRazor(object):
                 msg='Method [ %s ] was not found.' % command_name
             )
 
-    def list_brokers(self, extension, variables=None, required_vars=None):
+    def list_brokers(self, variables=None, required_vars=None):
         """ Lists all available brokers
 
         This will return 'None' if no brokers are found.
@@ -537,28 +533,69 @@ class ManageRazor(object):
         print r.json()
         return None
 
-    def list_nodes(self, extension, variables=None, required_vars=None):
+    def list_nodes(self, variables=None, required_vars=None):
         """ Lists all available nodes
 
         This will return 'None' if no nodes are found.
 
         :param extension: ``String``   Url extension to execute
-        :param variables: ``List``  List of all variablesthat are available
+        :param variables: ``List``  List of all variables that are available
                                     with the Razor command.
         :param required_vars: ``List``  List of razor command
                                         required variables
         """
+        # Build out request headers
+        headers = {'content-type': 'application/json'}
+
+        # build out extension
+        extension = '%s' % COMMAND_MAP['list-nodes']['extension']
+
+        # Build out request URL
+        url = '%(url)s%(extension)s' % dict(url=self.url, extension=extension)
 
         # issue api request
-        r = requests.get(
-            "%(url)s%(extension)s" % dict(url=self.url, extension=extension)
-        )
+        r = requests.get(url, headers=headers)
 
         if r.status_code == requests.codes.ok:
             return r.json()
         return None
 
-    def reinstall_node(self, extension, variables, required_vars):
+    def get_node(self, variables, required_vars):
+        """ Gets a nodes information
+
+        :param variables: ``List`` List of variables available to
+                                   the razor command
+        :param required_vars: ``List`` List of required varibles for
+                                       the razor command
+        """
+        # Build out the request headers
+        headers = {'content-type': 'application/json'}
+
+        # Build out request body
+        body = self._get_vars(variables, required=required_vars)
+
+        # build out extension
+        extension = ('%s' %
+                     COMMAND_MAP['get-node']['extension'] %
+                     {'name': body['name']})
+
+        # Build out request URL
+        url = '%(url)s%(extension)s' % dict(url=self.url, extension=extension)
+
+        # issue api request
+        r = requests.get(url, headers=headers)
+
+        # add return value work here
+        if r.status_code == requests.codes.ok:
+            return r.json()
+        else:
+            self.failure(
+                error='Bad Request',
+                rc=2,
+                msg=r.json()['error']
+            )
+
+    def reinstall_node(self, variables, required_vars):
         """Issues a reinstall node command
 
         This will return 'None' if the node is not found.
@@ -568,15 +605,22 @@ class ManageRazor(object):
         :param required_vars: ``list``  List of all required variables for the
                                         Razor command.
         """
-        # build out variables body
-        url = '%(url)s%(extension)s' % dict(url=self.url, extension=extension)
-        payload = self._get_vars(variables, required=required_vars)
+        # Build out request headers
         headers = {'content-type': 'application/json'}
 
-        # return json.dumps(payload)
+        # Build out the request body and headers
+        body = self._get_vars(variables, required=required_vars)
+
+        # build out extension
+        extension = ('%s' %
+                     COMMAND_MAP['reinstall-node']['extension'] %
+                     {'command': self.module.params['command']})
+
+        # build out request url
+        url = '%(url)s%(extension)s' % dict(url=self.url, extension=extension)
 
         # issue api request
-        r = requests.post(url, data=json.dumps(payload), headers=headers)
+        r = requests.post(url, data=json.dumps(body), headers=headers)
 
         # add return value work here
         if r.status_code == requests.codes.ok:
