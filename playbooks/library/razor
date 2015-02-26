@@ -46,6 +46,8 @@ options:
         description:
             - Operation for the module to perform, Currently available
         choices:
+            - list-nodes
+            - get-node
             - reinstall-node
     name:
         description:
@@ -236,12 +238,12 @@ COMMAND_MAP = {
     'create-task': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'os',
-            'template',
-            'boot-seq'
-        ]
+        'variables': {
+            'name': True,
+            'os': True,
+            'template': True,
+            'boot-seq': True
+        }
     },
     'delete-broker': {
         'command': '',
@@ -281,10 +283,10 @@ COMMAND_MAP = {
     'delete-tag': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'force'
-        ]
+        'variables': {
+            'name': True,
+            'force': False
+        }
     },
     'disable-policy': {
         'command': '',
@@ -303,30 +305,30 @@ COMMAND_MAP = {
     'modify-node-metadata': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'node',
-            'update',
-            'remove',
-            'clear',
-            'no-replace'
-        ]
+        'variables': {
+            'node': True,
+            'update': False,
+            'remove': False,
+            'clear': False,
+            'no-replace': False
+        }
     },
     'modify-policy-max-count': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'max-count'
-        ]
+        'variables': {
+            'name': True,
+            'max-count': True
+        }
     },
     'move-policy': {
         'command': 'move_policy',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'before',
-            'after'
-        ]
+        'variables': {
+            'name': True,
+            'before': True,
+            'after': True
+        }
     },
     'reboot-node': {
         'command': 'reboot_node',
@@ -338,10 +340,10 @@ COMMAND_MAP = {
     'register-node': {
         'command': 'register_node',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'installed',
-            'hw-info'
-        ]
+        'variables': {
+            'installed': True,
+            'hw-info': False
+        }
     },
     'reinstall-node': {
         'command': 'reinstall_node',
@@ -353,64 +355,64 @@ COMMAND_MAP = {
     'remove-node-metadata': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'node',
-            'key',
-            'all'
-        ]
+        'variables': {
+            'node': True,
+            'key': True,
+            'all': False
+        }
     },
     'remove-policy-tag': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'tag'
-        ]
+        'variables': {
+            'name': True,
+            'tag': True
+        }
     },
     'set-node-desired-power-state': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'to'
-        ]
+        'variables': {
+            'name': True,
+            'to': True
+        }
     },
     'set-node-hw-info': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'node',
-            'hw-info'
-        ]
+        'variables': {
+            'node': True,
+            'hw-info': True
+        }
     },
     'set-node-ipmi-credentials': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'ipmi-hostname',
-            'ipmi-username',
-            'ipmi-password'
-        ]
+        'variables': {
+            'name': True,
+            'ipmi-hostname': True,
+            'ipmi-username': True,
+            'ipmi-password': True
+        }
     },
     'update-node-metadata': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'node',
-            'key',
-            'value',
-            'no-replace'
-        ]
+        'variables': {
+            'node': True,
+            'key': True,
+            'value': True,
+            'no-replace': False
+        }
     },
     'update-tag-rule': {
         'command': '',
         'extension': '/commands/%(command)s',
-        'variables': [
-            'name',
-            'rule',
-            'force'
-        ]
+        'variables': {
+            'name': True,
+            'rule': True,
+            'force': False
+        }
     }
 }
 
@@ -512,26 +514,6 @@ class ManageRazor(object):
                 rc=2,
                 msg='Method [ %s ] was not found.' % command_name
             )
-
-    def list_brokers(self, variables=None, required_vars=None):
-        """ Lists all available brokers
-
-        This will return 'None' if no brokers are found.
-
-        :param extension: ``String``   Url extension to execute
-        :param variables: ``List``  List of all variablesthat are available
-                                    with the Razor command.
-        :param required_vars: ``List``  List of razor command
-                                        required variables
-        """
-
-        # issue api request
-        r = requests.get(
-            '%(url)s%(extension)s' % dict(url=self.url, extension=extension)
-        )
-
-        print r.json()
-        return None
 
     def list_nodes(self, variables=None, required_vars=None):
         """ Lists all available nodes
