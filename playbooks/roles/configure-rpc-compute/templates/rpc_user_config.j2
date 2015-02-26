@@ -58,7 +58,7 @@ global_overrides:
   # Bridged interface to build containers with
   management_bridge: "{{ rpc_user_config.container_bridge }}"
 
-  # Define your neutron netowrks.
+  # Define your neutron networks.
   provider_networks:
 {% for network in rpc_user_config.networking %}
     - network:
@@ -83,6 +83,12 @@ global_overrides:
 {% endif %}
 {% if network.subnetmask is defined %}
         subnetmask: "{{ network.subnetmask }}"
+{% endif %}
+{% if network.is_container_address is defined %}
+        is_container_address: "{{ network.is_container_address }}"
+{% endif %}
+{% if network.is_ssh_address is defined %}
+        is_ssh_address: "{{ network.is_ssh_address }}"
 {% endif %}
 {% endfor %}
 

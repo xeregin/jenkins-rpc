@@ -1,7 +1,0 @@
----
-
-- name: Create VG
-  lvg:
-    vg: "{{ vg_name }}"
-    pvs: "{{ pv }}"
-

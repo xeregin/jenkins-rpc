@@ -27,7 +27,7 @@ rpc_user_config:
         - "172.29.240.83,172.29.240.127"
         - "172.29.248.83,172.29.248.127"
     internal_lb_vip_address: 172.29.236.1
-    external_lb_vip_address: "{{hostvars[groups[infrstructure[0]]['ansible_ssh_host']}}"
+    external_lb_vip_address: "{{hostvars[groups['infrastructure'][0]]['ansible_ssh_host']}}"
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     lb_name:
@@ -41,6 +41,8 @@ rpc_user_config:
           group_binds:
             - all_containers
             - hosts
+          is_container_address: true
+          is_ssh_address: true
 
         - name: provider
           bridge: br-vlan
@@ -146,6 +148,11 @@ networking:
         - "bridge_ports em1.2{{cluster_number}}03"
         - "address 172.29.248.{{member_number}}/22"
 
+# /dev/sda (gpt)
+# 1 - boot
+# 2 - cinder-volumes-pv
+# 3 - lxc-pv
+# 4 - os-pv
 vgs:
   - name: cinder-volumes
     device: /dev/sda2
