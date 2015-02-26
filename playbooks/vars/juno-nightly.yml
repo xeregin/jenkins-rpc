@@ -1,5 +1,6 @@
 rpc_repo_dir: rpc_repo
 targetBranch: juno
+repo_url: http://rpc-repo.rackspace.com
 rpc_user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
@@ -11,7 +12,7 @@ rpc_user_config:
         - "172.29.240.83,172.29.240.127"
         - "172.29.248.83,172.29.248.127"
     internal_lb_vip_address: 172.29.236.89
-    external_lb_vip_address: 10.127.101.127
+    external_lb_vip_address: 172.29.236.89
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     lb_name:

@@ -1,7 +1,20 @@
 ---
+- name: Create /opt
+  file:
+    state: "directory"
+    path: "/opt"
+
+- name: Get Modern PIP
+  get_url:
+    url: "{{ get_pip_url }}"
+    dest: "/opt/get-pip.py"
+    validate_certs: "no"
+  register: get_pip
+  until: get_pip|success
+  retries: 3
+
 - name: Install pip
-  tags: rpc
-  shell: "curl https://bootstrap.pypa.io/get-pip.py|python"
+  shell: "python /opt/get-pip.py --no-index --find-links={{ repo_url }}/python_packages/{{ targetBranch }}/"
 
 - name: install all required pip packages
   pip: name={{ item }} state=latest
