@@ -1,5 +1,12 @@
 ---
-- name: get current nodes from razor
+- name: issue reinstall command to razor
   razor:
-    command: 'list-nodes'
     url: 'http://10.127.101.82:8080/api'
+    command: 'reinstall-node'
+    name: '{{ inventory_hostname }}'
+
+- name: reboot machine
+  command: shutdown -r now "Razor rekick issued"
+  async: 0
+  poll: 0
+  ignore_errors: true

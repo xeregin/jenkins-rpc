@@ -538,8 +538,19 @@ class ManageRazor(object):
         r = requests.get(url, headers=headers)
 
         if r.status_code == requests.codes.ok:
-            return r.json()
-        return None
+            self.module.exit_json(
+                cmd=url,
+                stdout=r.json()['items'],
+                changed=False,
+                stderr=False,
+                rc=0
+            )
+        else:
+            self.failure(
+                error='Bad Request',
+                rc=2,
+                msg='Invalid request, url, or server error'
+            )
 
     def get_node(self, variables, required_vars):
         """ Gets a nodes information
@@ -568,7 +579,13 @@ class ManageRazor(object):
 
         # add return value work here
         if r.status_code == requests.codes.ok:
-            return r.json()
+            self.module.exit_json(
+                cmd=url,
+                stdout="%s found" % r.json()['name'],
+                changed=True,
+                stderr=False,
+                rc=0
+            )
         else:
             self.failure(
                 error='Bad Request',
@@ -604,8 +621,14 @@ class ManageRazor(object):
         r = requests.post(url, data=json.dumps(body), headers=headers)
 
         # add return value work here
-        if r.status_code == requests.codes.ok:
-            return r.json()
+        if r.status_code == requests.codes.accepted:
+            self.module.exit_json(
+                cmd='%s with body %s' % (url, body),
+                stdout=r.json()['result'],
+                changed=True,
+                stderr=False,
+                rc=0
+            )
         else:
             self.failure(
                 error='Bad Request',
