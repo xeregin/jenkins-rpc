@@ -85,10 +85,10 @@ global_overrides:
         subnetmask: "{{ network.subnetmask }}"
 {% endif %}
 {% if network.is_container_address is defined %}
-        is_container_address: "{{ network.is_container_address }}"
+        is_container_address: {{ network.is_container_address }}
 {% endif %}
 {% if network.is_ssh_address is defined %}
-        is_ssh_address: "{{ network.is_ssh_address }}"
+        is_ssh_address: {{ network.is_ssh_address }}
 {% endif %}
 {% endfor %}
 
