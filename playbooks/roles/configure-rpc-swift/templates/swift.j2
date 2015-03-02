@@ -8,9 +8,9 @@ global_overrides:
         min_part_hours: {{ swift_config.min_part_hours }}
         repl_number: {{ swift_config.min_part_hours }}
         storage_network: '{{ swift_config.storage_network }}'
-        {% if swift_config.replication_network is defined %}
+{% if swift_config.replication_network is defined %}
         replication_network: '{{ swift_config.replication_network }}'
-        {% endif %}
+{% endif %}
         drives:
 {% for drive in swift_config.drives %}
             - name: {{ drive.name }}
