@@ -102,6 +102,13 @@ infra_hosts:
     ip: {{ hostvars[host]["ansible_ssh_host"] }}
 {% endfor %}
 
+# User defined Repo Infrastructure Hosts, this should be a required group
+repo-infra_hosts:
+{% for host in infra %}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
+{% endfor %}
+
 # User defined Network Hosts, this should be a required group
 network_hosts:
 {% for host in network %}
