@@ -15,7 +15,7 @@
             dest=/etc/{{config_prefix}}_deploy/{{config_prefix}}_user_config.yml
 
 - name: Generate passphrases
-  command: ~/{{rpc_repo_dir}}/scripts/pw-token-gen.py --file /etc/{{config_prefix}}_deploy/user_variables.yml
+  command: ~/{{rpc_repo_dir}}/scripts/pw-token-gen.py --file /etc/{{config_prefix}}_deploy/user_secrets.yml
 
 - name: "template target.sh"
   template: src=target.sh.j2
