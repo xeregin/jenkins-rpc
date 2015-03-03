@@ -37,7 +37,7 @@
     - role: run-script-from-os-ansible-deployment
       script_name: run-playbooks
       script_env:
-        DEPLOY_TEMPEST: yes
+        DEPLOY_TEMPEST: "yes"
 
 ## --------- [ Test with tempest ] ---------------
 - hosts: infrastructure[0]
