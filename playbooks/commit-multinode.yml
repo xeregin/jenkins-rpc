@@ -1,12 +1,11 @@
 ---
 
 ## --------- [ Prepare Cluster ] ---------------
-- include: packages.yml
-  tags: prepare
-- include: pip.yml
-  tags: prepare
-- include: networking.yml
-  tags: prepare
+- include: packages.yml tags=prepare
+
+- include: pip.yml tags=prepare
+
+- include: networking.yml tags=prepare
 
 - hosts: all
   tasks:
@@ -15,6 +14,7 @@
         vg: "{{item.name}}"
         pvs: "{{item.device}}"
       with_items: vgs
+  tags: prepare
 
 - hosts: infrastructure[0]
   tags: prepare
