@@ -1,4 +1,4 @@
-glance_default_store: swift
+{% raw %}glance_default_store: swift
 glance_notification_driver: noop
 glance_swift_store_auth_address: '{{ keystone_service_internalurl }}'
 glance_swift_store_container: glance_images
@@ -6,3 +6,4 @@ glance_swift_store_endpoint_type: internalURL
 glance_swift_store_key: '{{ glance_service_password }}'
 glance_swift_store_region: RegionOne
 glance_swift_store_user: 'service:glance'
+{% endraw %}
