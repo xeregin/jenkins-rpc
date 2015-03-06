@@ -27,3 +27,6 @@
   template: src=interface.j2 dest=/etc/network/interfaces.d/{{ item.name }}.cfg owner=root group=root mode=0644
   with_items: networking
   register: result
+
+- name: Bring up new interfaces
+  command: ifup -a
