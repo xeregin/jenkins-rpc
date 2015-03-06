@@ -119,7 +119,7 @@ networking:
         - "bridge_waitport 0"
         - "bridge_fd 0"
         - "bridge-ports bond0.801"
-        - "address {{ container_address.stdout|replace('\n','') }}"
+        - "address 192.168.10.{{member_number}}/22"
         - "dns-nameservers 69.20.0.164 69.20.0.196"
     - name: br-vxlan
       type: static
@@ -128,7 +128,7 @@ networking:
         - "bridge_waitport 0"
         - "bridge_fd 0"
         - "bridge_ports bond1.790"
-        - "address {{ vxlan_address.stdout|replace('\n','') }}"
+        - "address 172.29.241.{{member_number}}/22"
     - name: br-vlan
       type: manual
       directives:

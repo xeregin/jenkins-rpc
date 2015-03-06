@@ -14,7 +14,7 @@
   retries: 3
 
 - name: Install pip
-  shell: "python /opt/get-pip.py --no-index --find-links={{ repo_url }}/python_packages/{{ targetBranch }}/"
+  shell: "python /opt/get-pip.py"
 
 - name: install all required pip packages
   pip: name={{ item }} state=latest
