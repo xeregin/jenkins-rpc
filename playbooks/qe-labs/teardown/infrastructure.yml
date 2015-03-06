@@ -1,5 +1,0 @@
----
-- hosts: infrastructure
-  user: root
-  roles:
-    - infrastructure-node-teardown

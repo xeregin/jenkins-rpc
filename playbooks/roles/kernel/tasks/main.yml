@@ -1,0 +1,28 @@
+---
+- name: update apt cache
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  apt: update_cache=yes
+
+- name: install latest generic kernel headers / image
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  apt: name=linux-headers-generic state=present
+  apt: name=linux-image-generic state=present
+
+- name: remove old raring kernel headers
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  apt: name=linux-headers-3.8.0-* state=absent
+  apt: name=linux-headers-generic-lts-raring state=absent
+  apt: name=linux-image-3.8.0-* state=absent
+  apt: name=linux-image-generic-lts-raring state=absent
+
+- name: restart machine
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  command: shutdown -r now "Ansible updates triggered"
+  async: 0
+  poll: 0
+  ignore_errors: yes
+
+- name: waiting for server to come back
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  local_action: wait_for host={{ inventory_hostname }} port=22 state=started
+  sudo: false

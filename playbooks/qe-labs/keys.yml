@@ -1,4 +1,0 @@
----
-- hosts: deployment
-  roles:
-    - laggyluke.add-ssh-keys-from-github

@@ -1,0 +1,190 @@
+rpc_user_config:
+    container_cidr: 192.168.96.0/22
+    tunnel_cidr:  172.29.240.0/22
+    service_cidr: 172.29.236.0/22
+    storage_cidr: 172.29.244.0/22
+    repl_cidr: 172.29.248.0/22
+    used_ips:
+        - "192.168.96.1,192.168.96.15"
+        - "192.168.96.132,192.168.96.155"
+        - "172.29.240.132,172.29.240.155"
+        - "172.29.244.132,172.29.244.155"
+        - "172.29.248.132,172.29.248.155"
+        - "172.29.236.1"
+    internal_lb_vip_address: 192.168.96.10
+    external_lb_vip_address: 204.232.187.32
+    tunnel_bridge: br-vxlan
+    container_bridge: br-mgmt
+    lb_name:
+    networking:
+        - name: container
+          bridge: br-mgmt
+          container_bridge: br-mgmt
+          container_interface: eth1
+          ip_from_q: container
+          type: raw
+          group_binds:
+            - all_containers
+            - hosts
+        - name: provider
+          bridge: br-vlan
+          container_interface: eth11
+          type: vlan
+          range: 280:280
+          net_name: vlan
+          group_binds:
+            - neutron_linuxbridge_agent
+        - name: tenant
+          bridge: br-vxlan
+          container_interface: eth10
+          ip_from_q: tunnel
+          type: vxlan
+          range: 1:1000
+          net_name: vxlan
+          group_binds:
+            - neutron_linuxbridge_agent
+        - name: service
+          bridge: br-snet
+          container_interface: eth3
+          ip_from_q: snet
+          type: raw
+          group_binds:
+            - glance_api
+            - nova_compute
+            - neutron_linuxbridge_agent
+swift_config:
+  part_power: 8
+  weight: 100
+  min_part_hours: 1
+  repl_number: 3
+  storage_network: 'br-mgmt'
+  replication_network: 'br-repl'
+  drives:
+    - name: sdb
+    - name: sdc
+    - name: sdd
+    - name: sde
+    - name: sdf
+    - name: sdg
+  mount_point: /mnt
+  account: private_cloud_qe
+  container: iad3-lab01
+  storage_policies:
+    - name: gold
+      index: 0
+      default: True
+    - name: silver
+      index: 1
+      repl_number: 3
+      depreciated: True
+cinder_storage:
+  backends:
+    lvm:
+      volume_group: cinder-volumes
+    lvm_ssd:
+      volume_group: cinder-volumes
+networking:
+    - name: lo
+      type: loopback
+    - name: eth0
+      type: manual
+      directives:
+        - "bond-master bond0"
+        - "bond-primary eth0"
+    - name: eth2
+      type: static
+      directives:
+      - "netmask {{ ansible_eth2.ipv4.netmask }}"
+      - "post-up ip route add 10.191.192.0/18 via 10.136.93.65 dev eth2"
+      - "address {{ ansible_eth2.ipv4.address }}"
+    - name: eth3
+      type: manual
+      directives:
+        - "bond-master bond0"
+    - name: eth8
+      type: manual
+      directives:
+        - "bond-master bond1"
+        - "bond-primary eth8"
+    - name: eth10
+      type: manual
+      directives:
+        - "bond-master bond1"
+    - name: bond0
+      type: static
+      directives:
+        - "bond-slaves none"
+        - "bond-mode active-backup"
+        - "bond-miimon 100"
+        - "bond-downdelay 200"
+        - "bond-updelay 200"
+        - "address {{ ansible_default_ipv4.address }}"
+        - "netmask {{ ansible_default_ipv4.netmask }}"
+        - "gateway {{ ansible_default_ipv4.gateway }}"
+        - "dns-nameservers 69.20.0.164 69.20.0.196"
+        - "dns-search qe1.iad3.rackspace.com"
+    - name: bond1
+      type: manual
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bond-slaves none"
+        - "bond-mode active-backup"
+        - "bond-miimon 100"
+        - "bond-downdelay 250"
+        - "bond-updelay 250"
+    - name: bond0.694
+      type: manual
+      directives:
+        - "vlan-raw-device bond0"
+    - name: bond1.231
+      type: manual
+      directives:
+        - "vlan-raw-device bond1"
+    - name: bond1.465
+      type: manual
+      directives:
+        - "vlan-raw-device bond1"
+    - name: br-mgmt
+      type: static
+      directives:
+        - "bridge_stp off"
+        - "bridge_waitport 0"
+        - "bridge_fd 0"
+        - "bridge-ports bond0.694"
+        - "address 192.168.96.{{member_number}}/22"
+        - "dns-nameservers 69.20.0.164 69.20.0.196"
+    - name: br-vxlan
+      type: static
+      directives:
+        - "bridge_stp off"
+        - "bridge_waitport 0"
+        - "bridge_fd 0"
+        - "bridge_ports bond1.231"
+        - "address 172.29.240.{{member_number}}/22"
+    - name: br-vlan
+      type: manual
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+        - "bridge_stp off"
+        - "bridge_fd 0"
+        - "bridge_maxwait 0"
+        - "bridge_ports bond1"
+    - name: br-snet
+      type: static
+      directives:
+        - "bridge_stp off"
+        - "bridge_fd 0"
+        - "bridge_maxwait 0"
+        - "bridge_ports none"
+        - "address 172.29.236.1"
+        - "netmask 255.255.252.0"
+    - name: br-repl
+      type: manual
+      directives:
+        - "bridge_stp off"
+        - "bridge_waitport 0"
+        - "bridge_fd 0"
+        - "bridge_ports bond1.465"
+        - "address 172.29.248.{{member_number}}/22"

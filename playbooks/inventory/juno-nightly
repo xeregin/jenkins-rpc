@@ -1,0 +1,38 @@
+[all]
+node89 ansible_ssh_host=10.127.101.89 ansible_ssh_user=root member_number=1
+node116 ansible_ssh_host=10.127.101.116 ansible_ssh_user=root member_number=2
+node94 ansible_ssh_host=10.127.101.94 ansible_ssh_user=root member_number=3
+node118 ansible_ssh_host=10.127.101.118 ansible_ssh_user=root member_number=4
+node92 ansible_ssh_host=10.127.101.92 ansible_ssh_user=root member_number=5
+node93 ansible_ssh_host=10.127.101.93 ansible_ssh_user=root member_number=6
+node91 ansible_ssh_host=10.127.101.91 ansible_ssh_user=root member_number=7
+node119 ansible_ssh_host=10.127.101.119 ansible_ssh_user=root zone=1 member_number=8
+node107 ansible_ssh_host=10.127.101.107 ansible_ssh_user=root zone=2 member_number=9
+node120 ansible_ssh_host=10.127.101.120 ansible_ssh_user=root zone=3 member_number=10
+
+[haproxy]
+node89
+
+[infrastructure]
+node89
+node116
+node94
+
+[network]
+node116
+node94
+
+[compute]
+node118
+node92
+
+[cinder]
+node93
+
+[logger]
+node91
+
+[swift]
+node119
+node107
+node120

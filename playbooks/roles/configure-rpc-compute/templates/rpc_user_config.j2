@@ -1,0 +1,173 @@
+---
+{% set infra = groups['infrastructure'] %}
+{% set network = groups['network'] %}
+{% set compute = groups['compute'] %}
+{% set cinder = groups['cinder'] %}
+{% set logger = groups['logger'] %}
+{% if 'haproxy' in groups %}
+{% set haproxy = groups['haproxy'] %}
+{% endif %}
+
+# This is the md5 of the environment file
+# this will ensure consistency when deploying.
+environment_version: {{ environment_version.stat.md5 }}
+
+
+# User defined CIDR used for containers
+# Global cidr/s used for everything.
+cidr_networks:
+  # Cidr used in the Management network
+  container: {{ rpc_user_config.container_cidr }}
+
+  # Cider used for the VM network
+  tunnel: {{ rpc_user_config.tunnel_cidr }}
+
+{% if rpc_user_config.service_cidr is defined %}
+  # Cidr used for the service network
+  snet: {{ rpc_user_config.service_cidr}}
+{% endif %}
+
+{% if rpc_user_config.storage_cidr is defined %}
+  # Cidr used for the storage network
+  storage: {{ rpc_user_config.storage_cidr }}
+{% endif %}
+
+{% if rpc_user_config.used_ips is defined %}
+used_ips:
+{% for used_ip_range in rpc_user_config.used_ips %}
+  - {{ used_ip_range }}
+{% endfor %}
+{% endif %}
+
+# overrides anything else any where.
+global_overrides:
+  {% if rpc_user_config.rpc_repo_url is defined %}
+  # Repo for pip wheels.
+  rpc_repo_url: "{{ rpc_user_config.rpc_repo_url }}"
+  {% endif %}
+
+  # Internal Management vip address
+  internal_lb_vip_address: {{ rpc_user_config.internal_lb_vip_address }}
+
+  # External DMZ VIP address
+  external_lb_vip_address: {{ rpc_user_config.external_lb_vip_address }}
+
+  # Bridged interface to use with tunnel type networks
+  tunnel_bridge: "{{ rpc_user_config.tunnel_bridge }}"
+
+  # Bridged interface to build containers with
+  management_bridge: "{{ rpc_user_config.container_bridge }}"
+
+  # Define your neutron networks.
+  provider_networks:
+{% for network in rpc_user_config.networking %}
+    - network:
+        group_binds:
+{% for group_bind in network.group_binds %}
+          - {{ group_bind }}
+{% endfor %}
+        container_bridge: "{{ network.bridge }}"
+        container_interface: "{{ network.container_interface }}"
+        type: "{{ network.type }}"
+{% if network.ip_from_q is defined %}
+        ip_from_q: "{{ network.ip_from_q }}"
+{% endif %}
+{% if network.address is defined %}
+        interface_address: "{{ network.address }}"
+{% endif %}
+{% if network.range is defined %}
+        range: "{{ network.range }}"
+{% endif %}
+{% if network.net_name is defined %}
+        net_name: "{{ network.net_name }}"
+{% endif %}
+{% if network.subnetmask is defined %}
+        subnetmask: "{{ network.subnetmask }}"
+{% endif %}
+{% if network.is_container_address is defined %}
+        is_container_address: {{ network.is_container_address }}
+{% endif %}
+{% if network.is_ssh_address is defined %}
+        is_ssh_address: {{ network.is_ssh_address }}
+{% endif %}
+{% endfor %}
+
+  # Name of load balancer
+  lb_name: {{ rpc_user_config.lb_name }}
+
+# User defined Infrastructure Hosts, this should be a required group
+infra_hosts:
+{% for host in infra %}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
+{% endfor %}
+
+# User defined Repo Infrastructure Hosts, this should be a required group
+repo-infra_hosts:
+{% for host in infra %}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
+{% endfor %}
+
+# User defined Network Hosts, this should be a required group
+network_hosts:
+{% for host in network %}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
+{% endfor %}
+
+# User defined Compute Hosts, this should be a required group
+compute_hosts:
+{% for host in compute %}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
+{% endfor %}
+
+# User defined Cinder Hosts, this should be a required group
+storage_hosts:
+{% for host in cinder %}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
+    container_vars:
+      cinder_backends:
+        limit_container_types: cinder_volume
+{% if cinder_storage.backends.lvm is defined %}
+        lvm:
+          volume_group: {{ cinder_storage.backends.lvm.volume_group }}
+          volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+          volume_backend_name: LVM_iSCSI
+{% endif %}
+{% if cinder_storage.backends.lvm_ssd is defined %}
+        lvm_ssd:
+          volume_group: {{ cinder_storage.backends.lvm.volume_group }}
+          volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+          volume_backend_name: LVM_SSD_iSCSI
+{% endif %}
+{% if cinder_storage.backends.netapp is defined %}
+        netapp:
+          netapp_storage_family: ontap_7mode
+          netapp_storage_protocol: iscsi
+          netapp_server_hostname: {{ cinder_storage.backends.netapp.hostname }}
+          netapp_server_port: 80
+          netapp_login: {{ cinder_storage.backends.netapp.username }}
+          netapp_password: {{ cinder_storage.backends.netapp.password }}
+          volume_driver: cinder.volume.drivers.netapp.common.NetAppDriver
+          volume_backend_name: NETAPP_iSCSI
+{% endif %}
+{% endfor %}
+
+# User defined Logger Hosts, this should be a required group
+log_hosts:
+{% for host in logger %}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
+{% endfor %}
+
+{% if haproxy is defined %}
+# User defined HAProxy Hosts
+haproxy_hosts:
+{% for host in haproxy %}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
+{% endfor %}
+{% endif %}

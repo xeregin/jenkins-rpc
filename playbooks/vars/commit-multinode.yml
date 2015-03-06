@@ -1,0 +1,161 @@
+rpc_repo_dir: rpc_repo
+repo_url: http://rpc-repo.rackspace.com
+rpc_user_config:
+    container_cidr: 172.29.236.0/22
+    tunnel_cidr:  172.29.240.0/22
+    storage_cidr:  172.29.248.0/22
+    used_ips:
+        - 172.29.236.1
+        - 172.29.236.2
+        - 172.29.236.3
+        - 172.29.236.4
+        - 172.29.236.5
+
+        - 172.29.240.1
+        - 172.29.240.2
+        - 172.29.240.3
+        - 172.29.240.4
+        - 172.29.240.5
+
+        - 172.29.244.1
+        - 172.29.244.2
+        - 172.29.244.3
+        - 172.29.244.4
+        - 172.29.244.5
+
+        - "172.29.236.1,172.29.236.15"
+        - "172.29.236.83,172.29.236.127"
+        - "172.29.240.83,172.29.240.127"
+        - "172.29.248.83,172.29.248.127"
+    internal_lb_vip_address: 172.29.236.1
+    external_lb_vip_address: "{{hostvars[groups['infrastructure'][0]]['ansible_ssh_host']}}"
+    tunnel_bridge: br-vxlan
+    container_bridge: br-mgmt
+    lb_name:
+    networking:
+        - name: container
+          bridge: br-mgmt
+          container_bridge: br-mgmt
+          container_interface: eth1
+          ip_from_q: container
+          type: raw
+          group_binds:
+            - all_containers
+            - hosts
+          is_container_address: true
+          is_ssh_address: true
+
+        - name: provider
+          bridge: br-vlan
+          container_interface: eth11
+          type: flat
+          net_name: flat
+          group_binds:
+            - neutron_linuxbridge_agent
+
+        - name: tenant
+          bridge: br-vxlan
+          container_interface: eth10
+          ip_from_q: tunnel
+          type: vxlan
+          range: "1:1000"
+          net_name: vxlan
+          group_binds:
+            - neutron_linuxbridge_agent
+
+        - name: storage
+          bridge: br-storage
+          container_interface: eth2
+          ip_from_q: storage
+          type: raw
+          group_binds:
+            - glance_api
+            - cinder_api
+            - cinder_volume
+            - nova_compute
+            - swift_proxy
+
+swift_config:
+  part_power: 8
+  weight: 100
+  min_part_hours: 1
+  repl_number: 3
+  storage_network: 'br-storage'
+  drives:
+    - name: swift1
+    - name: swift2
+    - name: swift3
+    - name: swift4
+    - name: swift5
+  mount_point: /mnt
+  account: "service:glance"
+  container: glance
+  storage_policies:
+    - name: gold
+      index: 0
+      default: True
+    - name: silver
+      index: 1
+      repl_number: 3
+      depreciated: True
+cinder_storage:
+  backends:
+    lvm:
+      volume_group: cinder-volumes
+      volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+      volume_backend_name: LVM_iSCSI
+networking:
+    - name: lo
+      type: loopback
+
+    - name: "em1.2{{cluster_number}}00"
+      type: "manual"
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: "br-mgmt"
+      type: "static"
+      directives:
+        - "bridge_ports em1.2{{cluster_number}}00"
+        - "address 172.29.236.{{member_number}}/22"
+    - name: "em1.2{{cluster_number}}01"
+      type: "manual"
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: "br-vxlan"
+      type: "static"
+      directives:
+        - "bridge_ports em1.2{{cluster_number}}01"
+        - "address 172.29.240.{{member_number}}/22"
+    - name: "em1.2{{cluster_number}}02"
+      type: "manual"
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: "br-storage"
+      type: "static"
+      directives:
+        - "bridge_ports em1.2{{cluster_number}}02"
+        - "address 172.29.244.{{member_number}}/22"
+    - name: "em1.2{{cluster_number}}03"
+      type: "manual"
+      directives:
+        - "up ip link set $IFACE up"
+        - "down ip link set $IFACE down"
+    - name: "br-vlan"
+      type: "static"
+      directives:
+        - "bridge_ports em1.2{{cluster_number}}03"
+        - "address 172.29.248.{{member_number}}/22"
+
+# /dev/sda (gpt)
+# 1 - boot
+# 2 - cinder-volumes-pv
+# 3 - lxc-pv
+# 4 - os-pv
+vgs:
+  - name: cinder-volumes
+    device: /dev/sda2
+  - name: lxc
+    device: /dev/sda3

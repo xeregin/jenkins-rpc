@@ -1,0 +1,66 @@
+[all]
+569037-infra01 ansible_ssh_host=10.17.255.132 ansible_ssh_user=root member_number=1
+569038-infra02 ansible_ssh_host=10.17.255.133 ansible_ssh_user=root member_number=2
+569039-infra03 ansible_ssh_host=10.17.255.134 ansible_ssh_user=root member_number=3
+573972-compute01 ansible_ssh_host=10.17.255.152 ansible_ssh_user=root member_number=4
+573971-compute02 ansible_ssh_host=10.17.255.151 ansible_ssh_user=root member_number=5
+573951-compute03 ansible_ssh_host=10.17.255.135 ansible_ssh_user=root member_number=6
+573952-compute04 ansible_ssh_host=10.17.255.136 ansible_ssh_user=root member_number=7
+573953-compute05 ansible_ssh_host=10.17.255.137 ansible_ssh_user=root member_number=8
+573954-compute06 ansible_ssh_host=10.17.255.138 ansible_ssh_user=root member_number=9
+573955-compute07 ansible_ssh_host=10.17.255.139 ansible_ssh_user=root member_number=10
+573956-compute08 ansible_ssh_host=10.17.255.140 ansible_ssh_user=root member_number=11
+573957-compute09 ansible_ssh_host=10.17.255.141 ansible_ssh_user=root member_number=12
+573958-compute10 ansible_ssh_host=10.17.255.142 ansible_ssh_user=root member_number=13
+573959-compute11 ansible_ssh_host=10.17.255.143 ansible_ssh_user=root member_number=14
+573960-compute12 ansible_ssh_host=10.17.255.144 ansible_ssh_user=root member_number=15
+573961-compute13 ansible_ssh_host=10.17.255.145 ansible_ssh_user=root member_number=16
+573962-compute14 ansible_ssh_host=10.17.255.146 ansible_ssh_user=root member_number=17
+573963-compute15 ansible_ssh_host=10.17.255.147 ansible_ssh_user=root member_number=18
+573964-swift01 ansible_ssh_host=10.17.255.148 ansible_ssh_user=root member_number=19
+573965-swift02 ansible_ssh_host=10.17.255.149 ansible_ssh_user=root member_number=20
+573970-swift03 ansible_ssh_host=10.17.255.150 ansible_ssh_user=root member_number=21
+569058-cinder01 ansible_ssh_host=10.17.255.154 ansible_ssh_user=root member_number=22
+573973-cinder02 ansible_ssh_host=10.17.255.153 ansible_ssh_user=root member_number=23
+568575-logger01 ansible_ssh_host=10.17.255.155 ansible_ssh_user=root member_number=24
+
+[deployment]
+569037-infra01
+
+[infrastructure]
+569037-infra01
+569038-infra02
+569039-infra03
+
+[network]
+569038-infra02
+569039-infra03
+
+[compute]
+573972-compute01
+573971-compute02
+573951-compute03
+573952-compute04
+573953-compute05
+573954-compute06
+573955-compute07
+573956-compute08
+573957-compute09
+573958-compute10
+573959-compute11
+573960-compute12
+573961-compute13
+573962-compute14
+573963-compute15
+
+[swift]
+573964-swift01 zone=1
+573965-swift02 zone=2
+573970-swift03 zone=3
+
+[cinder]
+569058-cinder01
+573973-cinder02
+
+[logger]
+568575-logger01

@@ -1,0 +1,12 @@
+---
+- name: issue reinstall command to razor
+  razor:
+    url: '{{ razor_url }}'
+    command: 'reinstall-node'
+    name: '{{ inventory_hostname }}'
+
+- name: reboot machine
+  command: shutdown -r now "Razor rekick issued"
+  async: 0
+  poll: 0
+  ignore_errors: true
