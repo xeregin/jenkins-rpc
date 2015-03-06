@@ -1,21 +1,30 @@
+[all]
+node108 ansible_ssh_host=10.127.101.108 ansible_ssh_user=root member_number=1
+node101 ansible_ssh_host=10.127.101.101 ansible_ssh_user=root member_number=2
+node98 ansible_ssh_host=10.127.101.98 ansible_ssh_user=root member_number=3
+node121 ansible_ssh_host=10.127.101.121 ansible_ssh_user=root member_number=4
+node113 ansible_ssh_host=10.127.101.113 ansible_ssh_user=root member_number=5
+node115 ansible_ssh_host=10.127.101.115 ansible_ssh_user=root member_number=6
+node114 ansible_ssh_host=10.127.101.114 ansible_ssh_user=root member_number=7
+
 [haproxy]
-node108 ansible_ssh_host=10.127.101.108 ansible_ssh_user=root
+node108
 
 [infrastructure]
-node108 ansible_ssh_host=10.127.101.108 ansible_ssh_user=root
-node101 ansible_ssh_host=10.127.101.101 ansible_ssh_user=root
-node98 ansible_ssh_host=10.127.101.98 ansible_ssh_user=root
+node108
+node101
+node98
 
 [network]
-node101 ansible_ssh_host=10.127.101.101 ansible_ssh_user=root
-node98 ansible_ssh_host=10.127.101.98 ansible_ssh_user=root
+node101
+node98
 
 [compute]
-node121 ansible_ssh_host=10.127.101.121 ansible_ssh_user=root
-node113 ansible_ssh_host=10.127.101.113 ansible_ssh_user=root
+node121
+node113
 
 [cinder]
-node115 ansible_ssh_host=10.127.101.115 ansible_ssh_user=root
+node115
 
 [logger]
-node114 ansible_ssh_host=10.127.101.114 ansible_ssh_user=root
+node114

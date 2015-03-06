@@ -143,7 +143,7 @@ networking:
         - "bridge_waitport 0"
         - "bridge_fd 0"
         - "bridge-ports bond0.2002"
-        - "address {{ container_address.stdout|replace('\n','') }}"
+        - "address 172.29.236.{{member_number}}/22"
         - "dns-nameservers 8.8.8.8 8.8.4.4"
     - name: br-vxlan
       type: static
@@ -152,7 +152,7 @@ networking:
         - "bridge_waitport 0"
         - "bridge_fd 0"
         - "bridge_ports bond1.2003"
-        - "address {{ vxlan_address.stdout|replace('\n','') }}"
+        - "address 172.29.240.{{member_number}}/22"
     - name: br-vlan
       type: manual
       directives:
@@ -169,4 +169,4 @@ networking:
         - "bridge_waitport 0"
         - "bridge_fd 0"
         - "bridge-ports bond2.2004"
-        - "address {{ storage_address.stdout|replace('\n','') }}"
+        - "address 172.29.244.{{member_number}}/22"

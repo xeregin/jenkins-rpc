@@ -159,4 +159,3 @@ vgs:
     device: /dev/sda2
   - name: lxc
     device: /dev/sda3
-
