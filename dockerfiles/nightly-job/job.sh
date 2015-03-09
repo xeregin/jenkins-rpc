@@ -14,6 +14,14 @@ cd
 # We haven't trapped yet
 trapped=0
 
+# Trap setter; passes signal name as $1
+set_trap() {
+      func=$1; shift
+  for sig; do
+    trap "$func $sig" "$sig"
+  done
+}
+
 # Cleanup trap
 cleanup() {
   # If first trap
