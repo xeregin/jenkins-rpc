@@ -29,6 +29,12 @@
     - configure-rpc-compute
     - configure-rpc-swift
 
+- hosts: all
+  tags: prepare
+  user: root
+  roles:
+    - reboot
+
 ## --------- [ Run os-ansible-deployment ] ---------------
 - hosts: infrastructure[0]
   tags: run
