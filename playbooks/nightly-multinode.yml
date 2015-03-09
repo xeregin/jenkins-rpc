@@ -12,14 +12,6 @@
 
 - hosts: all
   user: root
-  vars_files:
-    - vars/pip.yml
-  roles:
-    - pip
-  tags: prepare
-
-- hosts: all
-  user: root
   roles:
     - networking
   tags: prepare
