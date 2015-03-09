@@ -1,4 +1,4 @@
-packages:
+install:
    - bridge-utils
    - lldpd
    - lsof

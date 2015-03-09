@@ -1,7 +1,7 @@
 ---
 - name: install bonding / bridge dependencies
   apt:
-    pkg: {{ item }}
+    pkg: "{{ item }}"
     state: present
     update_cache: yes
     cache_valid_time: 600

@@ -11,10 +11,10 @@
 - name: Install packages
   tags: packages
   apt:
-    pkg: {{ item }}
+    pkg: "{{ item }}"
     state: present
     update_cache: yes
     cache_valid_time: 600
   register: pkgs
   until: pkgs|success
-  with_items: packages
+  with_items: install
