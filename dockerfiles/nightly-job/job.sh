@@ -36,7 +36,7 @@ cleanup() {
 
   # Rekick the nodes in preperation for the next run.
   [ -e playbooks ] || pushd jenkins-rpc
-  [[ $REKICK == "yes" ]] &&  ansible-playbook -i inventory/$LAB -e @vars/$LAB playbooks/rekick-lab.yml ||:
+  [[ $REKICK == "yes" ]] &&  ansible-playbook -i playbooks/inventory/$LAB -e @playbook/vars/$LAB playbooks/rekick-lab.yml ||:
 
   # Exit
   exit $retval
@@ -60,8 +60,8 @@ then
 
   # Preconfigure lab / build RPC / test RPC
   ansible-playbook \
-    -i inventory/$LAB \
-    -e @vars/$LAB \
+    -i playbooks/inventory/$LAB \
+    -e @playbooks/vars/$LAB \
     playbooks/nightly-multinode.yml & wait %1
 fi
 
