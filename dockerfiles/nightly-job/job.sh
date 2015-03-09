@@ -43,9 +43,9 @@ cleanup() {
   trap - INT TERM ERR
 
   # Rekick the nodes in preperation for the next run.
-  [ -e playbooks ] || pushd jenkins-rpc
-  git checkout $targetBranch
-  [[ $REKICK == "yes" ]] &&  ansible-playbook -i playbooks/inventory/$LAB -e @playbook/vars/$LAB playbooks/rekick-lab.yml ||:
+  #[ -e playbooks ] || pushd jenkins-rpc
+  #git checkout $targetBranch
+  #[[ $REKICK == "yes" ]] &&  ansible-playbook -i playbooks/inventory/$LAB -e @playbook/vars/$LAB playbooks/rekick-lab.yml ||:
 
   # Exit
   exit $retval
