@@ -1,11 +1,11 @@
 [all]
-node108 ansible_ssh_host=10.127.101.108 ansible_ssh_user=root member_number=1
-node101 ansible_ssh_host=10.127.101.101 ansible_ssh_user=root member_number=2
-node98 ansible_ssh_host=10.127.101.98 ansible_ssh_user=root member_number=3
-node121 ansible_ssh_host=10.127.101.121 ansible_ssh_user=root member_number=4
-node113 ansible_ssh_host=10.127.101.113 ansible_ssh_user=root member_number=5
-node115 ansible_ssh_host=10.127.101.115 ansible_ssh_user=root member_number=6
-node114 ansible_ssh_host=10.127.101.114 ansible_ssh_user=root member_number=7
+node108 ansible_ssh_host=10.127.101.108 ansible_ssh_user=root member_number=108
+node101 ansible_ssh_host=10.127.101.101 ansible_ssh_user=root member_number=101
+node98 ansible_ssh_host=10.127.101.98 ansible_ssh_user=root member_number=98
+node121 ansible_ssh_host=10.127.101.121 ansible_ssh_user=root member_number=121
+node113 ansible_ssh_host=10.127.101.113 ansible_ssh_user=root member_number=113
+node115 ansible_ssh_host=10.127.101.115 ansible_ssh_user=root member_number=115
+node114 ansible_ssh_host=10.127.101.114 ansible_ssh_user=root member_number=114
 
 [haproxy]
 node108
