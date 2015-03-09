@@ -44,6 +44,7 @@ cleanup() {
 
   # Rekick the nodes in preperation for the next run.
   [ -e playbooks ] || pushd jenkins-rpc
+  git checkout $targetBranch
   [[ $REKICK == "yes" ]] &&  ansible-playbook -i playbooks/inventory/$LAB -e @playbook/vars/$LAB playbooks/rekick-lab.yml ||:
 
   # Exit
@@ -55,12 +56,12 @@ set_trap cleanup INT TERM ERR
 
 # Clone jenkins-rpc repo
 git clone git@github.com:rcbops/jenkins-rpc.git & wait %1
-git checkout $targetBranch
 
 if [[ $BUILD == "yes" ]]
 then
   # Move into jenkins-rpc
   pushd jenkins-rpc
+  git checkout $targetBranch
  
   # Set color and buffer
   export PYTHONUNBUFFERED=1
