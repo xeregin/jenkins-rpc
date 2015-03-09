@@ -29,7 +29,6 @@
   user: root
   roles:
 
-    - configure-rpc-swift-lvs
     - setup-git
 
     - role: run-script-from-os-ansible-deployment
