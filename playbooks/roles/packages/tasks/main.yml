@@ -1,10 +1,20 @@
 ---
-- name: Update package cache
-  apt: update_cache=yes
+- name: Updating packages
+  tags: packages
+  apt:
+    update_cache: yes
+    cache_valid_time: 600
+    upgrade: dist
+  register: pkgs
+  until: pkgs|success
 
-- name: Perform dist-upgrade
-  apt: upgrade=dist
-
-- name: install all required packages
-  apt: pkg={{ item }} state=latest
-  with_items: packages
+- name: Install packages
+  tags: packages
+  apt:
+    pkg: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 600
+  register: pkgs
+  until: pkgs|success
+  with_items: install
