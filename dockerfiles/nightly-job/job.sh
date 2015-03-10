@@ -71,6 +71,7 @@ then
   ansible-playbook \
     -i playbooks/inventory/$LAB \
     -e @playbooks/vars/$LAB \
+    -e @playbooks/vars/branch-vars-$targetBranch \
     playbooks/nightly-multinode.yml & wait %1
 fi
 
