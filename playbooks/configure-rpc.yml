@@ -4,4 +4,3 @@
   roles:
     - setup-git
     - configure-rpc-compute
-    - configure-rpc-swift
