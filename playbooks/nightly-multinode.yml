@@ -27,7 +27,6 @@
       script_name: bootstrap-ansible
 
     - configure-rpc-compute
-    - configure-rpc-swift
 
 - hosts: all
   tags: prepare

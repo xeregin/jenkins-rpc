@@ -33,17 +33,13 @@
       with_items: vgs
   tags: prepare
 
-- hosts: all
-  tags: prepare
-  user: root
-  roles:
-    - configure-rpc-swift-lvs
-    - setup-git
-
 - hosts: infrastructure[0]
   tags: prepare
   user: root
   roles:
+
+    - setup-git
+
     - role: run-script-from-os-ansible-deployment
       script_name: bootstrap-ansible
 
