@@ -1,2 +1,3 @@
 config_prefix: rpc
-targetBranch: juno
+branch: juno
+latest_tag: 10.1.2
