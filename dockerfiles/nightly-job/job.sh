@@ -70,8 +70,8 @@ then
   # Preconfigure lab / build RPC / test RPC
   ansible-playbook \
     -i playbooks/inventory/$LAB \
-    -e @playbooks/vars/$LAB \
-    -e @playbooks/vars/branch-vars-$RELEASE \
+    -e @playbooks/vars/$LAB.yml \
+    -e @playbooks/vars/branch-vars-$RELEASE.yml \
     playbooks/nightly-multinode.yml & wait %1
 elif [[ $BUILD == "tag" ]]
 then
@@ -86,8 +86,8 @@ then
   # Preconfigure lab / build RPC / test RPC
   ansible-playbook \
     -i playbooks/inventory/$LAB \
-    -e @playbooks/vars/$LAB \
-    -e @playbooks/vars/branch-vars-$RELEASE \
+    -e @playbooks/vars/$LAB.yml \
+    -e @playbooks/vars/branch-vars-$RELEASE.yml \
     -e LATEST_TAG=true
     playbooks/nightly-multinode.yml & wait %1
 
