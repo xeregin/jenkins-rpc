@@ -1,0 +1,8 @@
+--
+- include: teardown-infrastructure-node
+- include: teardown-network-node
+- include: teardown-cinder-node
+- include: teardown-swift-node
+- include: teardown-logging-node
+- include: teardown-compute-node
+- include: cleanup-host
