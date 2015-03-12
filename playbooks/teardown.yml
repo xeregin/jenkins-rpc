@@ -1,35 +1,35 @@
 ---
-hosts: infrastructure
-user: root
-roles:
+- hosts: infrastructure
+  user: root
+  roles:
     - teardown-infrastructure-node
-    
-hosts: network
-user: root
-roles:
+
+- hosts: network
+  user: root
+  roles:
     - teardown-network-node
-    
-hosts: cinder
-user: root
-roles:
+
+- hosts: cinder
+  user: root
+  roles:
     - teardown-cinder-node
-    
-hosts: swift
-user: root
-roles:
+
+- hosts: swift
+  user: root
+  roles:
     - teardown-swift-node
-    
-hosts: logger
-user: root
-roles:
+
+- hosts: logger
+  user: root
+  roles:
     - teardown-logging-node
-    
-hosts: compute
-user: root
-roles:
+
+- hosts: compute
+  user: root
+  roles:
     - teardown-compute-node
-    
-hosts: all
-user: root
-roles:
+
+- hosts: all
+  user: root
+  roles:
     - cleanup-host
