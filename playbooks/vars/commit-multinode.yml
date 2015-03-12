@@ -3,7 +3,7 @@ repo_url: http://rpc-repo.rackspace.com
 rpc_user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
-    storage_cidr:  172.29.248.0/22
+    storage_cidr:  172.29.244.0/22
     used_ips:
         - 172.29.236.1
         - 172.29.236.2
@@ -23,10 +23,6 @@ rpc_user_config:
         - 172.29.244.4
         - 172.29.244.5
 
-        - "172.29.236.1,172.29.236.15"
-        - "172.29.236.83,172.29.236.127"
-        - "172.29.240.83,172.29.240.127"
-        - "172.29.248.83,172.29.248.127"
     internal_lb_vip_address: 172.29.236.1
     external_lb_vip_address: "{{hostvars[groups['infrastructure'][0]]['ansible_ssh_host']}}"
     tunnel_bridge: br-vxlan
