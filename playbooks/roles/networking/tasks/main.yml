@@ -37,3 +37,4 @@
 
 - name: Bring up new interfaces
   command: ifup -a
+  when: bring_up_interfaces
