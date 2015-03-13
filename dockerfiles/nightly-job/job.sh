@@ -44,7 +44,7 @@ cleanup() {
 
   # Rekick the nodes in preperation for the next run.
   #[ -e playbooks ] || pushd jenkins-rpc
-  #git checkout $targetBranch
+  #git checkout $RELEASE
   #[[ $REKICK == "yes" ]] &&  ansible-playbook -i playbooks/inventory/$LAB -e @playbook/vars/$LAB playbooks/rekick-lab.yml ||:
 
   # Exit
@@ -57,11 +57,11 @@ set_trap cleanup INT TERM ERR
 # Clone jenkins-rpc repo
 git clone git@github.com:rcbops/jenkins-rpc.git & wait %1
 
-if [[ $BUILD == "yes" ]]
+if [[ $BUILD == "branch" ]]
 then
   # Move into jenkins-rpc
   pushd jenkins-rpc
-  git checkout $targetBranch
+  git checkout $RELEASE
  
   # Set color and buffer
   export PYTHONUNBUFFERED=1
@@ -71,6 +71,7 @@ then
   ansible-playbook \
     -i playbooks/inventory/$LAB \
     -e @playbooks/vars/$LAB \
+    -e @playbooks/vars/branch-vars-$RELEASE \
     playbooks/nightly-multinode.yml & wait %1
 elif [[ $BUILD == "tag" ]]
 then
@@ -85,10 +86,11 @@ then
   # Preconfigure lab / build RPC / test RPC
   ansible-playbook \
     -i playbooks/inventory/$LAB \
-    -e @playbooks/vars/$LAB.yml \
-    -e @playbooks/vars/branch-vars-$RELEASE.yml \
-    -e LATEST_TAG=true \
+    -e @playbooks/vars/$LAB \
+    -e @playbooks/vars/branch-vars-$RELEASE \
+    -e LATEST_TAG=true
     playbooks/nightly-multinode.yml & wait %1
+
 fi
 
 # Exit cleanly

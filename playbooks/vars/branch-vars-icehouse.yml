@@ -1,2 +1,3 @@
 config_prefix: rpc
-targetBranch: icehouse
+branch: icehouse
+latest_tag: 9.0.6
