@@ -88,7 +88,7 @@ then
     -i playbooks/inventory/$LAB \
     -e @playbooks/vars/$LAB.yml \
     -e @playbooks/vars/branch-vars-$RELEASE.yml \
-    -e LATEST_TAG=true
+    -e LATEST_TAG=true \
     playbooks/nightly-multinode.yml & wait %1
 
 fi
