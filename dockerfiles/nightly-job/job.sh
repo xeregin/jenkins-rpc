@@ -72,6 +72,23 @@ then
     -i playbooks/inventory/$LAB \
     -e @playbooks/vars/$LAB \
     playbooks/nightly-multinode.yml & wait %1
+elif [[ $BUILD == "tag" ]]
+then
+  # Move into jenkins-rpc
+  pushd jenkins-rpc
+  git checkout $RELEASE
+ 
+  # Set color and buffer
+  export PYTHONUNBUFFERED=1
+  export ANSIBLE_FORCE_COLOR=1
+
+  # Preconfigure lab / build RPC / test RPC
+  ansible-playbook \
+    -i playbooks/inventory/$LAB \
+    -e @playbooks/vars/$LAB.yml \
+    -e @playbooks/vars/branch-vars-$RELEASE.yml \
+    -e LATEST_TAG=true \
+    playbooks/nightly-multinode.yml & wait %1
 fi
 
 # Exit cleanly
