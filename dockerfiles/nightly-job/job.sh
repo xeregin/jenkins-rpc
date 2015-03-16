@@ -55,43 +55,21 @@ cleanup() {
 set_trap cleanup INT TERM ERR
 
 # Clone jenkins-rpc repo
-git clone git@github.com:rcbops/jenkins-rpc.git & wait %1
+git clone ${JENKINS_RPC_URL:-git@github.com:rcbops/jenkins-rpc.git} & wait %1
 
-if [[ $BUILD == "branch" ]]
-then
-  # Move into jenkins-rpc
-  pushd jenkins-rpc
-  git checkout $RELEASE
- 
-  # Set color and buffer
-  export PYTHONUNBUFFERED=1
-  export ANSIBLE_FORCE_COLOR=1
+# Move into jenkins-rpc
+pushd jenkins-rpc
+git checkout $JENKINS_RPC_BRANCH
 
-  # Preconfigure lab / build RPC / test RPC
-  ansible-playbook \
-    -i playbooks/inventory/$LAB \
-    -e @playbooks/vars/$LAB.yml \
-    -e @playbooks/vars/branch-vars-$RELEASE.yml \
-    playbooks/nightly-multinode.yml & wait %1
-elif [[ $BUILD == "tag" ]]
-then
-  # Move into jenkins-rpc
-  pushd jenkins-rpc
-  git checkout $RELEASE
- 
-  # Set color and buffer
-  export PYTHONUNBUFFERED=1
-  export ANSIBLE_FORCE_COLOR=1
+# Set color and buffer
+export PYTHONUNBUFFERED=1
+export ANSIBLE_FORCE_COLOR=1
 
-  # Preconfigure lab / build RPC / test RPC
-  ansible-playbook \
-    -i playbooks/inventory/$LAB \
-    -e @playbooks/vars/$LAB.yml \
-    -e @playbooks/vars/branch-vars-$RELEASE.yml \
-    -e LATEST_TAG=true \
-    playbooks/nightly-multinode.yml & wait %1
-
-fi
-
+# Preconfigure lab / build RPC / test RPC
+ansible-playbook \
+  -i playbooks/inventory/$LAB \
+  -e @playbooks/vars/$LAB.yml \
+  -e os_ansible_branch=${OS_ANSIBLE_BRANCH}
+  playbooks/nightly-multinode.yml & wait %1
 # Exit cleanly
 exit 0
