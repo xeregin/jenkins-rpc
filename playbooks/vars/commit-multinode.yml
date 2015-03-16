@@ -1,3 +1,4 @@
+config_prefix: openstack
 rpc_repo_dir: rpc_repo
 repo_url: http://rpc-repo.rackspace.com
 rpc_user_config:

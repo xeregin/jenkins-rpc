@@ -12,9 +12,9 @@ ansible-playbook \
   -e@vars/pip.yml\
   -e@vars/kernel.yml\
   -e@vars/commit-multinode.yml\
-  -e@vars/branch-vars-${TARGET_BRANCH}.yml\
   -e cluster_number=${CLUSTER_NUMBER}\
   -e GERRIT_REFSPEC=${GERRIT_REFSPEC}\
+  -e os_ansible_branch=${OS_ANSIBLE_BRANCH}\
   --tags $TAGS\
   $ANSIBLE_OPTIONS\
   commit-multinode.yml
