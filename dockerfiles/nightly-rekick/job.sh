@@ -49,7 +49,7 @@ cleanup() {
 rekick() {
   # teardown the lab
   pushd jenkins-rpc
-  git checkout $RELEASE
+  git checkout $JENKINS_RPC_BRANCH
 
   export PYTHONUNBUFFERED=1
   export ANSIBLE_FORCE_COLOR=1
@@ -66,7 +66,7 @@ rekick() {
 set_trap cleanup INT TERM ERR
 
 # Clone jenkins-rpc repo
-git clone git@github.com:rcbops/jenkins-rpc.git & wait %1
+git clone ${JENKINS_RPC_URL:-git@github.com:rcbops/jenkins-rpc.git} & wait %1
 
 # rekick lab
 rekick
