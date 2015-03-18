@@ -1,7 +1,8 @@
 ---
 - name: "{{script_name}}"
   environment: script_env
-  shell: "scripts/{{script_name}}.sh"
+  shell: "scripts/{{script_name}}.sh |& tee -a /var/log/{{script_name}}.log"
   args:
     chdir: "{{rpc_repo_dir}}"
+    executable: /bin/bash
 

@@ -42,35 +42,34 @@ cleanup() {
   # Disable trap
   trap - INT TERM ERR
 
-  # Rekick the nodes in preperation for the next run.
-  #[ -e playbooks ] || pushd jenkins-rpc
-  #git checkout $RELEASE
-  #[[ $REKICK == "yes" ]] &&  ansible-playbook -i playbooks/inventory/$LAB -e @playbook/vars/$LAB playbooks/rekick-lab.yml ||:
-
   # Exit
   exit $retval
+}
+
+rekick() {
+  # teardown the lab
+  pushd jenkins-rpc
+  git checkout $RELEASE
+
+  export PYTHONUNBUFFERED=1
+  export ANSIBLE_FORCE_COLOR=1
+
+  ansible-playbook \
+    -i playbooks/inventory/$LAB \
+    -e @playbooks/vars/$LAB.yml \
+    playbooks/rekick-lab.yml & wait %1
+
+  popd
 }
 
 # Set the trap
 set_trap cleanup INT TERM ERR
 
 # Clone jenkins-rpc repo
-git clone ${JENKINS_RPC_URL:-git@github.com:rcbops/jenkins-rpc.git} & wait %1
+git clone git@github.com:rcbops/jenkins-rpc.git & wait %1
 
-# Move into jenkins-rpc
-pushd jenkins-rpc
-git checkout $JENKINS_RPC_BRANCH
-
-# Set color and buffer
-export PYTHONUNBUFFERED=1
-export ANSIBLE_FORCE_COLOR=1
-
-# Preconfigure lab / build RPC / test RPC
-ansible-playbook \
-  -i playbooks/inventory/$LAB \
-  -e @playbooks/vars/$LAB.yml \
-  -e os_ansible_branch=${OS_ANSIBLE_BRANCH}
-  playbooks/nightly-multinode.yml & wait %1
+# rekick lab
+rekick
 
 # Exit cleanly
 exit 0
