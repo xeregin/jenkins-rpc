@@ -69,7 +69,7 @@ export ANSIBLE_FORCE_COLOR=1
 ansible-playbook \
   -i playbooks/inventory/$LAB \
   -e @playbooks/vars/$LAB.yml \
-  -e os_ansible_branch=${OS_ANSIBLE_BRANCH}
+  -e os_ansible_branch=${OS_ANSIBLE_BRANCH} \
   playbooks/nightly-multinode.yml & wait %1
 
 # Exit cleanly
