@@ -40,17 +40,8 @@
     - rpc
     - git
   command: >
-    git checkout {{branch}}
+    git checkout {{os_ansible_branch}}
     chdir={{rpc_repo_dir}}
-
-- name: Checkout target tag
-  tags:
-    - rpc
-    - git
-  command: >
-    git checkout {{latest_tag}}
-    chdir={{rpc_repo_dir}}
-  when: LATEST_TAG is defined
 
 - name: Get change from gerrit
   tags:
