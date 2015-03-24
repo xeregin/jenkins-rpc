@@ -23,6 +23,8 @@
   roles:
     - networking
   tags: prepare
+  vars:
+    bring_up_interfaces: True
 
 - hosts: all
   tasks:
