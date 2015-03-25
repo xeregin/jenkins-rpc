@@ -5,9 +5,9 @@ OS_ANSIBLE_BRANCH=${OS_ANSIBLE_BRANCH:-master}
 ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:--v}
 
 ansible-playbook \
-  -i inventory/nighty-${LAB} \
-  -e @vars/nightly-${LAB}.yml \
-  -e os_ansible_branch=${OS_ANSIBLE_BRANCH} \
+  -i inventory/nightly-$LAB \
+  -e @vars/nightly-$LAB.yml \
+  -e os_ansible_branch=$OS_ANSIBLE_BRANCH \
   --tags $TAGS \
   $ANSIBLE_OPTIONS \
   nightly-multinode.yml
