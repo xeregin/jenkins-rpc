@@ -46,30 +46,22 @@ cleanup() {
   exit $retval
 }
 
-rekick() {
-  # teardown the lab
-  pushd jenkins-rpc
-  git checkout $JENKINS_RPC_BRANCH
-
-  export PYTHONUNBUFFERED=1
-  export ANSIBLE_FORCE_COLOR=1
-
-  ansible-playbook \
-    -i playbooks/inventory/$LAB \
-    -e @playbooks/vars/$LAB.yml \
-    playbooks/rekick-lab.yml & wait %1
-
-  popd
-}
-
 # Set the trap
 set_trap cleanup INT TERM ERR
 
 # Clone jenkins-rpc repo
-git clone ${JENKINS_RPC_URL:-git@github.com:rcbops/jenkins-rpc.git} & wait %1
+git clone -b $JENKINS_RPC_BRANCH $JENKINS_RPC_URL & wait %1
 
-# rekick lab
-rekick
+# Move into jenkins-rpc
+pushd jenkins-rpc/playbooks
+
+set -x
+
+# Execute bash script
+bash ../scripts/nightly-rekick.sh & wait %1
+rc=$?
 
 # Exit cleanly
-exit 0
+popd
+set +x
+cleanup $rc
