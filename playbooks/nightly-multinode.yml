@@ -4,21 +4,29 @@
 
 - hosts: all
   user: root
+  tags: prepare
   vars_files:
     - vars/packages.yml
   roles:
     - packages
-  tags: prepare
 
 - hosts: all
   user: root
+  tags: prepare
+  vars_files:
+    - vars/pip.yml
+  roles:
+    - pip
+
+- hosts: all
+  user: root
+  tags: prepare
   roles:
     - networking
-  tags: prepare
 
 - hosts: infrastructure[0]
-  tags: prepare
   user: root
+  tags: prepare
   roles:
 
     - setup-git
@@ -30,8 +38,8 @@
     - configure-rpc-swift
 
 - hosts: all
-  tags: prepare
   user: root
+  tags: prepare
   roles:
     - reboot
 

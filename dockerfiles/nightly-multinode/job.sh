@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 set -e
-set -x
+
+JENKINS_RPC_URL=${JENKINS_RPC_URL:-git@github.com:rcbops/jenkins-rpc.git}
+JENKINS_RPC_BRANCH=${JENKINS_RPC_BRANCH:-master}
 
 env
 
@@ -42,11 +44,6 @@ cleanup() {
   # Disable trap
   trap - INT TERM ERR
 
-  # Rekick the nodes in preperation for the next run.
-  #[ -e playbooks ] || pushd jenkins-rpc
-  #git checkout $RELEASE
-  #[[ $REKICK == "yes" ]] &&  ansible-playbook -i playbooks/inventory/$LAB -e @playbook/vars/$LAB playbooks/rekick-lab.yml ||:
-
   # Exit
   exit $retval
 }
@@ -55,21 +52,18 @@ cleanup() {
 set_trap cleanup INT TERM ERR
 
 # Clone jenkins-rpc repo
-git clone ${JENKINS_RPC_URL:-git@github.com:rcbops/jenkins-rpc.git} & wait %1
+git clone -b $JENKINS_RPC_BRANCH $JENKINS_RPC_URL & wait %1
 
 # Move into jenkins-rpc
-pushd jenkins-rpc
-git checkout $JENKINS_RPC_BRANCH
+pushd jenkins-rpc/playbooks
 
-# Set color and buffer
-export PYTHONUNBUFFERED=1
-export ANSIBLE_FORCE_COLOR=1
+set -x
 
-# Preconfigure lab / build RPC / test RPC
-ansible-playbook \
-  -i playbooks/inventory/$LAB \
-  -e @playbooks/vars/$LAB.yml \
-  -e os_ansible_branch=${OS_ANSIBLE_BRANCH} \
-  playbooks/nightly-multinode.yml & wait %1
+# Execute bash script
+bash ../scripts/commit-multinode.sh & wait %1
+rc=$?
+
 # Exit cleanly
-exit 0
+popd
+set +x
+cleanup $rc
