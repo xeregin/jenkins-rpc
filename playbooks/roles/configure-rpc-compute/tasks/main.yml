@@ -4,7 +4,7 @@
 
 - name: Copy rpc_deploy directory
   command: cp -a ~/{{rpc_repo_dir}}/etc/{{config_prefix}}_deploy /etc/{{config_prefix}}_deploy
-           creates=~/rpc_deploy
+           creates=/etc/{{config_prefix}}_deploy
 
 - name: Set environment_md5 fact for template
   stat: path=/etc/{{config_prefix}}_deploy/{{config_prefix}}_environment.yml
