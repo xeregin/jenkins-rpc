@@ -60,7 +60,7 @@ pushd jenkins-rpc/playbooks
 set -x
 
 # Execute bash script
-bash ../scripts/commit-multinode.sh & wait %1
+bash ../scripts/nightly-multinode.sh & wait %1
 rc=$?
 
 # Exit cleanly
