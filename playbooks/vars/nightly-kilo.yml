@@ -202,5 +202,5 @@ networking:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge-ports bond2.XXXX"
-        - "address 172.30.248.{{member_number}}/22"
+        - "bridge-ports bond2.2005"
+        - "address 172.30.244.{{member_number}}/22"
