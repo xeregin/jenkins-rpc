@@ -7,4 +7,3 @@ ansible-playbook \
   -e @vars/nightly-${LAB}.yml \
   $ANSIBLE_OPTIONS \
   nightly-rekick.yml
-  
