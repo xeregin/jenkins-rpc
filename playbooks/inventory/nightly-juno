@@ -6,9 +6,9 @@ node118 ansible_ssh_host=10.127.101.118 ansible_ssh_user=root member_number=118
 node92 ansible_ssh_host=10.127.101.92 ansible_ssh_user=root member_number=92
 node93 ansible_ssh_host=10.127.101.93 ansible_ssh_user=root member_number=93
 node91 ansible_ssh_host=10.127.101.91 ansible_ssh_user=root member_number=91
-node119 ansible_ssh_host=10.127.101.119 ansible_ssh_user=root zone=1 member_number=119
-node107 ansible_ssh_host=10.127.101.107 ansible_ssh_user=root zone=2 member_number=107
-node120 ansible_ssh_host=10.127.101.120 ansible_ssh_user=root zone=3 member_number=120
+node119 ansible_ssh_host=10.127.101.119 ansible_ssh_user=root member_number=119 zone=1
+node107 ansible_ssh_host=10.127.101.107 ansible_ssh_user=root member_number=107 zone=2
+node120 ansible_ssh_host=10.127.101.120 ansible_ssh_user=root member_number=120 zone=3
 
 [haproxy]
 node89
