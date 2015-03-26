@@ -28,22 +28,22 @@
   user: root
   tags: prepare
   roles:
-
     - setup-git
 
-    - role: run-script-from-os-ansible-deployment
-      script_name: bootstrap-ansible
-
+- hosts: infrastructure[0]
+  user: root
+  tags: configure
+  roles:
     - configure-rpc-compute
     - configure-rpc-swift
 
 - hosts: all
   user: root
-  tags: prepare
+  tags: reboot
   roles:
     - reboot
 
-## --------- [ Run os-ansible-deployment ] ---------------
+## --------- [ Run os-ansible-deployment ] ----------
 - hosts: infrastructure[0]
   tags: run
   roles:
@@ -58,3 +58,10 @@
   roles:
     - role: run-script-from-os-ansible-deployment
       script_name: run-tempest
+
+## --------- [ Rekick Cluster ] ------------------
+- hosts: all
+  user: root
+  tags: rekick
+  roles:
+    - razor-rekick
