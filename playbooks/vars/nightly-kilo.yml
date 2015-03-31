@@ -161,7 +161,7 @@ networking:
       type: manual
       directives:
         - "vlan-raw-device bond2"
-    - name: bond2.XXXX
+    - name: bond2.2005
       type: manual
       directives:
         - "vlan-raw-device bond2"

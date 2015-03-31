@@ -69,6 +69,9 @@ global_overrides:
         container_bridge: "{{ network.bridge }}"
         container_interface: "{{ network.container_interface }}"
         type: "{{ network.type }}"
+{% if network.container_type is defined %}
+        container_type: "{{ network.container_type }}"
+{% endif %}
 {% if network.ip_from_q is defined %}
         ip_from_q: "{{ network.ip_from_q }}"
 {% endif %}
@@ -92,18 +95,29 @@ global_overrides:
 {% endif %}
 {% endfor %}
 
-  # Name of load balancer
-  lb_name: {{ rpc_user_config.lb_name }}
-
-# User defined Infrastructure Hosts, this should be a required group
-infra_hosts:
+# Shared infrastructure parts
+shared-infra_hosts:
 {% for host in infra %}
   {{ host }}:
     ip: {{ hostvars[host]["ansible_ssh_host"] }}
 {% endfor %}
 
-# User defined Repo Infrastructure Hosts, this should be a required group
-repo-infra_hosts:
+# Openstack Compute Infrastructure Parts
+os-infra_hosts:
+{% for host in infra %}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
+{% endfor %}
+
+# Storage Infrastructure Parts
+storage-infra_hosts:
+{% for host in infra %}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
+{% endfor %}
+
+# Keystone Identity Infrastructure Parts
+identity_hosts:
 {% for host in infra %}
   {{ host }}:
     ip: {{ hostvars[host]["ansible_ssh_host"] }}
@@ -163,8 +177,15 @@ log_hosts:
     ip: {{ hostvars[host]["ansible_ssh_host"] }}
 {% endfor %}
 
+# User defined Repo Infrastructure Hosts, this is an optional group
+repo-infra_hosts:
+{% for host in infra %}
+  {{ host }}:
+    ip: {{ hostvars[host]["ansible_ssh_host"] }}
+{% endfor %}
+
 {% if haproxy is defined %}
-# User defined HAProxy Hosts
+# User defined HAProxy Hosts, this is an optional group
 haproxy_hosts:
 {% for host in haproxy %}
   {{ host }}:
