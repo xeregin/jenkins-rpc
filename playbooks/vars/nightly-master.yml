@@ -23,14 +23,18 @@ rpc_user_config:
           bridge: br-mgmt
           container_bridge: br-mgmt
           container_interface: eth1
+          container_type: veth
           ip_from_q: container
           type: raw
+          is_ssh_address: true
+          is_container_address: true
           group_binds:
             - all_containers
             - hosts
         - name: provider
           bridge: br-vlan
           container_interface: eth11
+          container_type: veth
           type: vlan
           range: 2010:2010
           net_name: vlan
@@ -39,6 +43,7 @@ rpc_user_config:
         - name: tenant
           bridge: br-vxlan
           container_interface: eth10
+          container_type: veth
           ip_from_q: tunnel
           type: vxlan
           range: 1:1000
@@ -48,6 +53,7 @@ rpc_user_config:
         - name: storage
           bridge: br-storage
           container_interface: eth2
+          container_type: veth
           ip_from_q: storage
           type: raw
           group_binds:
@@ -158,7 +164,7 @@ networking:
       type: manual
       directives:
         - "vlan-raw-device bond2"
-    - name: bond2.XXXX
+    - name: bond2.2005
       type: manual
       directives:
         - "vlan-raw-device bond2"
