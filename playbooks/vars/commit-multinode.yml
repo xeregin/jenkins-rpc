@@ -146,6 +146,11 @@ networking:
       directives:
         - "bridge_ports em1.2{{cluster_number}}03"
         - "address 172.29.248.{{member_number}}/22"
+    - name: "em1"
+      type: "static"
+      directives:
+        - "address {{ansible_em1['ipv4']['address']}}"
+        - "netmask 255.255.255.0"
 
 # /dev/sda (gpt)
 # 1 - boot
