@@ -7,7 +7,7 @@ OS_ANSIBLE_URL=${OS_ANSIBLE_URL:-git@github.com:stackforge/os-ansible-deployment
 OS_ANSIBLE_BRANCH=${OS_ANSIBLE_BRANCH:-master}
 JENKINS_RPC_URL=${JENKINS_RPC_URL:-git@github.com:rcbops/jenkins-rpc.git}
 JENKINS_RPC_BRANCH=${JENKINS_RPC_BRANCH:-master}
-TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS:-scenario}
+TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS:-commit_multinode}
 ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR:-1}
 ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:--v}
 
@@ -35,7 +35,7 @@ run_script(){
   echo "export ANSIBLE_FORCE_COLOR=$ANSIBLE_FORCE_COLOR" >> script_env
   scp script_env $infra_1_ip:/tmp/env
   echo "Running script ${1} from os-ansible-deployment/scripts."
-  ssh root@$infra_1_ip ". /tmp/env; cd ~/rpc_repo; bash scripts/${1}.sh"
+  ssh root@$infra_1_ip "source /tmp/env; cd ~/rpc_repo; bash scripts/${1}.sh"
 }
 
 prepare(){
