@@ -35,7 +35,7 @@ run_script(){
   echo "export ANSIBLE_FORCE_COLOR=$ANSIBLE_FORCE_COLOR" >> script_env
   scp script_env $infra_1_ip:/tmp/env
   echo "Running script ${1} from os-ansible-deployment/scripts."
-  ssh root@$infra_1_ip ". /tmp/env; cd ~/rpc_repo; bash scripts/${1}.sh"
+  ssh root@$infra_1_ip "source /tmp/env; cd ~/rpc_repo; bash scripts/${1}.sh"
 }
 
 prepare(){
