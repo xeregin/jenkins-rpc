@@ -134,14 +134,14 @@ storage_hosts:
 {% if cinder_storage.backends.lvm is defined %}
         lvm:
           volume_group: {{ cinder_storage.backends.lvm.volume_group }}
-          volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
-          volume_backend_name: LVM_iSCSI
+          volume_driver: {{ cinder_storage.backends.lvm.volume_driver }}
+          volume_backend_name: {{ cinder_storage.backends.lvm.volume_backend_name }}
 {% endif %}
 {% if cinder_storage.backends.lvm_ssd is defined %}
         lvm_ssd:
-          volume_group: {{ cinder_storage.backends.lvm.volume_group }}
-          volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
-          volume_backend_name: LVM_SSD_iSCSI
+          volume_group: {{ cinder_storage.backends.lvm_ssd.volume_group }}
+          volume_driver: {{ cinder_storage.backends.lvm_ssd.volume_driver }}
+          volume_backend_name: {{ cinder_storage.backends.lvm_ssd.volume_backend_name }}
 {% endif %}
 {% if cinder_storage.backends.netapp is defined %}
         netapp:
@@ -151,8 +151,8 @@ storage_hosts:
           netapp_server_port: 80
           netapp_login: {{ cinder_storage.backends.netapp.username }}
           netapp_password: {{ cinder_storage.backends.netapp.password }}
-          volume_driver: cinder.volume.drivers.netapp.common.NetAppDriver
-          volume_backend_name: NETAPP_iSCSI
+          volume_driver: {{ cinder_storage.backends.lvm_ssd.volume_driver }}
+          volume_backend_name: {{ cinder_storage.backends.lvm_ssd.volume_backend_name }}
 {% endif %}
 {% endfor %}
 
