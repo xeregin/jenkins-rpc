@@ -56,6 +56,7 @@ rpc_user_config:
             - cinder_volume
             - nova_compute
 swift_config:
+  vg: swift-volumes
   part_power: 8
   weight: 100
   min_part_hours: 1
@@ -63,7 +64,11 @@ swift_config:
   storage_network: 'br-storage' 
   replication_network: 'br-repl'
   drives:
-    - name: sdb
+    - name: swift1
+    - name: swift2
+    - name: swift3
+    - name: swift4
+    - name: swift5
   mount_point: /mnt
   account: private_cloud_qe
   container: sat6-lab01
@@ -204,3 +209,8 @@ networking:
         - "bridge_fd 0"
         - "bridge-ports bond2.2005"
         - "address 172.30.244.{{member_number}}/22"
+vgs:
+    - name: cinder-volumes
+      device: /dev/sdb1
+    - name: swift-volumes
+      device: /dev/sdb2
