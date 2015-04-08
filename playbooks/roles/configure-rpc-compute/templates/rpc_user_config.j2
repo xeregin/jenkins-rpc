@@ -151,8 +151,8 @@ storage_hosts:
           netapp_server_port: 80
           netapp_login: {{ cinder_storage.backends.netapp.username }}
           netapp_password: {{ cinder_storage.backends.netapp.password }}
-          volume_driver: {{ cinder_storage.backends.lvm_ssd.volume_driver }}
-          volume_backend_name: {{ cinder_storage.backends.lvm_ssd.volume_backend_name }}
+          volume_driver: {{ cinder_storage.backends.netapp.volume_driver }}
+          volume_backend_name: {{ cinder_storage.backends.netapp.volume_backend_name }}
 {% endif %}
 {% endfor %}
 
