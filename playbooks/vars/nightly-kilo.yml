@@ -70,8 +70,8 @@ swift_config:
     - name: swift4
     - name: swift5
   mount_point: /mnt
-  account: private_cloud_qe
-  container: sat6-lab01
+  account: "service:glance"
+  container: glance
   storage_policies:
     - name: gold
       index: 0
@@ -82,12 +82,10 @@ swift_config:
       depreciated: True
 cinder_storage:
   backends:
-    netapp:
-      username: test
-      hostname: test
-      password: test
     lvm:
-      volume_group: vg_storage
+      volume_group: cinder-volumes
+      volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+      volume_backend_name: LVM_iSCSI
 networking:
     - name: lo
       type: loopback
