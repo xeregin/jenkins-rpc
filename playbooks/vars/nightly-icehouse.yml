@@ -55,12 +55,10 @@ rpc_user_config:
             - nova_compute
 cinder_storage:
   backends:
-    netapp:
-      username: test
-      hostname: test
-      password: test
     lvm:
-      volume_group: vg_storage
+      volume_group: cinder-volumes
+      volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+      volume_backend_name: LVM_iSCSI
 networking:
     - name: lo
       type: loopback
@@ -170,3 +168,6 @@ networking:
         - "bridge_fd 0"
         - "bridge-ports bond2.2004"
         - "address 172.29.244.{{member_number}}/22"
+vgs:
+    - name: cinder-volumes
+      device: /dev/sdb1
