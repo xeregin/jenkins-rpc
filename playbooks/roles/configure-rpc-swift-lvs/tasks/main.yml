@@ -8,46 +8,26 @@
 
 - name: Create LVs for Swift
   lvol:
-    vg: lxc 
-    lv: "{{ item }}"
+    vg: "{{ swift_config.vg }}"
+    lv: "{{ item.name }}"
     size: 10G
-  with_items:
-    - swift1
-    - swift2
-    - swift3
-    - swift4
-    - swift5
+  with_items: swift_config.drives
 
 - name: Create swift mount dirs
   file:
     state: directory
-    path: "/mnt/{{ item }}"
-  with_items:
-    - swift1
-    - swift2
-    - swift3
-    - swift4
-    - swift5
+    path: "{{ swift_config.mount_point }}/{{ item.name }}"
+  with_items: swift_config.drives
 
 - name: mkfs.xfs swift partitions
-  shell: "xfs_info /dev/lxc/{{ item }} || mkfs.xfs -f /dev/lxc/{{ item }}"
-  with_items:
-    - swift1
-    - swift2
-    - swift3
-    - swift4
-    - swift5
+  shell: "xfs_info /dev/{{ swift_config.vg }}/{{ item.name }} || mkfs.xfs -f /dev/{{ swift_config.vg }}/{{ item.name }}"
+  with_items: swift_config.drives
 
 - name: Mount swift partitions
   mount: 
     state: mounted
     fstype: xfs
-    src: "/dev/lxc/{{ item }}"
-    name: "/mnt/{{ item }}"
-  with_items:
-    - swift1
-    - swift2
-    - swift3
-    - swift4
-    - swift5
+    src: "/dev/{{ swift_config.vg }}/{{ item.name }}"
+    name: "{{ swift_config.mount_point }}/{{ item.name }}"
+  with_items: swift_config.drives
 
