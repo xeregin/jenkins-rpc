@@ -23,6 +23,7 @@
   tags: prepare
   roles:
     - networking
+    - volumes
 
 - hosts: infrastructure[0]
   user: root
