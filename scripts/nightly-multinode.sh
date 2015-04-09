@@ -43,6 +43,7 @@ prepare(){
   run_script bootstrap-ansible
   run_playbook_tag configure
   run_playbook_tag reboot
+
   # sleep for 2 minutes to wait for ssh
   echo "Sleeping for 3 minutes to allow ssh to come up."
   sleep 180
@@ -59,7 +60,9 @@ test(){
 }
 
 rekick(){
+  run_playbook_tag cleanup
   run_playbook_tag rekick
+
   # sleep for 3 minutes to wait for ssh
   echo "Sleeping for 3 minutes to allow ssh to come up."
   sleep 180
