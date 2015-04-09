@@ -24,6 +24,11 @@
   roles:
     - networking
     - volumes
+
+- hosts: swift
+  user: root
+  tags: prepare
+  roles:
     - configure-rpc-swift-lvs
 
 - hosts: infrastructure[0]
@@ -62,7 +67,15 @@
       script_name: run-tempest
 
 ## --------- [ Rekick Cluster ] ------------------
+- hosts: cinder
+  gather_facts: no
+  user: root
+  tags: cleanup
+  roles:
+    - cleanup-cinder
+
 - hosts: all
+  gather_facts: no
   user: root
   tags: rekick
   roles:
