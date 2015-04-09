@@ -60,7 +60,15 @@
       script_name: run-tempest
 
 ## --------- [ Rekick Cluster ] ------------------
+- hosts: cinder
+  gather_facts: no
+  user: root
+  tags: cleanup
+  roles:
+    - cleanup-cinder
+
 - hosts: all
+  gather_facts: no
   user: root
   tags: rekick
   roles:
