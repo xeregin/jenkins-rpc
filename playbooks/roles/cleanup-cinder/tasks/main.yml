@@ -1,0 +1,14 @@
+---
+- name: remove cinder volumes volume group (lvm)
+  lvg: 
+    vg: "{{ cinder_storage.backends.lvm.volume_group }}"
+    state: absent 
+    force: yes
+  when: cinder_storage.backends.lvm.volume_group is defined
+
+- name: remove cinder volumes volume group (lvm_ssd)
+  lvg: 
+    vg: "{{ cinder_storage.backends.lvm_ssd.volume_group }}"
+    state: absent
+    force: yes
+  when: cinder_storage.backends.lvm_ssd.volume_group is defined
