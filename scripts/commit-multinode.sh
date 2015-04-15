@@ -51,7 +51,7 @@ if __name__ == "__main__":
 EOP
 }
 
-run_playbook_tag(){
+run_jenkins_rpc_playbook_tag(){
   echo "Running tag ${1} from jenkins-rpc/commit-multinode.yml"
   ansible-playbook \
     -i inventory/commit-cluster-$CLUSTER_NUMBER\
@@ -67,32 +67,37 @@ run_playbook_tag(){
     commit-multinode.yml
 }
 
-run_script(){
+ssh_command(){
   #Find the first node ip from the inventory
   [[ -z $infra_1_ip ]] && infra_1_ip=$(grep -o -m 1 '10.127.[0-9]\+.[0-9]\+' \
                           < inventory/commit-cluster-$CLUSTER_NUMBER)
   : >> /tmp/env
   scp script_env $infra_1_ip:/tmp/env
+  echo "Running command ${1}"
+  ssh root@$infra_1_ip "${1}"
+}
+
+ssh_osad_script(){
   echo "Running script ${1} from os-ansible-deployment/scripts."
-  ssh root@$infra_1_ip ". /tmp/env; cd ~/rpc_repo; bash scripts/${1}.sh"
+  ssh_command ". /tmp/env; cd ~/rpc_repo; bash scripts/${1}.sh"
 }
 
 prepare(){
-  run_playbook_tag prepare
+  run_jenkins_rpc_playbook_tag prepare
 }
 
 run(){
   echo "export DEPLOY_TEMPEST=yes" > script_env
-  run_script run-playbooks
+  ssh_osad_script run-playbooks
 }
 
 test(){
   echo "export TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS}" > script_env
-  run_script run-tempest
+  ssh_osad_script run-tempest
 }
 
 clean(){
-  run_playbook_tag clean
+  run_jenkins_rpc_playbook_tag clean
 }
 
 _claim(){
@@ -126,6 +131,10 @@ release(){
   cluster_tool check_release $CLUSTER_NAME
 }
 
+upgrade(){
+  ssh_command "curl $UPGRADE_SCRIPT_URL >~/rpc-repo/scripts/upgrade_script.sh; cd ~/rpc-repo; bash scripts/upgrade_script.sh"
+}
+
 # A propterties file (Java key=value format) is produced to be read by the
 # parent jenkins job. This is then used to inject CLUSTER_{NAME,CLAIM} into
 # the env for the cleanup job, so the correct cluster is cleaned and released
@@ -154,7 +163,8 @@ for tag in ${TAGS}
 do
   $tag
   rc=$(( $rc + $? ))
-  [[ $rc -ne 0 ]] && break
+  # must continue to the end incase tags include cleanup or release
+  #[[ $rc -ne 0 ]] && break
   write_properties CLUSTER_NAME CLUSTER_CLAIM
 done
 
