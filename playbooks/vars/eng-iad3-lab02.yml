@@ -203,6 +203,6 @@ networking:
 # volume groups for cinder / swift
 vgs:
     - name: cinder-volumes
-      device: /dev/sdb1
+      device: /dev/sdb
     - name: swift-volumes
-      device: /dev/sdb2
+      device: /dev/sdc
