@@ -1,6 +1,9 @@
+# dir / repo info
 config_prefix: rpc
 rpc_repo_dir: rpc_repo
 repo_url: http://rpc-repo.rackspace.com
+
+# rpc_user_config info
 rpc_user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
@@ -72,6 +75,7 @@ rpc_user_config:
             - nova_compute
             - swift_proxy
 
+# swift configuration
 swift_config:
   vg: lxc
   part_power: 8
@@ -85,6 +89,7 @@ swift_config:
     - name: swift3
     - name: swift4
     - name: swift5
+  lv_size: 10G
   mount_point: /mnt
   account: "service:glance"
   container: glance
@@ -96,12 +101,16 @@ swift_config:
       index: 1
       repl_number: 3
       depreciated: True
+
+# cinder configuration
 cinder_storage:
   backends:
     lvm:
       volume_group: cinder-volumes
       volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
       volume_backend_name: LVM_iSCSI
+
+# host networking
 networking:
     - name: lo
       type: loopback
