@@ -10,7 +10,7 @@
   lvol:
     vg: "{{ swift_config.vg }}"
     lv: "{{ item.name }}"
-    size: 10G
+    size: "{{ swift_config.lv_size }}"
   with_items: swift_config.drives
 
 - name: Create swift mount dirs

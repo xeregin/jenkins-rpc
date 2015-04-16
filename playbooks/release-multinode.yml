@@ -66,17 +66,53 @@
     - role: run-script-from-os-ansible-deployment
       script_name: run-tempest
 
-## --------- [ Rekick Cluster ] ------------------
-- hosts: cinder
-  gather_facts: no
+## --------- [ Cleanup Cluster ] ------------------
+- hosts: infrastructure
   user: root
+  gather_facts: no
+  tags: cleanup
+  roles:
+    - teardown-infrastructure-node
+
+- hosts: network
+  user: root
+  gather_facts: no
+  tags: cleanup
+  roles:
+    - teardown-network-node
+
+- hosts: cinder
+  user: root
+  gather_facts: no
   tags: cleanup
   roles:
     - cleanup-cinder-volumes
+    - teardown-cinder-node
+
+- hosts: swift
+  user: root
+  gather_facts: no
+  tags: cleanup
+  roles:
+    - teardown-swift-node
+
+- hosts: logger
+  user: root
+  gather_facts: no
+  tags: cleanup
+  roles:
+    - teardown-logging-node
+
+- hosts: compute
+  user: root
+  gather_facts: no
+  tags: cleanup
+  roles:
+    - teardown-compute-node
 
 - hosts: all
-  gather_facts: no
   user: root
-  tags: rekick
+  gather_facts: no
+  tags: cleanup
   roles:
-    - razor-rekick
+    - cleanup-host

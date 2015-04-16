@@ -2,7 +2,7 @@
 
 ### -------------- [ Variables ] --------------------
 LAB=${LAB:-master}
-TAGS=${TAGS:-rekick,prepare,run,test}
+TAGS=${TAGS:-cleanup,prepare,run,test}
 OS_ANSIBLE_URL=${OS_ANSIBLE_URL:-git@github.com:stackforge/os-ansible-deployment.git}
 OS_ANSIBLE_BRANCH=${OS_ANSIBLE_BRANCH:-master}
 JENKINS_RPC_URL=${JENKINS_RPC_URL:-git@github.com:rcbops/jenkins-rpc.git}
@@ -17,20 +17,20 @@ env
 
 run_playbook_tag(){
   export ANSIBLE_FORCE_COLOR
-  echo "Running tag ${1} from jenkins-rpc/nightly-multinode.yml"
+  echo "Running tag ${1} from jenkins-rpc/release-multinode.yml"
   ansible-playbook \
-    -i inventory/nightly-${LAB}\
-    -e @vars/nightly-${LAB}.yml\
+    -i inventory/${LAB}\
+    -e @vars/${LAB}.yml\
     -e os_ansible_branch=${OS_ANSIBLE_BRANCH}\
     --tags $1\
     $ANSIBLE_OPTIONS\
-    nightly-multinode.yml
+    release-multinode.yml
 }
 
 run_script(){
   #Find the first node ip from the inventory
-  [[ -z $infra_1_ip ]] && infra_1_ip=$(grep -o -m 1 '10.127.[0-9]\+.[0-9]\+' \
-                          < inventory/nightly-$LAB)
+  [[ -z $infra_1_ip ]] && infra_1_ip=$(grep -o -m 1 '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' \
+                          < inventory/release-$LAB)
   : >> /tmp/env
   echo "export ANSIBLE_FORCE_COLOR=$ANSIBLE_FORCE_COLOR" >> script_env
   scp script_env $infra_1_ip:/tmp/env
@@ -59,13 +59,9 @@ test(){
   run_script run-tempest
 }
 
-rekick(){
+cleanup(){
   run_playbook_tag cleanup
-  run_playbook_tag rekick
-
-  # sleep for 3 minutes to wait for ssh
-  echo "Sleeping for 3 minutes to allow ssh to come up."
-  sleep 180
+  run_playbook_tag reboot
 }
 
 ### -------------- [ Main ] --------------------

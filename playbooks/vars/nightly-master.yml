@@ -1,7 +1,10 @@
+# repo / dir info
 config_prefix: openstack
 rpc_repo_dir: rpc_repo
 repo_url: http://rpc-repo.rackspace.com
 razor_url: http://10.127.101.82:8080/api
+
+# rpc user config info
 rpc_user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
@@ -23,14 +26,18 @@ rpc_user_config:
           bridge: br-mgmt
           container_bridge: br-mgmt
           container_interface: eth1
+          container_type: veth
           ip_from_q: container
           type: raw
+          is_ssh_address: true
+          is_container_address: true
           group_binds:
             - all_containers
             - hosts
         - name: provider
           bridge: br-vlan
           container_interface: eth11
+          container_type: veth
           type: vlan
           range: 2010:2010
           net_name: vlan
@@ -39,6 +46,7 @@ rpc_user_config:
         - name: tenant
           bridge: br-vxlan
           container_interface: eth10
+          container_type: veth
           ip_from_q: tunnel
           type: vxlan
           range: 1:1000
@@ -48,6 +56,7 @@ rpc_user_config:
         - name: storage
           bridge: br-storage
           container_interface: eth2
+          container_type: veth
           ip_from_q: storage
           type: raw
           group_binds:
@@ -56,6 +65,8 @@ rpc_user_config:
             - cinder_volume
             - nova_compute
             - swift_proxy
+
+# swift configuration
 swift_config:
   vg: swift-volumes
   part_power: 8
@@ -70,6 +81,7 @@ swift_config:
     - name: swift3
     - name: swift4
     - name: swift5
+  lv_size: 20G
   mount_point: /mnt
   account: "service:glance"
   container: glance
@@ -81,12 +93,16 @@ swift_config:
       index: 1
       repl_number: 3
       depreciated: True
+
+# cinder configuration
 cinder_storage:
   backends:
     lvm:
       volume_group: cinder-volumes
       volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
       volume_backend_name: LVM_iSCSI
+
+# networking configuration
 networking:
     - name: lo
       type: loopback
@@ -162,7 +178,7 @@ networking:
       type: manual
       directives:
         - "vlan-raw-device bond2"
-    - name: bond2.XXXX
+    - name: bond2.2005
       type: manual
       directives:
         - "vlan-raw-device bond2"
@@ -208,6 +224,8 @@ networking:
         - "bridge_fd 0"
         - "bridge-ports bond2.2005"
         - "address 172.30.244.{{member_number}}/22"
+
+# volume group information for cinder / swift
 vgs:
     - name: cinder-volumes
       device: /dev/sdb1
