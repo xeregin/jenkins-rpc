@@ -132,7 +132,9 @@ release(){
 }
 
 upgrade(){
-  ssh_command "curl $UPGRADE_SCRIPT_URL >~/rpc_repo/scripts/upgrade_script.sh; cd ~/rpc_repo; echo YES | bash scripts/upgrade_script.sh"
+  ssh_command "cd ~/rpc_repo;
+               git checkout $UPGRADE_BRANCH;
+               echo YES | bash scripts/upgrade_script.sh"
 }
 
 # A propterties file (Java key=value format) is produced to be read by the
