@@ -22,7 +22,7 @@ rpc_user_config:
         - name: container
           bridge: br-mgmt
           container_bridge: br-mgmt
-          container_interface: em1
+          container_interface: eth1
           container_type: veth
           ip_from_q: container
           type: raw
@@ -33,7 +33,7 @@ rpc_user_config:
             - hosts
         - name: provider
           bridge: br-vlan
-          container_interface: em11
+          container_interface: eth11
           container_type: veth
           type: vlan
           range: 725:725
@@ -42,7 +42,7 @@ rpc_user_config:
             - neutron_linuxbridge_agent
         - name: tenant
           bridge: br-vxlan
-          container_interface: em10
+          container_interface: eth10
           container_type: veth
           ip_from_q: tunnel
           type: vxlan
@@ -52,7 +52,7 @@ rpc_user_config:
             - neutron_linuxbridge_agent
         - name: storage
           bridge: br-storage
-          container_interface: em2
+          container_interface: eth2
           container_type: veth
           ip_from_q: storage
           type: raw
@@ -65,7 +65,6 @@ rpc_user_config:
 
 # all swift configuration
 swift_config:
-  vg: swift-volumes
   part_power: 8
   weight: 100
   min_part_hours: 1
@@ -73,12 +72,14 @@ swift_config:
   storage_network: 'br-storage' 
   replication_network: 'br-storage'
   drives:
-    - name: swift1
-    - name: swift2
-    - name: swift3
-    - name: swift4
-    - name: swift5
-  lv_size: 50G
+    - name: sdd
+    - name: sde
+    - name: sdf
+    - name: sdg
+    - name: sdh
+    - name: sdi
+    - name: sdj
+    - name: sdk
   mount_point: /mnt
   account: "service:glance"
   container: glance
@@ -139,7 +140,7 @@ networking:
         - "netmask {{ ansible_default_ipv4.netmask }}"
         - "gateway {{ ansible_default_ipv4.gateway }}"
         - "dns-nameservers 69.20.0.164 69.20.0.196"
-        - "dns-search rpchost.com"
+        - "dns-search 10gb.rpchost.com"
     - name: bond1
       type: manual
       directives:
@@ -191,7 +192,7 @@ networking:
         - "bridge_waitport 0"
         - "bridge_fd 0"
         - "bridge_ports bond0.1470"
-        - "address 172.27.244.{{ member_number }}/22"
+        - "address 172.29.244.{{ member_number }}/22"
     - name: br-snet
       type: static
       directives:
@@ -199,10 +200,3 @@ networking:
         - "bridge_waitport 0"
         - "bridge_fd 0"
         - "address 172.29.248.1/22"
-
-# volume groups for cinder / swift
-vgs:
-    - name: cinder-volumes
-      device: /dev/sdb
-    - name: swift-volumes
-      device: /dev/sdc
