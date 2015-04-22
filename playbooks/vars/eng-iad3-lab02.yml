@@ -14,7 +14,7 @@ rpc_user_config:
         - "172.29.240.96,172.29.240.157"
         - "172.29.244.96,172.29.244.157"
         - "172.30.244.96,172.30.244.157"
-    internal_lb_vip_address: 172.29.236.10
+    internal_lb_vip_address: 172.29.236.15
     external_lb_vip_address: 72.4.117.65
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
