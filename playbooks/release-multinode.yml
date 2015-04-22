@@ -23,13 +23,6 @@
   tags: prepare
   roles:
     - networking
-    - volumes
-
-- hosts: swift
-  user: root
-  tags: prepare
-  roles:
-    - configure-rpc-swift-lvs
 
 - hosts: infrastructure[0]
   user: root
