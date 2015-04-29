@@ -33,6 +33,7 @@
       script_env:
         DEPLOY_LB: "no"
         DEPLOY_TEMPEST: "yes"
+        DEPLOY_RPC_SUPPORT: "no"
 
 ## --------- [ Test with tempest ] ---------------
 - hosts: infrastructure[0]
