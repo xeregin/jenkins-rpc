@@ -2,7 +2,7 @@
 
 ### -------------- [ Variables ] --------------------
 LAB=${LAB:-master}
-TAGS=${TAGS:-rekick,prepare,run,test}
+TAGS=${TAGS:-rekick,prepare,run,upgrade,test}
 OS_ANSIBLE_URL=${OS_ANSIBLE_URL:-git@github.com:stackforge/os-ansible-deployment.git}
 OS_ANSIBLE_BRANCH=${OS_ANSIBLE_BRANCH:-master}
 JENKINS_RPC_URL=${JENKINS_RPC_URL:-git@github.com:rcbops/jenkins-rpc.git}
@@ -10,6 +10,7 @@ JENKINS_RPC_BRANCH=${JENKINS_RPC_BRANCH:-master}
 TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS:-api}
 ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR:-1}
 ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:--v}
+UPGRADE=${UPGRADE:-YES}
 
 ### -------------- [ Functions ] --------------------
 
@@ -57,6 +58,11 @@ run(){
 test(){
   echo "export TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS}" > script_env
   run_script run-tempest
+}
+
+upgrade(){
+  echo "export UPGRADE=${UPGRADE}" > script_env
+  run_script run-upgrade
 }
 
 rekick(){
