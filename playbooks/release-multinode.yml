@@ -1,28 +1,11 @@
 ---
 
 ## --------- [ Prepare Cluster ] ---------------
+- include: packages.yml tags=prepare
 
-- hosts: all
-  user: root
-  tags: prepare
-  vars_files:
-    - vars/packages.yml
-  roles:
-    - packages
+- include: pip.yml tags=prepare
 
-- hosts: all
-  user: root
-  tags: prepare
-  vars_files:
-    - vars/pip.yml
-  roles:
-    - pip
-
-- hosts: all
-  user: root
-  tags: prepare
-  roles:
-    - networking
+- include: networking.yml tags=prepare
 
 - hosts: infrastructure[0]
   user: root
@@ -37,11 +20,7 @@
     - configure-rpc-compute
     - configure-rpc-swift
 
-- hosts: all
-  user: root
-  tags: reboot
-  roles:
-    - reboot
+- include: reboot-hosts.yml tags=reboot
 
 ## --------- [ Run os-ansible-deployment ] ----------
 - hosts: infrastructure[0]
@@ -60,52 +39,4 @@
       script_name: run-tempest
 
 ## --------- [ Cleanup Cluster ] ------------------
-- hosts: infrastructure
-  user: root
-  gather_facts: no
-  tags: cleanup
-  roles:
-    - teardown-infrastructure-node
-
-- hosts: network
-  user: root
-  gather_facts: no
-  tags: cleanup
-  roles:
-    - teardown-network-node
-
-- hosts: cinder
-  user: root
-  gather_facts: no
-  tags: cleanup
-  roles:
-    - cleanup-cinder-volumes
-    - teardown-cinder-node
-
-- hosts: swift
-  user: root
-  gather_facts: no
-  tags: cleanup
-  roles:
-    - teardown-swift-node
-
-- hosts: logger
-  user: root
-  gather_facts: no
-  tags: cleanup
-  roles:
-    - teardown-logging-node
-
-- hosts: compute
-  user: root
-  gather_facts: no
-  tags: cleanup
-  roles:
-    - teardown-compute-node
-
-- hosts: all
-  user: root
-  gather_facts: no
-  tags: cleanup
-  roles:
-    - cleanup-host
+- include: teardown.yml tags=cleanup
