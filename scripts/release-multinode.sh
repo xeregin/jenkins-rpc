@@ -2,7 +2,7 @@
 
 ### -------------- [ Variables ] --------------------
 LAB=${LAB:-master}
-TAGS=${TAGS:-cleanup,prepare,run,test}
+TAGS=${TAGS:-cleanup prepare run test}
 OS_ANSIBLE_URL=${OS_ANSIBLE_URL:-git@github.com:stackforge/os-ansible-deployment.git}
 OS_ANSIBLE_BRANCH=${OS_ANSIBLE_BRANCH:-master}
 JENKINS_RPC_URL=${JENKINS_RPC_URL:-git@github.com:rcbops/jenkins-rpc.git}
