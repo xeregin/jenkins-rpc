@@ -12,8 +12,6 @@
   tags: prepare
   roles:
     - setup-git
-    - role: run-script-from-os-ansible-deployment
-      script_name: bootstrap-ansible
 
 - hosts: infrastructure[0]
   user: root
