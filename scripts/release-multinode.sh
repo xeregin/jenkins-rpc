@@ -10,6 +10,8 @@ JENKINS_RPC_BRANCH=${JENKINS_RPC_BRANCH:-master}
 TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS:-api}
 ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR:-1}
 ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:--v}
+UPGRADE=${UPGRADE:-YES}
+UPGRADE_BRANCH=${UPGRADE_BRANCH:-master}
 
 ### -------------- [ Functions ] --------------------
 
@@ -38,6 +40,17 @@ run_script(){
   ssh root@$infra_1_ip "source /tmp/env; cd ~/rpc_repo; bash scripts/${1}.sh"
 }
 
+run_upgrade(){
+  #Find the first node ip from the inventory
+  [[ -z $infra_1_ip ]] && infra_1_ip=$(grep -o -m 1 '10.127.[0-9]\+.[0-9]\+' \
+                          < inventory/nightly-$LAB)
+  : >> /tmp/env
+  echo "export ANSIBLE_FORCE_COLOR=$ANSIBLE_FORCE_COLOR" >> script_env
+  scp script_env $infra_1_ip:/tmp/env
+  echo "Running script ${1} from os-ansible-deployment/scripts."
+  ssh root@$infra_1_ip "source /tmp/env; cd ~/rpc_repo; echo $UPGRADE | bash scripts/${1}.sh" 
+}
+
 prepare(){
   run_playbook_tag prepare
   run_script bootstrap-ansible
@@ -52,6 +65,17 @@ prepare(){
 run(){
   echo "export DEPLOY_TEMPEST=yes" > script_env
   run_script run-playbooks
+}
+
+upgrade(){
+  # set os_ansible_branch environment varible for upgrade
+  OS_ANSIBLE_BRANCH=${UPGRADE_BRANCH}
+
+  # run jenkins-rpc upgrade tag
+  run_playbook_tag upgrade
+
+  # run os-ansible-deployment upgrade script
+  run_upgrade run-upgrade
 }
 
 test(){
