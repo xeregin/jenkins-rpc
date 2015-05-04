@@ -59,6 +59,12 @@
     - role: run-script-from-os-ansible-deployment
       script_name: run-tempest
 
+## ---------- [ Upgrade ] ------------
+- hosts: infrastructure[0]
+  tags: upgrade
+  roles:
+    - role: setup-git
+
 ## --------- [ Cleanup Cluster ] ------------------
 - hosts: infrastructure
   user: root
