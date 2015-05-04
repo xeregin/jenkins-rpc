@@ -66,6 +66,12 @@
     - role: run-script-from-os-ansible-deployment
       script_name: run-tempest
 
+## ---------- [ Upgrade ] ------------
+- hosts: infrastructure[0]
+  tags: upgrade
+  roles:
+    - role: setup-git
+
 ## --------- [ Rekick Cluster ] ------------------
 - hosts: cinder
   gather_facts: no
