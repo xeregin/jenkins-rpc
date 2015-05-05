@@ -30,7 +30,7 @@ run_playbook_tag(){
 run_script(){
   #Find the first node ip from the inventory
   [[ -z $infra_1_ip ]] && infra_1_ip=$(grep -o -m 1 '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' \
-                          < inventory/release-$LAB)
+                          < inventory/$LAB)
   : >> /tmp/env
   echo "export ANSIBLE_FORCE_COLOR=$ANSIBLE_FORCE_COLOR" >> script_env
   scp script_env $infra_1_ip:/tmp/env
