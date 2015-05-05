@@ -68,9 +68,6 @@ run(){
 }
 
 upgrade(){
-  # set os_ansible_branch environment varible for upgrade
-  OS_ANSIBLE_BRANCH=${UPGRADE_BRANCH}
-
   # run jenkins-rpc upgrade tag
   run_playbook_tag upgrade
 
