@@ -593,6 +593,49 @@ class ManageRazor(object):
                 msg=r.json()['error']
             )
 
+    def reboot_node(self, variables, required_vars):
+        """Issues a reboot node command
+
+        This will return 'None' if the node is not found.
+
+        :param variables: ``list``  List of all variables that are available
+                                    with the Razor command.
+        :param required_vars: ``list``  List of all required variables for the
+                                        Razor command.
+        """
+        # Build out request headers
+        headers = {'content-type': 'application/json'}
+
+        # Build out the request body and headers
+        body = self._get_vars(variables, required=required_vars)
+
+        # build out extension
+        extension = ('%s' %
+                     COMMAND_MAP['reboot-node']['extension'] %
+                     {'command': self.module.params['command']})
+
+        # build out request url
+        url = '%(url)s%(extension)s' % dict(url=self.url, extension=extension)
+
+        # issue api request
+        r = requests.post(url, data=json.dumps(body), headers=headers)
+
+        # add return value work here
+        if r.status_code == requests.codes.accepted:
+            self.module.exit_json(
+                cmd='%s with body %s' % (url, body),
+                stdout=r.json()['result'],
+                changed=True,
+                stderr=False,
+                rc=0
+            )
+        else:
+            self.failure(
+                error='Bad Request',
+                rc=2,
+                msg=r.json()['error']
+            )
+
     def reinstall_node(self, variables, required_vars):
         """Issues a reinstall node command
 
