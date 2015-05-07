@@ -38,15 +38,26 @@
     - setup-git
 
 - hosts: infrastructure[0]
+  tags: prepare
   user: root
-  tags: configure
+  roles:
+    - role: run-script-from-os-ansible-deployment
+      script_name: bootstrap-ansible
+
+- hosts: infrastructure[0]
+  user: root
+  tags:
+    - configure
+    - prepare
   roles:
     - configure-rpc-compute
     - configure-rpc-swift
 
 - hosts: all
   user: root
-  tags: reboot
+  tags:
+    - reboot
+    - prepare
   roles:
     - reboot
 
@@ -72,11 +83,15 @@
   roles:
     - role: setup-git
 
+
+
 ## --------- [ Rekick Cluster ] ------------------
 - hosts: cinder
   gather_facts: no
   user: root
-  tags: cleanup
+  tags:
+    - cleanup
+    - rekick
   roles:
     - cleanup-cinder-volumes
 
