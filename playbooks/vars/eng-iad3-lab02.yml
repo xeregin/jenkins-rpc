@@ -36,7 +36,7 @@ rpc_user_config:
           container_interface: eth11
           container_type: veth
           type: vlan
-          range: 2010:2010
+          range: 725:725
           net_name: vlan
           group_binds:
             - neutron_linuxbridge_agent
