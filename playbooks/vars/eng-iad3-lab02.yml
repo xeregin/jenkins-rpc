@@ -1,5 +1,5 @@
 # dir and repo info
-config_prefix: rpc
+config_prefix: openstack
 rpc_repo_dir: rpc_repo
 repo_url: https://rpc-repo.rackspace.com
 
