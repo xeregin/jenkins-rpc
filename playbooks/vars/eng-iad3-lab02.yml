@@ -13,9 +13,8 @@ rpc_user_config:
         - "172.29.236.96,172.29.236.157"
         - "172.29.240.96,172.29.240.157"
         - "172.29.244.96,172.29.244.157"
-        - "172.30.244.96,172.30.244.157"
     internal_lb_vip_address: 172.29.236.10
-    external_lb_vip_address: 72.4.117.65
+    external_lb_vip_address: 72.4.117.93
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     lb_name: 605010-lbal1.iad3.rpchost.com
@@ -23,7 +22,7 @@ rpc_user_config:
         - name: container
           bridge: br-mgmt
           container_bridge: br-mgmt
-          container_interface: em1
+          container_interface: eth1
           container_type: veth
           ip_from_q: container
           type: raw
@@ -34,7 +33,7 @@ rpc_user_config:
             - hosts
         - name: provider
           bridge: br-vlan
-          container_interface: em11
+          container_interface: eth11
           container_type: veth
           type: vlan
           range: 725:725
@@ -43,7 +42,7 @@ rpc_user_config:
             - neutron_linuxbridge_agent
         - name: tenant
           bridge: br-vxlan
-          container_interface: em10
+          container_interface: eth10
           container_type: veth
           ip_from_q: tunnel
           type: vxlan
@@ -53,7 +52,7 @@ rpc_user_config:
             - neutron_linuxbridge_agent
         - name: storage
           bridge: br-storage
-          container_interface: em2
+          container_interface: eth2
           container_type: veth
           ip_from_q: storage
           type: raw
