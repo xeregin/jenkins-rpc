@@ -23,6 +23,7 @@ run_playbook_tag(){
   ansible-playbook \
     -i inventory/nightly-${LAB}\
     -e @vars/nightly-${LAB}.yml\
+    -e os_ansible_url=${OS_ANSIBLE_URL}\
     -e os_ansible_branch=${OS_ANSIBLE_BRANCH}\
     --tags $1\
     $ANSIBLE_OPTIONS\
@@ -48,7 +49,7 @@ run_upgrade(){
   echo "export ANSIBLE_FORCE_COLOR=$ANSIBLE_FORCE_COLOR" >> script_env
   scp script_env $infra_1_ip:/tmp/env
   echo "Running script ${1} from os-ansible-deployment/scripts."
-  ssh root@$infra_1_ip "source /tmp/env; cd ~/rpc_repo; echo $UPGRADE | bash scripts/${1}.sh" 
+  ssh root@$infra_1_ip "source /tmp/env; cd ~/rpc_repo; echo $UPGRADE | bash scripts/${1}.sh"
 }
 
 prepare(){

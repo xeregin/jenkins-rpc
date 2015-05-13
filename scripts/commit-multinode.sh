@@ -2,6 +2,7 @@
 
 ### -------------- [ Variables ] --------------------
 TAGS=${TAGS:-prepare,run,test}
+OS_ANSIBLE_URL={$OS_ANSIBLE_URL:-https://github.com/stackforge/os-ansible-deployment}
 OS_ANSIBLE_BRANCH=${OS_ANSIBLE_BRANCH:-master}
 GERRIT_REFSPEC=${GERRIT_REFSPEC:-refs/changes/87/139087/14}
 ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:--v}
@@ -61,6 +62,7 @@ run_jenkins_rpc_playbook_tag(){
     -e@vars/commit-multinode.yml\
     -e cluster_number=${CLUSTER_NUMBER}\
     -e GERRIT_REFSPEC=${GERRIT_REFSPEC}\
+    -e os_ansible_url=${OS_ANSIBLE_URL}\
     -e os_ansible_branch=${OS_ANSIBLE_BRANCH}\
     --tags $1\
     $ANSIBLE_OPTIONS\

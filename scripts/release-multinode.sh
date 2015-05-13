@@ -23,6 +23,7 @@ run_playbook_tag(){
   ansible-playbook \
     -i inventory/${LAB}\
     -e @vars/${LAB}.yml\
+    -e os_ansible_url=${OS_ANSIBLE_URL}\
     -e os_ansible_branch=${OS_ANSIBLE_BRANCH}\
     --tags $1\
     $ANSIBLE_OPTIONS\
