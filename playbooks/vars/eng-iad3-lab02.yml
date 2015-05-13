@@ -1,5 +1,5 @@
 # dir and repo info
-config_prefix: openstack
+config_prefix: rpc
 rpc_repo_dir: rpc_repo
 repo_url: https://rpc-repo.rackspace.com
 
@@ -15,9 +15,10 @@ rpc_user_config:
         - "172.29.244.96,172.29.244.157"
         - "172.30.244.96,172.30.244.157"
     internal_lb_vip_address: 172.29.236.10
-    external_lb_vip_address: 72.4.117.65
+    external_lb_vip_address: 72.4.117.93
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
+    lb_name: 605010-lbal1.iad3.rpchost.com
     networking:
         - name: container
           bridge: br-mgmt
