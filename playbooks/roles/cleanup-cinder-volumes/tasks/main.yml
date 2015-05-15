@@ -1,4 +1,16 @@
 ---
+- name: gather all cinder volumes
+  shell: lvs | grep cinder | cut -f 3 -d ' '
+  register: cinder_vols
+
+- name: cleanup all gathered cinder volumes
+  lvol:
+    vg: "{{ cinder_storage.backends.lvm.volume_group }}"
+    lv: "{{ item }}"
+    state: absent
+    force: yes
+  with_items: cinder_vols.stdout_lines
+
 - name: remove cinder volumes volume group (lvm)
   lvg: 
     vg: "{{ cinder_storage.backends.lvm.volume_group }}"
