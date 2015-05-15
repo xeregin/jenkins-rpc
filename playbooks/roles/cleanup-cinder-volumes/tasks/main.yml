@@ -10,6 +10,7 @@
     state: absent
     force: yes
   with_items: cinder_vols.stdout_lines
+  when: cinder_storage.backends.lvm.volume_group is defined
 
 - name: remove cinder volumes volume group (lvm)
   lvg: 
