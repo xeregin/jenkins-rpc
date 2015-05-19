@@ -2,7 +2,7 @@
 
 ### -------------- [ Variables ] --------------------
 TAGS=${TAGS:-prepare,run,test}
-OS_ANSIBLE_URL={$OS_ANSIBLE_URL:-https://github.com/stackforge/os-ansible-deployment}
+OS_ANSIBLE_URL=${OS_ANSIBLE_URL:-https://github.com/stackforge/os-ansible-deployment}
 OS_ANSIBLE_BRANCH=${OS_ANSIBLE_BRANCH:-master}
 GERRIT_REFSPEC=${GERRIT_REFSPEC:-refs/changes/87/139087/14}
 ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:--v}
