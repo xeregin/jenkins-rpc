@@ -1,4 +1,4 @@
-{% extends "rpc_user_config.j2" %}
+{% extends "{{ config_prefix }}_user_config.j2" %}
 {% block lvm %}
 container_vars:
   cinder_backends:

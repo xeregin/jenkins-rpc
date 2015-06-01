@@ -1,9 +1,8 @@
-# dir and repo info
+# repo configuration info
 config_prefix: openstack
-rpc_repo_dir: rpc_repo
+rpc_repo_dir: os-ansible-deployment
 repo_url: https://rpc-repo.rackspace.com
 
-# all rpc user configuration
 rpc_user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
@@ -69,7 +68,7 @@ swift_config:
   weight: 100
   min_part_hours: 1
   repl_number: 3
-  storage_network: 'br-storage' 
+  storage_network: 'br-storage'
   replication_network: 'br-storage'
   drives:
     - name: sdd
