@@ -1,9 +1,9 @@
-# dir and repo info
+# repo configuration info
 config_prefix: openstack
-openstack_repo_dir: os-ansible-deployment
+rpc_repo_dir: os-ansible-deployment
+repo_url: http://rpc-repo.rackspace.com
 
-# all OSAD user configuration
-openstack_user_config:
+rpc_user_config:
     container_cidr: 172.27.236.0/22
     tunnel_cidr:  172.27.240.0/22
     storage_cidr:  172.27.244.0/22
@@ -12,7 +12,6 @@ openstack_user_config:
         - "172.27.236.73,172.27.236.127"
         - "172.27.240.73,172.27.240.127"
         - "172.27.244.73,172.27.244.127"
-    openstack_repo_url: http://rpc-repo.rackspace.com
     internal_lb_vip_address: 172.27.236.10
     external_lb_vip_address: 72.4.117.65
     tunnel_bridge: br-vxlan

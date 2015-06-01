@@ -41,10 +41,6 @@ used_ips:
 
 # overrides anything else any where.
 global_overrides:
-  {% if rpc_user_config.rpc_repo_url is defined %}
-  # Repo for pip wheels.
-  rpc_repo_url: "{{ rpc_user_config.rpc_repo_url }}"
-  {% endif %}
 
   # Internal Management vip address
   internal_lb_vip_address: {{ rpc_user_config.internal_lb_vip_address }}
