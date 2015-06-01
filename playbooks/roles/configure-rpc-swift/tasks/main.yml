@@ -1,11 +1,11 @@
 ---
-- name: create rpc deploy conf.d folder
+- name: Create 'rpc_deploy' conf.d folder
   file: path=/etc/{{ config_prefix }}_deploy/conf.d
         state=directory
         mode=0755
   when: swift_config is defined
 
-- name: create and configure the swift.yml file
+- name: Create and configure the swift.yml file
   template: src=swift.j2
             dest=/etc/{{ config_prefix }}_deploy/conf.d/swift.yml
             mode=0644

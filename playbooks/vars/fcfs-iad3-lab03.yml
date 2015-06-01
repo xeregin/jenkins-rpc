@@ -1,7 +1,7 @@
 # dir and repo info
-config_prefix: rpc_deploy
+config_prefix: rpc
 rpc_repo_dir: rpc_repo
-rpc_repo_url: https://rpc-repo.rackspace.com
+repo_url: https://rpc-repo.rackspace.com
 
 rpc_user_config:
     container_cidr: 172.27.236.0/22

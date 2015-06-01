@@ -3,9 +3,9 @@
 ### -------------- [ Variables ] --------------------
 LAB=${LAB:-master}
 TAGS=${TAGS:-cleanup prepare run upgrade test}
-OS_ANSIBLE_URL=${OS_ANSIBLE_URL:-git@github.com:stackforge/os-ansible-deployment.git}
+OS_ANSIBLE_URL=${OS_ANSIBLE_URL:-https://github.com/stackforge/os-ansible-deployment}
 OS_ANSIBLE_BRANCH=${OS_ANSIBLE_BRANCH:-master}
-JENKINS_RPC_URL=${JENKINS_RPC_URL:-git@github.com:rcbops/jenkins-rpc.git}
+JENKINS_RPC_URL=${JENKINS_RPC_URL:-https://github.com/rcbops/jenkins-rpc}
 JENKINS_RPC_BRANCH=${JENKINS_RPC_BRANCH:-master}
 TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS:-api}
 ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR:-1}
@@ -43,7 +43,7 @@ run_script(){
 run_upgrade(){
   #Find the first node ip from the inventory
   [[ -z $infra_1_ip ]] && infra_1_ip=$(grep -o -m 1 '10.127.[0-9]\+.[0-9]\+' \
-                          < inventory/nightly-$LAB)
+                          < inventory/$LAB)
   : >> /tmp/env
   echo "export ANSIBLE_FORCE_COLOR=$ANSIBLE_FORCE_COLOR" >> script_env
   scp script_env $infra_1_ip:/tmp/env

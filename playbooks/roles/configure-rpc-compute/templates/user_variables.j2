@@ -1,0 +1,17 @@
+glance_default_store: swift
+{% if rpc_repo_url is defined %}
+openstack_repo_url: '{{ repo_url }}'
+{% endif %}
+glance_notification_driver: noop
+glance_swift_store_auth_address: {{ "'{{ keystone_service_internalurl }}'" }}
+glance_swift_store_container: glance_images
+glance_swift_store_endpoint_type: internalURL
+glance_swift_store_key: {{ "'{{ glance_service_password }}'" }}
+glance_swift_store_region: RegionOne
+glance_swift_store_user: 'service:glance'
+tempest_public_subnet_cidr: '172.29.248.0/22'
+# See https://bugs.launchpad.net/openstack-ansible/+bug/1442823
+# TODO: revert this once these tests can run successfully w/ run_ssh: True
+tempest_compute_run_ssh: False
+ssl_protocol: "ALL -SSLv2 -SSLv3"
+ssl_cipher_suite: "ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS"

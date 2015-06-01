@@ -17,15 +17,15 @@
     - rpc
     - git
   command:
-    rm -rf {{rpc_repo_dir}}
+    rm -rf {{ rpc_repo_dir }}
 
 - name: Clone stackforge repo
   tags:
     - rpc
     - git
   git: >
-    repo=https://github.com/stackforge/os-ansible-deployment
-    dest={{rpc_repo_dir}}
+    repo={{ os_ansible_url }}
+    dest={{ rpc_repo_dir }}
 
 - name: Fetch origin
   tags:
@@ -33,15 +33,15 @@
     - git
   command: >
     git fetch origin
-    chdir={{rpc_repo_dir}}
+    chdir={{ rpc_repo_dir }}
 
 - name: Checkout target branch
   tags:
     - rpc
     - git
   command: >
-    git checkout {{os_ansible_branch}}
-    chdir={{rpc_repo_dir}}
+    git checkout {{ os_ansible_branch }}
+    chdir={{ rpc_repo_dir }}
 
 - name: Get change from gerrit
   tags:
@@ -50,7 +50,7 @@
   shell:
     git fetch https://review.openstack.org/stackforge/os-ansible-deployment {{GERRIT_REFSPEC}}
   args:
-    chdir: "{{rpc_repo_dir}}"
+    chdir: "{{ rpc_repo_dir }}"
   when: GERRIT_REFSPEC is defined
 
 - name: Merge Review
@@ -59,5 +59,5 @@
     - git
   command: >
     git merge FETCH_HEAD
-    chdir={{rpc_repo_dir}}
+    chdir={{ rpc_repo_dir }}
   when: GERRIT_REFSPEC is defined

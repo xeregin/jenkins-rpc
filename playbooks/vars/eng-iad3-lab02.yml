@@ -3,7 +3,6 @@ config_prefix: rpc
 rpc_repo_dir: rpc_repo
 repo_url: https://rpc-repo.rackspace.com
 
-# all rpc user configuration
 rpc_user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
@@ -70,7 +69,7 @@ swift_config:
   weight: 100
   min_part_hours: 1
   repl_number: 3
-  storage_network: 'br-storage' 
+  storage_network: 'br-storage'
   replication_network: 'br-storage'
   drives:
     - name: swift1
