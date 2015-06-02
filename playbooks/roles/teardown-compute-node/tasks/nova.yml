@@ -6,6 +6,7 @@
 - name: Gather VMs
   virt: command=list_vms
   register: instances
+  ignore_errors: yes
 
 - name: Destroy VMs
   virt: name={{ item }} command=destroy
@@ -17,6 +18,7 @@
   with_items:
     - nova
     - python-neutronclient
+  ignore_errors: yes
 
 - name: Remove nova directories
   file: path={{ item }} state=absent
