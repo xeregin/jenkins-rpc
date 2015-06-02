@@ -6,6 +6,7 @@
 - name: Get all running vms
   shell: "virsh list | grep instance | awk '{print $2}'"
   register: instances
+  ignore_errors: yes
 
 - name: Stop all running instances
   virt: name={{ item }} command=shutdown
@@ -20,6 +21,7 @@
   with_items:
     - nova
     - python-neutronclient
+  ignore_errors: yes
 
 - name: Remove nova directories
   file: path={{ item }} state=absent
