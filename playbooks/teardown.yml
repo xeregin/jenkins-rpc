@@ -1,8 +1,63 @@
---
-- include: teardown-infrastructure-node
-- include: teardown-network-node
-- include: teardown-cinder-node
-- include: teardown-swift-node
-- include: teardown-logging-node
-- include: teardown-compute-node
-- include: cleanup-host
+---
+- hosts: infrastructure
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - teardown-infrastructure-node
+
+- hosts: compute
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - teardown-compute-node
+
+- hosts: network
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - teardown-network-node
+
+- hosts: cinder
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - teardown-cinder-node
+
+- hosts: swift
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - teardown-swift-node
+
+- hosts: logger
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - teardown-logging-node
+
+- hosts: all
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - cleanup-host

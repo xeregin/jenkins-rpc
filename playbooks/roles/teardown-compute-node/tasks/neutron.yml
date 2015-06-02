@@ -8,6 +8,7 @@
   with_items:
     - neutron
     - python-novaclient
+  ignore_errors: yes
 
 - name: Remove neutron directories
   file: path={{ item }} state=absent
