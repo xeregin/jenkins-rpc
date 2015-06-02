@@ -83,7 +83,9 @@
   roles:
     - role: setup-git
 
-
+## --------- [ Cleanup Cluster ] ------------------
+- include: teardown.yml
+  tags: rekick
 
 ## --------- [ Rekick Cluster ] ------------------
 - hosts: cinder
