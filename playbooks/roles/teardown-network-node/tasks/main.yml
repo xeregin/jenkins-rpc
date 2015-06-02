@@ -2,15 +2,17 @@
 - name: Catalog active local containers
   command: lxc-ls
   register: active_local_containers
+  ignore_errors: yes
 
 - name: Stop local containers
   command: lxc-stop -k -n {{ item }}
   with_items: active_local_containers.stdout_lines
-  ignore_errors: yes
+  when: active_local_containers.stdout_lines is defined
 
 - name: Destroy local containers
   command: lxc-destroy -f -n {{ item }}
   with_items: active_local_containers.stdout_lines
+  when: active_local_containers. stdout_lines is defined
 
 - name: Remove all containers from /etc/hosts
   lineinfile: dest=/etc/hosts regexp="container" state=absent
