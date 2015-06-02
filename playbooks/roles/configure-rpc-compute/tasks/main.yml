@@ -79,4 +79,3 @@
 
 - name: Generate passphrases
   command: ~/{{ rpc_repo_dir }}/scripts/pw-token-gen.py --file /etc/{{ config_prefix }}_deploy/user_secrets.yml
->>>>>>> bbdbe9a... Hardcode a pip mirror URL
