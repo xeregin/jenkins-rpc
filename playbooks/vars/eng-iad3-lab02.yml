@@ -1,7 +1,7 @@
 # repo configuration info
 config_prefix: openstack
 rpc_repo_dir: os-ansible-deployment
-repo_url: https://rpc-repo.rackspace.com
+# repo_url: https://rpc-repo.rackspace.com
 
 rpc_user_config:
     container_cidr: 172.29.236.0/22
