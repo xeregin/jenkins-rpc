@@ -1,4 +1,13 @@
 ---
+- name: add verifyhostkeydns to ssh options
+  lineinfile:
+    dest: ~/.ssh/config
+    line: "{{ item }}"
+    create: yes
+  with_items:
+    - "VerifyHostKeyDNS yes"
+    - "StrictHostKeyChecking no"
+
 - name: install git
   apt:
     pkg: git
@@ -26,6 +35,7 @@
   git: >
     repo={{ os_ansible_url }}
     dest={{ rpc_repo_dir }}
+    accept_hostkey=True
 
 - name: Fetch origin
   tags:
