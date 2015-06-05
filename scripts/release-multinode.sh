@@ -53,17 +53,18 @@ run_upgrade(){
 }
 
 prepare(){
-  run_playbook_tag prepare
-  run_script bootstrap-ansible
-  run_playbook_tag configure
-  run_playbook_tag reboot
-
-  # sleep for 2 minutes to wait for ssh
-  echo "Sleeping for 3 minutes to allow ssh to come up."
+  # sleep for 3 minutes to wait for ssh
+  echo "Sleeping for 3 minutes to allow ssh to come up after rekick."
   sleep 180
+
+  run_playbook_tag prepare
 }
 
 run(){
+    # sleep for 3 minutes to wait for ssh
+  echo "Sleeping for 3 minutes to allow ssh to come up after prepare reboot."
+  sleep 180
+
   echo "export DEPLOY_TEMPEST=yes" > script_env
   run_script run-playbooks
 }
@@ -83,7 +84,6 @@ test(){
 
 cleanup(){
   run_playbook_tag cleanup
-  run_playbook_tag reboot
 }
 
 ### -------------- [ Main ] --------------------
