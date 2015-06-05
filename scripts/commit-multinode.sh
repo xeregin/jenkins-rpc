@@ -163,9 +163,7 @@ write_properties CLUSTER_NAME CLUSTER_CLAIM
 rc=0
 for tag in ${TAGS}
 do
-  $tag
-  rc=$(( $rc + $? ))
-  [[ $rc -ne 0 ]] && break
+  $tag || { rc=1; break; }
   write_properties CLUSTER_NAME CLUSTER_CLAIM
 done
 
