@@ -16,6 +16,7 @@ rpc_user_config:
     external_lb_vip_address: 72.4.117.65
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
+    lb_name: 605011-lbal1.iad3.rpchost.com
     networking:
         - name: container
           bridge: br-mgmt
