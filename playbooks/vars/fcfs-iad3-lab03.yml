@@ -20,7 +20,7 @@ rpc_user_config:
         - name: container
           bridge: br-mgmt
           container_bridge: br-mgmt
-          container_interface: em1
+          container_interface: eth1
           container_type: veth
           ip_from_q: container
           type: raw
@@ -31,7 +31,7 @@ rpc_user_config:
             - hosts
         - name: provider
           bridge: br-vlan
-          container_interface: em11
+          container_interface: eth11
           container_type: veth
           type: vlan
           range: 2010:2010
@@ -40,7 +40,7 @@ rpc_user_config:
             - neutron_linuxbridge_agent
         - name: tenant
           bridge: br-vxlan
-          container_interface: em10
+          container_interface: eth10
           container_type: veth
           ip_from_q: tunnel
           type: vxlan
@@ -50,7 +50,7 @@ rpc_user_config:
             - neutron_linuxbridge_agent
         - name: storage
           bridge: br-storage
-          container_interface: em2
+          container_interface: eth2
           container_type: veth
           ip_from_q: storage
           type: raw
