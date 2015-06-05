@@ -165,10 +165,7 @@ write_properties CLUSTER_NAME CLUSTER_CLAIM
 rc=0
 for tag in ${TAGS}
 do
-  $tag
-  rc=$(( $rc + $? ))
-  # must continue to the end incase tags include cleanup or release
-  #[[ $rc -ne 0 ]] && break
+  $tag || { rc=1; break; }
   write_properties CLUSTER_NAME CLUSTER_CLAIM
 done
 
