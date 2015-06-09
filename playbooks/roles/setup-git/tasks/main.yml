@@ -16,59 +16,64 @@
 - name: Configure git identity
   tags:
     - rpc
+    - osad
     - git
   shell: >
     git config --global user.email "jenkins@propter.net";
     git config --global user.name "Jenkins"
 
-- name: Delete RPC repo
+- name: Delete repo
   tags:
     - rpc
+    - osad
     - git
   file: >
     path={{ rpc_repo_dir }}
     state=absent
 
-- name: Clone stackforge repo
+- name: Clone repo
   tags:
     - rpc
+    - osad
     - git
   git: >
-    repo={{ os_ansible_url }}
-    dest={{ rpc_repo_dir }}
+    repo={{ repo_url }}
+    dest={{ repo_dir }}
     accept_hostkey=True
 
 - name: Fetch origin
   tags:
     - rpc
+    - osad
     - git
   command: >
     git fetch origin
-    chdir={{ rpc_repo_dir }}
+    chdir={{ repo_dir }}
 
 - name: Checkout target branch
   tags:
     - rpc
+    - osad
     - git
   command: >
-    git checkout {{ os_ansible_branch }}
-    chdir={{ rpc_repo_dir }}
+    git checkout {{ repo_branch }}
+    chdir={{ repo_dir }}
 
 - name: Get change from gerrit
   tags:
-    - rpc
+    - osad
     - git
   shell:
     git fetch https://review.openstack.org/stackforge/os-ansible-deployment {{GERRIT_REFSPEC}}
   args:
-    chdir: "{{ rpc_repo_dir }}"
+    chdir: "{{ repo_dir }}"
   when: GERRIT_REFSPEC is defined
 
 - name: Merge Review
   tags:
-    - rpc
+    - osad
     - git
   command: >
     git merge FETCH_HEAD
-    chdir={{ rpc_repo_dir }}
+    chdir={{ repo_dir }}
   when: GERRIT_REFSPEC is defined

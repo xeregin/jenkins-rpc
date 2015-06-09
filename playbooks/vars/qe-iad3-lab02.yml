@@ -1,4 +1,4 @@
-rpc_user_config:
+user_config:
     container_cidr: 192.168.100.0/22
     tunnel_cidr:  172.29.241.0/22
     service_cidr: 172.29.236.0/22

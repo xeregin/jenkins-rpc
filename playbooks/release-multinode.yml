@@ -43,8 +43,8 @@
     - configure
     - prepare
   roles:
-    - configure-rpc-compute
-    - configure-rpc-swift
+    - configure-compute
+    - configure-swift
 
 - hosts: all
   user: root
@@ -52,22 +52,6 @@
     - prepare
   roles:
     - reboot
-
-## --------- [ Run os-ansible-deployment ] ----------
-- hosts: infrastructure[0]
-  tags: run
-  roles:
-    - role: run-script-from-os-ansible-deployment
-      script_name: run-playbooks
-      script_env:
-        DEPLOY_TEMPEST: "yes"
-
-## --------- [ Test with tempest ] ---------------
-- hosts: infrastructure[0]
-  tags: test
-  roles:
-    - role: run-script-from-os-ansible-deployment
-      script_name: run-tempest
 
 ## ---------- [ Upgrade ] ------------
 - hosts: infrastructure[0]

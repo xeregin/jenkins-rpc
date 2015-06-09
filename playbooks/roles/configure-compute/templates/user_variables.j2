@@ -1,5 +1,5 @@
 glance_default_store: swift
-{% if rpc_repo_url is defined %}
+{% if repo_url is defined %}
 openstack_repo_url: '{{ repo_url }}'
 {% endif %}
 glance_notification_driver: noop
