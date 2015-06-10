@@ -160,6 +160,7 @@ networking:
       directives:
         - "address {{ansible_em1['ipv4']['address']}}"
         - "netmask 255.255.255.0"
+        - "dns-nameservers 8.8.8.8 8.8.4.4"
 
 # /dev/sda (gpt)
 # 1 - boot
