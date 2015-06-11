@@ -1,61 +1,34 @@
 ---
-- hosts: infrastructure
+- hosts: all
   user: root
-  tags: 
+  tags:
     - cleanup
     - rekick
   gather_facts: no
   roles:
-    - teardown-infrastructure-node
+    - teardown-containers
 
 - hosts: compute
   user: root
-  tags: 
+  tags:
     - cleanup
     - rekick
   gather_facts: no
   roles:
     - teardown-compute-node
 
-- hosts: network
-  user: root
-  tags: 
-    - cleanup
-    - rekick
-  gather_facts: no
-  roles:
-    - teardown-network-node
-
-- hosts: cinder
-  user: root
-  tags: 
-    - cleanup
-    - rekick
-  gather_facts: no
-  roles:
-    - teardown-cinder-node
-
 - hosts: swift
   user: root
-  tags: 
+  tags:
     - cleanup
     - rekick
   gather_facts: no
   roles:
     - teardown-swift-node
 
-- hosts: logger
-  user: root
-  tags: 
-    - cleanup
-    - rekick
-  gather_facts: no
-  roles:
-    - teardown-logging-node
-
 - hosts: all
   user: root
-  tags: 
+  tags:
     - cleanup
     - rekick
   gather_facts: no
