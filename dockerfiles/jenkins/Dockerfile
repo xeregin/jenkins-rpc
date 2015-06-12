@@ -23,6 +23,13 @@ RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install -y jenkins git ssh-client lxc-docker
 
+# install pip
+RUN curl https://bootstrap.pypa.io/get-pip.py > get-pip.py
+RUN python get-pip.py
+
+# Install Requests
+RUN pip install requests pyyaml virtualenv ansible==1.8.4 jinja2 python-heatclient
+
 # Use volume for Jenkins home
 ENV JENKINS_HOME /opt/jenkins
 VOLUME /opt/jenkins
