@@ -1,0 +1,182 @@
+---
+## --------- [ Prepare Cluster ] ---------------
+- hosts: all
+  user: root
+  gather_facts: no
+  tags: 
+    - prepare
+  roles:
+    - packages
+
+- hosts: all
+  user: root
+  gather_facts: no
+  tags: 
+    - prepare
+  roles:
+    - pip
+
+- hosts: all
+  user: root
+  gather_facts: yes
+  tags: 
+    - prepare
+  roles:
+    - networking
+
+- hosts: all
+  user: root
+  gather_facts: yes
+  tags:
+    - nightly
+  roles:
+    - volumes
+
+- hosts: swift
+  user: root
+  gather_facts: yes
+  tags: 
+    - nightly
+    - commit
+  roles:
+    - configure-swift-lvs
+
+- hosts: infrastructure[0]
+  user: root
+  gather_facts: no
+  tags:
+    - rpc
+    - osad
+    - prepare
+  roles:
+    - setup-git
+
+- hosts: infrastructure[0]
+  user: root
+  gather_facts: no
+  tags:
+    - rpc
+    - osad
+    - prepare
+  roles:
+    - role: run-script-from-os-ansible-deployment
+      script_name: bootstrap-ansible
+
+- hosts: infrastructure[0]
+  user: root
+  gather_facts: no
+  tags:
+    - rpc
+    - osad
+    - prepare
+  roles:
+    - configure-compute
+    - configure-storage
+
+- hosts: infrastructure[0]
+  user: root
+  gather_facts: no
+  tags:
+    - rpc
+  roles:
+    - configure-rpc
+
+- hosts: all
+  user: root
+  gather_facts: no
+  tags:
+    - reboot
+    - prepare
+  roles:
+    - reboot
+
+## ---------- [ Upgrade ] ------------
+- hosts: infrastructure[0]
+  user: root
+  gather_facts: no
+  tags: 
+    - upgrade
+  roles:
+    - setup-git
+
+## --------- [ Cleanup Cluster ] ------------------
+- hosts: infrastructure
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - teardown-infrastructure-node
+
+- hosts: compute
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - teardown-compute-node
+
+- hosts: network
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - teardown-network-node
+
+- hosts: cinder
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - teardown-cinder-node
+
+- hosts: swift
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - teardown-swift-node
+
+- hosts: logger
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - teardown-logging-node
+
+- hosts: all
+  user: root
+  tags: 
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
+    - cleanup-host
+
+## --------- [ Rekick Cluster ] ------------------
+- hosts: cinder
+  gather_facts: no
+  user: root
+  tags:
+    - cleanup
+    - rekick
+  roles:
+    - cleanup-cinder-volumes
+
+- hosts: all
+  gather_facts: no
+  user: root
+  tags: 
+    - rekick
+  roles:
+    - razor-rekick

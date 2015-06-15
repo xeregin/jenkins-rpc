@@ -14,10 +14,6 @@
     state: latest
 
 - name: Configure git identity
-  tags:
-    - rpc
-    - osad
-    - git
   shell: >
     git config --global user.email "jenkins@propter.net";
     git config --global user.name "Jenkins"
@@ -32,37 +28,19 @@
     state=absent
 
 - name: Clone repo
-  tags:
-    - rpc
-    - osad
-    - git
   git: >
-    repo={{ repo_url }}
+    repo={{ product_url }}
     dest={{ repo_dir }}
+    recursive=yes
     accept_hostkey=True
 
 - name: Fetch origin
-  tags:
-    - rpc
-    - osad
-    - git
-  command: >
-    git fetch origin
-    chdir={{ repo_dir }}
+  command: git fetch origin chdir={{ repo_dir }}
 
 - name: Checkout target branch
-  tags:
-    - rpc
-    - osad
-    - git
-  command: >
-    git checkout {{ repo_branch }}
-    chdir={{ repo_dir }}
+  command: git checkout {{ product_branch }} chdir={{ repo_dir }}
 
 - name: Get change from gerrit
-  tags:
-    - osad
-    - git
   shell:
     git fetch https://review.openstack.org/stackforge/os-ansible-deployment {{GERRIT_REFSPEC}}
   args:
@@ -70,9 +48,6 @@
   when: GERRIT_REFSPEC is defined
 
 - name: Merge Review
-  tags:
-    - osad
-    - git
   command: >
     git merge FETCH_HEAD
     chdir={{ repo_dir }}
