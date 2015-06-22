@@ -1,5 +1,5 @@
 ---
-- name: "{{script_name}}"
+- name: "{{ script_name }}"
   environment: script_env
   shell: "set -o pipefail; scripts/{{ script_name }}.sh |& tee -a /var/log/{{ script_name }}.log"
   args:

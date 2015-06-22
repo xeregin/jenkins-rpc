@@ -1,18 +1,22 @@
 #!/usr/bin/env bash
 
-# TODO: Include overview
+# This script prepares, deploys, and tests the `rpc-openstack` and
+# `os-ansible-deployment` projects within a variety of environments. Each func-
+# tion corresponds to a Ansible role within the `multinode.yml` playbook.
 
-## Job centric variables
+# They're run in a set order and perform documented installation steps until
+# they either complete or fail. The idea of the tag system is to be able to
+# have flexible jenkins jobs, without complex job relationships in jenkins.
+
+
+## Job-centric variables
 LAB=${LAB:-master}
 LAB_PREFIX=${LAB_PREFIX:-nightly}
 TAGS=${TAGS:-prepare run upgrade test}
-PRODUCT=${PRODUCT:-osad}
-REPO_DIR=${REPO_DIR:-"/opt/os-ansible-deployment"}
-OSAD_REPO_DIR=${OSAD_REPO_DIR:-"/opt/os-ansible-deployment"}
+PRODUCT=${PRODUCT:-os-ansible-deployment}
 CONFIG_PREFIX=${CONFIG_PREFIX:-openstack}
 
-## Jenkins centric variables
-PRODUCT_URL=${PRODUCT_URL:-https://github.com/stackforge/os-ansible-deployment}
+## Jenkins-centric variables
 PRODUCT_BRANCH=${PRODUCT_BRANCH:-master}
 JENKINS_RPC_URL=${JENKINS_RPC_URL:-https://github.com/rcbops/jenkins-rpc}
 JENKINS_RPC_BRANCH=${JENKINS_RPC_BRANCH:-master}
@@ -30,8 +34,13 @@ function ssh_command {
   local command="$1"
   local infra01
 
-  infra01="$(grep --only-matching --max-count=1 \
-    '[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+' ./playbooks/inventory/${LAB_PREFIX}-${LAB})" > /tmp/env
+  # Find the deployment node's IP address within a lab's inventory file
+  OCTET='[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'
+  infra01="$(grep --only-matching --max-count=1 $OCTET \
+     ./inventory/${LAB_PREFIX}-${LAB})"
+
+  # Clear a temp environment file in-case we're already on the deployment node
+  > /tmp/env
   echo "export ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR}" >> script_env
   scp script_env $infra01:/tmp/env
 
@@ -41,27 +50,27 @@ function ssh_command {
 function run_tag {
   export ANSIBLE_FORCE_COLOR
   local tag="$1"
-  
+
   echo "Running ${tag} from multinode.yml"
-  
+
   ansible-playbook \
-    --inventory-file="playbooks/inventory/${LAB_PREFIX}-${LAB}" \
-    --extra-vars="@playbooks/vars/${LAB_PREFIX}-${LAB}.yml" \
-    --extra-vars="repo_dir=${REPO_DIR}" \
+    --inventory-file="inventory/${LAB_PREFIX}-${LAB}" \
+    --extra-vars="@vars/${LAB_PREFIX}-${LAB}.yml" \
+    --extra-vars="product_repo_dir=${PRODUCT_REPO_DIR}" \
     --extra-vars="osad_repo_dir=${OSAD_REPO_DIR}" \
     --extra-vars="product_url=${PRODUCT_URL}" \
     --extra-vars="product_branch=${PRODUCT_BRANCH}" \
     --extra-vars="config_prefix=${CONFIG_PREFIX}" \
     --tags="${PRODUCT},${tag},${LAB_PREFIX}" \
     ${ANSIBLE_OPTIONS} \
-    playbooks/multinode.yml
+    multinode.yml
 }
 
 function run_script {
   local script="$1"
 
-  echo "Running script ${1} from ${REPO_DIR}/scripts."
-  ssh_command "cd ${REPO_DIR}; bash scripts/${script}.sh"
+  echo "Running ${script} from ${PRODUCT_REPO_DIR}/scripts."
+  ssh_command "cd ${PRODUCT_REPO_DIR}; bash scripts/${script}.sh"
 }
 
 function prepare {
@@ -77,22 +86,22 @@ function run {
 
   echo "export DEPLOY_MAAS=${DEPLOY_MAAS}" > script_env
   echo "export DEPLOY_HAPROXY=${DEPLOY_HAPROXY}" > script_env
-  run_script $RUN_SCRIPT
+  run_script $BUILD_SCRIPT_NAME
 }
 
 function upgrade {
   run_tag upgrade
-  run_script $RUN_UPGRADE
+  run_script $UPGRADE_SCRIPT_NAME
 }
 
 function test {
   echo "export TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS}" > script_env
-  
+
   # Due to rpc-openstack having osad as a git submodule
   # when we run the tests for deploying from rpc-openstack
   # we have to change the DIR that we start from
-  REPO_DIR=$OSAD_REPO_DIR
-  run_script $TEST_SCRIPT
+  PRODUCT_REPO_DIR=$OSAD_REPO_DIR
+  run_script $TEST_SCRIPT_NAME
 }
 
 function rekick {
@@ -104,34 +113,41 @@ function cleanup {
 }
 
 function main {
-  local status_code
+  local retval
 
-  # Set vars determinate on what product we are testing
-  if [[ "${PRODUCT}" = "rpc" ]]; then
-    echo "Inside RPC"
-    RUN_SCRIPT=deploy
-    UPGRADE_SCRIPT=upgrade
-    TEST_SCRIPT=run-tempest
-    OSAD_REPO_DIR="${REPO_DIR}/os-ansible-deployment"
-    if [[ "${LAB_PREFIX}" = "nightly" ]]; then
+  # Variables based products' respective documentation
+  if [[ "${PRODUCT}" == "rpc-openstack" ]]; then
+    BUILD_SCRIPT_NAME="deploy"
+    UPGRADE_SCRIPT_NAME="upgrade"
+    TEST_SCRIPT_NAME="run-tempest"
+    PRODUCT_REPO_DIR="/opt/rpc-openstack"
+    PRODUCT_URL="https://github.com/rcbops/rpc-openstack"
+    OSAD_REPO_DIR="${PRODUCT_REPO_DIR}/os-ansible-deployment"
+
+    if [[ "${LAB_PREFIX}" == "nightly" ]]; then
       DEPLOY_MAAS="no"
       DEPLOY_HAPROXY="yes"
     fi
-  else
-    echo "Inside OSAD"
-    RUN_SCRIPT=run-playbooks
-    UPGRADE_SCRIPT=run-upgradeupgrade
-    TEST_SCRIPT=run-tempest
+
+  elif [[ "${PRODUCT}" == "os-ansible-deployment" ]]; then
+    BUILD_SCRIPT_NAME="run-playbooks"
+    UPGRADE_SCRIPT_NAME="run-upgrade"
+    TEST_SCRIPT_NAME="run-tempest"
     OSAD_REPO_DIR="/opt/os-ansible-deployment"
+    PRODUCT_REPO_DIR=$OSAD_REPO_DIR
+    PRODUCT_URL="https://github.com/stackforge/os-ansible-deployment"
+  else
+    echo "Invalid product name. Choices: 'rpc-openstack' or 'os-ansible-deployment'"
+    exit 1
   fi
 
-  status_code=0
+  retval=0
   for tag in ${TAGS}
   do
-    $tag || { rc=1; break; }
+    $tag || { retval=1; break; }
   done
 
-  exit $status_code
+  exit $retval
 }
 
 main "$@"

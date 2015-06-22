@@ -2,9 +2,11 @@
 - name: Install pip requirements
   pip: requirements={{ osad_repo_dir }}/requirements.txt
 
-- name: Copy osad config files
-  command: cp -r {{ osad_repo_dir }}/etc/{{ config_prefix }}_deploy /etc/{{ config_prefix }}_deploy
-           creates=/etc/{{ config_prefix }}_deploy
+- name: Remove old OSAD user configuration files
+  shell: rm -rf /etc/{{ config_prefix }}_deploy/user_*
+
+- name: Copy OSAD user configuration files
+  shell: cp --recursive {{ osad_repo_dir }}/etc/{{ config_prefix }}_deploy/user_* /etc/{{ config_prefix }}_deploy
 
 - name: Gather environment MD5
   stat: path=/etc/{{ config_prefix }}_deploy/{{ config_prefix }}_environment.yml

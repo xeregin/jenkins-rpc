@@ -1,44 +1,48 @@
-# repo configuration info
+---
 config_prefix: openstack
-repo_dir: rpc_repo
-repo_url: https://rpc-repo.rackspace.com
+repo_dir: os-ansible-deployment
+# repo_url: http://rpc-repo.rackspace.com
 
 user_config:
-    container_cidr: 172.29.236.0/22
-    tunnel_cidr:  172.29.240.0/22
-    storage_cidr: 172.29.244.0/22
+    container_cidr: 172.27.236.0/22
+    tunnel_cidr:  172.27.240.0/22
+    storage_cidr:  172.27.244.0/22
     used_ips:
-        - "172.29.236.1,172.29.236.15"
-        - "172.29.236.160,172.29.236.169"
-        - "172.29.240.160,172.29.240.169"
-        - "172.29.244.160,172.29.244.169"
-        - "172.29.248.1"
-    internal_lb_vip_address: 172.29.236.10
-    external_lb_vip_address: 204.232.187.32
+        - "172.27.236.1,172.27.236.15"
+        - "172.27.236.73,172.27.236.127"
+        - "172.27.240.73,172.27.240.127"
+        - "172.27.244.73,172.27.244.127"
+    internal_lb_vip_address: 172.27.236.10
+    external_lb_vip_address: 72.4.117.65
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
-    lb_name:
+    lb_name: 605011-lbal1.iad3.rpchost.com
     networking:
         - name: container
           bridge: br-mgmt
           container_bridge: br-mgmt
           container_interface: eth1
+          container_type: veth
           ip_from_q: container
           type: raw
+          is_ssh_address: true
+          is_container_address: true
           group_binds:
             - all_containers
             - hosts
         - name: provider
           bridge: br-vlan
           container_interface: eth11
+          container_type: veth
           type: vlan
-          range: 280:280
+          range: 2010:2010
           net_name: vlan
           group_binds:
             - neutron_linuxbridge_agent
         - name: tenant
           bridge: br-vxlan
           container_interface: eth10
+          container_type: veth
           ip_from_q: tunnel
           type: vxlan
           range: 1:1000
@@ -48,6 +52,7 @@ user_config:
         - name: storage
           bridge: br-storage
           container_interface: eth2
+          container_type: veth
           ip_from_q: storage
           type: raw
           group_binds:
@@ -57,6 +62,7 @@ user_config:
             - nova_compute
             - swift_proxy
 
+# all swift configuration
 swift_config:
   vg: swift-volumes
   part_power: 8
@@ -71,11 +77,7 @@ swift_config:
     - name: swift3
     - name: swift4
     - name: swift5
-    - name: swift6
-    - name: swift7
-    - name: swift8
-    - name: swift9
-  lv_size: 400G
+  lv_size: 50G
   mount_point: /mnt
   account: "service:glance"
   container: glance
@@ -88,6 +90,7 @@ swift_config:
       repl_number: 3
       depreciated: True
 
+# cinder configuration
 cinder_storage:
   backends:
     lvm:
@@ -95,15 +98,16 @@ cinder_storage:
       volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
       volume_backend_name: LVM_iSCSI
 
+# all networking interface configs
 networking:
     - name: lo
       type: loopback
-    - name: p6p1
+    - name: em1
       type: manual
       directives:
         - "bond-master bond0"
-        - "bond-primary p6p1"
-    - name: p7p1
+        - "bond-primary em1"
+    - name: p1p1
       type: manual
       directives:
         - "bond-master bond0"
@@ -111,14 +115,14 @@ networking:
       type: static
       directives:
       - "netmask {{ ansible_em3.ipv4.netmask }}"
-      - "post-up ip route add 10.191.192.0/18 via 10.136.93.65 dev em3"
+      - "post-up ip route add 10.191.192.0/18 via 10.136.157.225 dev em3"
       - "address {{ ansible_em3.ipv4.address }}"
-    - name: p6p2
+    - name: em4
       type: manual
       directives:
         - "bond-master bond1"
-        - "bond-primary p6p2"
-    - name: p7p2
+        - "bond-primary em4"
+    - name: p1p4
       type: manual
       directives:
         - "bond-master bond1"
@@ -134,7 +138,7 @@ networking:
         - "netmask {{ ansible_default_ipv4.netmask }}"
         - "gateway {{ ansible_default_ipv4.gateway }}"
         - "dns-nameservers 69.20.0.164 69.20.0.196"
-        - "dns-search qe1.iad3.rackspace.com"
+        - "dns-search rpchost.com"
     - name: bond1
       type: manual
       directives:
@@ -143,15 +147,15 @@ networking:
         - "bond-miimon 100"
         - "bond-downdelay 250"
         - "bond-updelay 250"
-    - name: bond0.694
+    - name: bond0.1474
       type: manual
       directives:
         - "vlan-raw-device bond0"
-    - name: bond0.465
+    - name: bond0.1476
       type: manual
       directives:
         - "vlan-raw-device bond0"
-    - name: bond1.231
+    - name: bond1.1475
       type: manual
       directives:
         - "vlan-raw-device bond1"
@@ -161,17 +165,9 @@ networking:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge-ports bond0.694"
-        - "address 172.29.236.{{ member_number }}/22"
+        - "bridge_ports bond0.1474"
+        - "address 172.27.236.{{ member_number }}/22"
         - "dns-nameservers 69.20.0.164 69.20.0.196"
-    - name: br-vxlan
-      type: static
-      directives:
-        - "bridge_stp off"
-        - "bridge_waitport 0"
-        - "bridge_fd 0"
-        - "bridge_ports bond1.231"
-        - "address 172.29.240.{{ member_number }}/22"
     - name: br-vlan
       type: manual
       directives:
@@ -179,25 +175,33 @@ networking:
         - "bridge_waitport 0"
         - "bridge_fd 0"
         - "bridge_ports bond1"
+    - name: br-vxlan
+      type: static
+      directives:
+        - "bridge_stp off"
+        - "bridge_waitport 0"
+        - "bridge_fd 0"
+        - "bridge_ports bond1.1475"
+        - "address 172.27.240.{{ member_number }}/22"
     - name: br-storage
       type: static
       directives:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge_ports bond0.465"
-        - "address 172.29.244.{{ member_number }}/22"
+        - "bridge_ports bond0.1476"
+        - "address 172.27.244.{{ member_number }}/22"
     - name: br-snet
       type: static
       directives:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "address 172.29.248.1"
-        - "netmask 255.255.252.0"
+        - "address 172.27.248.1/22"
 
+# volume groups for cinder / swift
 vgs:
-  - name: cinder-volumes
-    device: /dev/sdb
-  - name: swift-volumes
-    device: /dev/sdb
+    - name: cinder-volumes
+      device: /dev/sdb
+    - name: swift-volumes
+      device: /dev/sdc

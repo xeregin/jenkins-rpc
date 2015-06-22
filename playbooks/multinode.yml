@@ -1,9 +1,23 @@
 ---
+
+# Generic task w/ all lab prefixes to skip missing tags
+# https://github.com/ansible/ansible/pull/9418
+- hosts: all
+  user: root
+  gather_facts: no
+  tags:
+    - nightly
+    - commit
+    - release
+  tasks:
+    - name: Ping hosts
+      ping:
+
 ## --------- [ Prepare Cluster ] ---------------
 - hosts: all
   user: root
   gather_facts: no
-  tags: 
+  tags:
     - prepare
   roles:
     - packages
@@ -11,7 +25,7 @@
 - hosts: all
   user: root
   gather_facts: no
-  tags: 
+  tags:
     - prepare
   roles:
     - pip
@@ -19,7 +33,7 @@
 - hosts: all
   user: root
   gather_facts: yes
-  tags: 
+  tags:
     - prepare
   roles:
     - networking
@@ -35,7 +49,7 @@
 - hosts: swift
   user: root
   gather_facts: yes
-  tags: 
+  tags:
     - nightly
     - commit
   roles:
@@ -45,8 +59,8 @@
   user: root
   gather_facts: no
   tags:
-    - rpc
-    - osad
+    - rpc-openstack
+    - os-ansible-deployment
     - prepare
   roles:
     - setup-git
@@ -55,8 +69,8 @@
   user: root
   gather_facts: no
   tags:
-    - rpc
-    - osad
+    - rpc-openstack
+    - os-ansible-deployment
     - prepare
   roles:
     - role: run-script-from-os-ansible-deployment
@@ -66,8 +80,8 @@
   user: root
   gather_facts: no
   tags:
-    - rpc
-    - osad
+    - rpc-openstack
+    - os-ansible-deployment
     - prepare
   roles:
     - configure-compute
@@ -77,7 +91,7 @@
   user: root
   gather_facts: no
   tags:
-    - rpc
+    - rpc-openstack
   roles:
     - configure-rpc
 
@@ -94,69 +108,42 @@
 - hosts: infrastructure[0]
   user: root
   gather_facts: no
-  tags: 
+  tags:
     - upgrade
   roles:
     - setup-git
 
 ## --------- [ Cleanup Cluster ] ------------------
-- hosts: infrastructure
+- hosts: all
   user: root
-  tags: 
+  tags:
     - cleanup
     - rekick
   gather_facts: no
   roles:
-    - teardown-infrastructure-node
+    - teardown-containers
 
 - hosts: compute
   user: root
-  tags: 
+  tags:
     - cleanup
     - rekick
   gather_facts: no
   roles:
     - teardown-compute-node
 
-- hosts: network
-  user: root
-  tags: 
-    - cleanup
-    - rekick
-  gather_facts: no
-  roles:
-    - teardown-network-node
-
-- hosts: cinder
-  user: root
-  tags: 
-    - cleanup
-    - rekick
-  gather_facts: no
-  roles:
-    - teardown-cinder-node
-
 - hosts: swift
   user: root
-  tags: 
+  tags:
     - cleanup
     - rekick
   gather_facts: no
   roles:
     - teardown-swift-node
 
-- hosts: logger
-  user: root
-  tags: 
-    - cleanup
-    - rekick
-  gather_facts: no
-  roles:
-    - teardown-logging-node
-
 - hosts: all
   user: root
-  tags: 
+  tags:
     - cleanup
     - rekick
   gather_facts: no
@@ -176,7 +163,7 @@
 - hosts: all
   gather_facts: no
   user: root
-  tags: 
+  tags:
     - rekick
   roles:
     - razor-rekick

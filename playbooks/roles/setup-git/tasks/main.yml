@@ -1,5 +1,5 @@
 ---
-- name: add verifyhostkeydns to ssh options
+- name: Add VerifyHostKeyDNS to ssh options
   lineinfile:
     dest: ~/.ssh/config
     line: "{{ item }}"
@@ -8,7 +8,7 @@
     - "VerifyHostKeyDNS yes"
     - "StrictHostKeyChecking no"
 
-- name: install git
+- name: Install git
   apt:
     pkg: git
     state: latest
@@ -24,31 +24,31 @@
     - osad
     - git
   file: >
-    path={{ rpc_repo_dir }}
+    path={{ product_repo_dir }}
     state=absent
 
 - name: Clone repo
   git: >
     repo={{ product_url }}
-    dest={{ repo_dir }}
+    dest={{ product_repo_dir }}
     recursive=yes
     accept_hostkey=True
 
 - name: Fetch origin
-  command: git fetch origin chdir={{ repo_dir }}
+  command: git fetch origin chdir={{ product_repo_dir }}
 
 - name: Checkout target branch
-  command: git checkout {{ product_branch }} chdir={{ repo_dir }}
+  command: git checkout {{ product_branch }} chdir={{ product_repo_dir }}
 
 - name: Get change from gerrit
   shell:
-    git fetch https://review.openstack.org/stackforge/os-ansible-deployment {{GERRIT_REFSPEC}}
+    git fetch https://review.openstack.org/stackforge/os-ansible-deployment {{ GERRIT_REFSPEC }}
   args:
-    chdir: "{{ repo_dir }}"
+    chdir: "{{ product_repo_dir }}"
   when: GERRIT_REFSPEC is defined
 
 - name: Merge Review
   command: >
     git merge FETCH_HEAD
-    chdir={{ repo_dir }}
+    chdir={{ product_repo_dir }}
   when: GERRIT_REFSPEC is defined
