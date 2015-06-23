@@ -117,12 +117,12 @@ networking:
       - "netmask {{ ansible_em3.ipv4.netmask }}"
       - "post-up ip route add 10.191.192.0/18 via 10.136.157.225 dev em3"
       - "address {{ ansible_em3.ipv4.address }}"
-    - name: p4p2
+    - name: em4
       type: manual
       directives:
         - "bond-master bond1"
-        - "bond-primary p4p2"
-    - name: p5p2
+        - "bond-primary em4"
+    - name: p1p4
       type: manual
       directives:
         - "bond-master bond1"
