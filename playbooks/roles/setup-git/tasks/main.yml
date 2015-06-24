@@ -25,8 +25,9 @@
   tags:
     - rpc
     - git
-  command:
-    rm -rf {{ rpc_repo_dir }}
+  file: >
+    path: {{ rpc_repo_dir }}
+    state: absent
 
 - name: Clone stackforge repo
   tags:
