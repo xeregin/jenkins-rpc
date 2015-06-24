@@ -4,6 +4,11 @@
   register: containers
   ignore_errors: yes
 
+- name: Stop containers
+  command: lxc-stop --kill --name="{{ item }}"
+  with_items: containers.stdout_lines
+  when: containers.stdout_lines is defined
+
 - name: Destroy containers
   command: lxc-destroy --force --name="{{ item }}"
   with_items: containers.stdout_lines
