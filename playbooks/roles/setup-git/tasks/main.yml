@@ -26,8 +26,8 @@
     - rpc
     - git
   file: >
-    path: {{ rpc_repo_dir }}
-    state: absent
+    path={{ rpc_repo_dir }}
+    state=absent
 
 - name: Clone stackforge repo
   tags:
