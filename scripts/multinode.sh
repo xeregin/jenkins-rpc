@@ -28,6 +28,7 @@ UPGRADE_BRANCH=${UPGRADE_BRANCH:-master}
 DEPLOY_MAAS=${DEPLOY_MAAS:-"yes"}
 DEPLOY_HAPROXY=${DEPLOY_HAPROXY:-"no"}
 
+
 env
 
 function ssh_command {
@@ -51,7 +52,7 @@ function run_tag {
   export ANSIBLE_FORCE_COLOR
   local tag="$1"
 
-  echo "Running ${tag} from multinode.yml"
+  echo "Running ${tag} from multinode.yml with tags: ${tag}, ${PRODUCT}, and ${LAB_PREFIX}."
 
   ansible-playbook \
     --inventory-file="inventory/${LAB_PREFIX}-${LAB}" \

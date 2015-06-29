@@ -59,8 +59,6 @@
   user: root
   gather_facts: no
   tags:
-    - rpc-openstack
-    - os-ansible-deployment
     - prepare
   roles:
     - setup-git
@@ -69,8 +67,6 @@
   user: root
   gather_facts: no
   tags:
-    - rpc-openstack
-    - os-ansible-deployment
     - prepare
   roles:
     - role: run-script-from-os-ansible-deployment
@@ -80,8 +76,6 @@
   user: root
   gather_facts: no
   tags:
-    - rpc-openstack
-    - os-ansible-deployment
     - prepare
   roles:
     - configure-compute
