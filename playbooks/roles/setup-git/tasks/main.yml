@@ -19,10 +19,6 @@
     git config --global user.name "Jenkins"
 
 - name: Delete repo
-  tags:
-    - rpc
-    - osad
-    - git
   file: >
     path={{ product_repo_dir }}
     state=absent
