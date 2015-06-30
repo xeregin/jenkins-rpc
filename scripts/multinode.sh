@@ -52,19 +52,33 @@ function run_tag {
   export ANSIBLE_FORCE_COLOR
   local tag="$1"
 
-  echo "Running ${tag} from multinode.yml with tags: ${tag}, ${PRODUCT}, and ${LAB_PREFIX}."
-
-  ansible-playbook \
-    --inventory-file="inventory/${LAB_PREFIX}-${LAB}" \
-    --extra-vars="@vars/${LAB_PREFIX}-${LAB}.yml" \
-    --extra-vars="product_repo_dir=${PRODUCT_REPO_DIR}" \
-    --extra-vars="osad_repo_dir=${OSAD_REPO_DIR}" \
-    --extra-vars="product_url=${PRODUCT_URL}" \
-    --extra-vars="product_branch=${PRODUCT_BRANCH}" \
-    --extra-vars="config_prefix=${CONFIG_PREFIX}" \
-    --tags="${PRODUCT},${tag},${LAB_PREFIX}" \
-    ${ANSIBLE_OPTIONS} \
-    multinode.yml
+  if [[ ${tag} == "prepare" ]]; then
+    echo "Running ${tag} from multinode.yml with tags: ${tag}, ${PRODUCT}, and ${LAB_PREFIX}."
+    ansible-playbook \
+      --inventory-file="inventory/${LAB_PREFIX}-${LAB}" \
+      --extra-vars="@vars/${LAB_PREFIX}-${LAB}.yml" \
+      --extra-vars="product_repo_dir=${PRODUCT_REPO_DIR}" \
+      --extra-vars="osad_repo_dir=${OSAD_REPO_DIR}" \
+      --extra-vars="product_url=${PRODUCT_URL}" \
+      --extra-vars="product_branch=${PRODUCT_BRANCH}" \
+      --extra-vars="config_prefix=${CONFIG_PREFIX}" \
+      --tags="${tag},${PRODUCT},${LAB_PREFIX}" \
+      ${ANSIBLE_OPTIONS} \
+      multinode.yml
+  else
+    echo "Running ${tag} from multinode.yml"
+    ansible-playbook \
+      --inventory-file="inventory/${LAB_PREFIX}-${LAB}" \
+      --extra-vars="@vars/${LAB_PREFIX}-${LAB}.yml" \
+      --extra-vars="product_repo_dir=${PRODUCT_REPO_DIR}" \
+      --extra-vars="osad_repo_dir=${OSAD_REPO_DIR}" \
+      --extra-vars="product_url=${PRODUCT_URL}" \
+      --extra-vars="product_branch=${PRODUCT_BRANCH}" \
+      --extra-vars="config_prefix=${CONFIG_PREFIX}" \
+      --tags="${tag}" \
+      ${ANSIBLE_OPTIONS} \
+      multinode.yml
+  fi
 }
 
 function run_script {
@@ -76,7 +90,7 @@ function run_script {
 
 function prepare {
   echo "Sleep 3 minutes for reboot"
-  sleep 180
+  #sleep 180
 
   run_tag prepare
 }

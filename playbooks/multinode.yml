@@ -9,6 +9,7 @@
     - nightly
     - commit
     - release
+    - os-ansible-deployment
   tasks:
     - name: Ping hosts
       ping:
@@ -43,6 +44,7 @@
   gather_facts: yes
   tags:
     - nightly
+    - commit
   roles:
     - volumes
 
@@ -67,7 +69,6 @@
   user: root
   gather_facts: no
   tags:
-    - os-ansible-deployment
     - prepare
   roles:
     - role: run-script-from-os-ansible-deployment
@@ -94,7 +95,6 @@
   user: root
   gather_facts: no
   tags:
-    - reboot
     - prepare
   roles:
     - reboot
