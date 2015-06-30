@@ -90,7 +90,7 @@ function run_script {
 
 function prepare {
   echo "Sleep 3 minutes for reboot"
-  #sleep 180
+  sleep 180
 
   run_tag prepare
 }
