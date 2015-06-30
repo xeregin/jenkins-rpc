@@ -25,8 +25,8 @@ ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR:-1}
 ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:--v}
 UPGRADE=${UPGRADE:-NO}
 UPGRADE_BRANCH=${UPGRADE_BRANCH:-master}
-DEPLOY_MAAS=${DEPLOY_MAAS:-"yes"}
-DEPLOY_HAPROXY=${DEPLOY_HAPROXY:-"no"}
+DEPLOY_MAAS=${DEPLOY_MAAS:-"no"}
+DEPLOY_HAPROXY=${DEPLOY_HAPROXY:-"yes"}
 
 
 env
@@ -125,9 +125,9 @@ function main {
     PRODUCT_URL="https://github.com/rcbops/rpc-openstack"
     OSAD_REPO_DIR="${PRODUCT_REPO_DIR}/os-ansible-deployment"
 
-    if [[ "${LAB_PREFIX}" == "nightly" ]]; then
-      DEPLOY_MAAS="no"
-      DEPLOY_HAPROXY="yes"
+    if [[ "${LAB_PREFIX}" == "release" ]]; then
+      DEPLOY_MAAS="yes"
+      DEPLOY_HAPROXY="no"
     fi
 
   elif [[ "${PRODUCT}" == "os-ansible-deployment" ]]; then
