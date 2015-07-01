@@ -1,5 +1,5 @@
 ---
-- name: add verifyhostkeydns to ssh options
+- name: Add VerifyHostKeyDNS to ssh options
   lineinfile:
     dest: ~/.ssh/config
     line: "{{ item }}"
@@ -8,66 +8,43 @@
     - "VerifyHostKeyDNS yes"
     - "StrictHostKeyChecking no"
 
-- name: install git
+- name: Install git
   apt:
     pkg: git
     state: latest
 
 - name: Configure git identity
-  tags:
-    - rpc
-    - git
   shell: >
     git config --global user.email "jenkins@propter.net";
     git config --global user.name "Jenkins"
 
-- name: Delete RPC repo
-  tags:
-    - rpc
-    - git
-  command:
-    rm -rf {{ rpc_repo_dir }}
+- name: Delete repo
+  file: >
+    path={{ product_repo_dir }}
+    state=absent
 
-- name: Clone stackforge repo
-  tags:
-    - rpc
-    - git
+- name: Clone repo
   git: >
-    repo={{ os_ansible_url }}
-    dest={{ rpc_repo_dir }}
+    repo={{ product_url }}
+    dest={{ product_repo_dir }}
+    recursive=yes
     accept_hostkey=True
 
 - name: Fetch origin
-  tags:
-    - rpc
-    - git
-  command: >
-    git fetch origin
-    chdir={{ rpc_repo_dir }}
+  command: git fetch origin chdir={{ product_repo_dir }}
 
 - name: Checkout target branch
-  tags:
-    - rpc
-    - git
-  command: >
-    git checkout {{ os_ansible_branch }}
-    chdir={{ rpc_repo_dir }}
+  command: git checkout {{ product_branch }} chdir={{ product_repo_dir }}
 
 - name: Get change from gerrit
-  tags:
-    - rpc
-    - git
   shell:
-    git fetch https://review.openstack.org/stackforge/os-ansible-deployment {{GERRIT_REFSPEC}}
+    git fetch https://review.openstack.org/stackforge/os-ansible-deployment {{ GERRIT_REFSPEC }}
   args:
-    chdir: "{{ rpc_repo_dir }}"
+    chdir: "{{ product_repo_dir }}"
   when: GERRIT_REFSPEC is defined
 
 - name: Merge Review
-  tags:
-    - rpc
-    - git
   command: >
     git merge FETCH_HEAD
-    chdir={{ rpc_repo_dir }}
+    chdir={{ product_repo_dir }}
   when: GERRIT_REFSPEC is defined

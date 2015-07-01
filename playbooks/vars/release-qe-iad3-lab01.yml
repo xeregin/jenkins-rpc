@@ -1,9 +1,8 @@
-# repo configuration info
-config_prefix: openstack
-rpc_repo_dir: rpc_repo
+config_prefix: rpc
+repo_dir: rpc_repo
 repo_url: https://rpc-repo.rackspace.com
 
-rpc_user_config:
+user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
     storage_cidr: 172.29.244.0/22
@@ -14,7 +13,7 @@ rpc_user_config:
         - "172.29.244.160,172.29.244.169"
         - "172.29.248.1"
     internal_lb_vip_address: 172.29.236.10
-    external_lb_vip_address: .232.187.32
+    external_lb_vip_address: 204.232.187.32
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     lb_name:

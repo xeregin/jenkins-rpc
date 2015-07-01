@@ -1,8 +1,9 @@
 config_prefix: rpc
-rpc_repo_dir: rpc_repo
+repo_dir: rpc_repo
 repo_url: https://rpc-repo.rackspace.com
 razor_url: http://10.127.101.82:8080/api
-rpc_user_config:
+
+user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
     storage_cidr:  172.29.244.0/22
@@ -55,12 +56,10 @@ rpc_user_config:
             - nova_compute
 cinder_storage:
   backends:
-    netapp:
-      username: test
-      hostname: test
-      password: test
     lvm:
-      volume_group: vg_storage
+      volume_group: cinder-volumes
+      volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+      volume_backend_name: LVM_iSCSI
 networking:
     - name: lo
       type: loopback
@@ -170,3 +169,6 @@ networking:
         - "bridge_fd 0"
         - "bridge-ports bond2.2004"
         - "address 172.29.244.{{member_number}}/22"
+vgs:
+    - name: cinder-volumes
+      device: /dev/sdb1

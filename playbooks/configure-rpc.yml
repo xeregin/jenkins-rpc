@@ -1,7 +1,0 @@
----
-- hosts: infrastructure[0]
-  user: root
-  roles:
-    - setup-git
-    - configure-rpc-compute
-    - configure-rpc-swift
