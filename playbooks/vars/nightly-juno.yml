@@ -1,9 +1,9 @@
 config_prefix: rpc
-rpc_repo_dir: rpc_repo
+repo_dir: rpc_repo
 repo_url: https://rpc-repo.rackspace.com
 razor_url: http://10.127.101.82:8080/api
 
-rpc_user_config:
+user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
     storage_cidr:  172.29.248.0/22

@@ -1,14 +1,20 @@
-rpc_user_config:
-    container_cidr: 192.168.100.0/22
-    tunnel_cidr:  172.29.241.0/22
-    service_cidr: 172.29.236.0/22
+---
+config_prefix: openstack
+repo_dir: rpc_repo
+repo_url: https://rpc-repo.rackspace.com
+
+user_config:
+    container_cidr: 172.29.236.0/22
+    tunnel_cidr:  172.29.240.0/22
+    storage_cidr: 172.29.244.0/22
     used_ips:
-        - "192.168.100.1,192.168.100.15"
-        - "192.168.100.132,192.168.100.155"
-        - "172.29.241.132,172.29.241.155"
-        - "172.29.236.1"
-    internal_lb_vip_address: 192.168.100.10
-    external_lb_vip_address: 204.232.187.80
+        - "172.29.236.1,172.29.236.15"
+        - "172.29.236.160,172.29.236.169"
+        - "172.29.240.160,172.29.240.169"
+        - "172.29.244.160,172.29.244.169"
+        - "172.29.248.1"
+    internal_lb_vip_address: 172.29.236.10
+    external_lb_vip_address: 204.232.187.32
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     lb_name:
@@ -26,7 +32,7 @@ rpc_user_config:
           bridge: br-vlan
           container_interface: eth11
           type: vlan
-          range: 410:410
+          range: 280:280
           net_name: vlan
           group_binds:
             - neutron_linuxbridge_agent
@@ -39,45 +45,80 @@ rpc_user_config:
           net_name: vxlan
           group_binds:
             - neutron_linuxbridge_agent
-        - name: service
-          bridge: br-snet
-          container_interface: eth3
-          ip_from_q: snet
+        - name: storage
+          bridge: br-storage
+          container_interface: eth2
+          ip_from_q: storage
           type: raw
           group_binds:
             - glance_api
+            - cinder_api
+            - cinder_volume
             - nova_compute
-            - neutron_linuxbridge_agent
+            - swift_proxy
+
+swift_config:
+  vg: swift-volumes
+  part_power: 8
+  weight: 100
+  min_part_hours: 1
+  repl_number: 3
+  storage_network: 'br-storage'
+  replication_network: 'br-storage'
+  drives:
+    - name: swift1
+    - name: swift2
+    - name: swift3
+    - name: swift4
+    - name: swift5
+    - name: swift6
+    - name: swift7
+    - name: swift8
+    - name: swift9
+  lv_size: 400G
+  mount_point: /mnt
+  account: "service:glance"
+  container: glance
+  storage_policies:
+    - name: gold
+      index: 0
+      default: True
+    - name: silver
+      index: 1
+      repl_number: 3
+      depreciated: True
+
 cinder_storage:
   backends:
     lvm:
       volume_group: cinder-volumes
-    lvm_ssd:
-      volume_group: cinder-volumes
+      volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+      volume_backend_name: LVM_iSCSI
+
 networking:
     - name: lo
       type: loopback
-    - name: em1
+    - name: p6p1
       type: manual
       directives:
         - "bond-master bond0"
-        - "bond-primary em1"
+        - "bond-primary p6p1"
+    - name: p7p1
+      type: manual
+      directives:
+        - "bond-master bond0"
     - name: em3
       type: static
       directives:
       - "netmask {{ ansible_em3.ipv4.netmask }}"
-      - "post-up ip route add 10.191.192.0/18 via 10.136.93.97 dev em3"
+      - "post-up ip route add 10.191.192.0/18 via 10.136.93.65 dev em3"
       - "address {{ ansible_em3.ipv4.address }}"
-    - name: em4
-      type: manual
-      directives:
-        - "bond-master bond0"
-    - name: p6p1
+    - name: p6p2
       type: manual
       directives:
         - "bond-master bond1"
-        - "bond-primary p6p1"
-    - name: p7p1
+        - "bond-primary p6p2"
+    - name: p7p2
       type: manual
       directives:
         - "bond-master bond1"
@@ -97,18 +138,20 @@ networking:
     - name: bond1
       type: manual
       directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
         - "bond-slaves none"
         - "bond-mode active-backup"
         - "bond-miimon 100"
         - "bond-downdelay 250"
         - "bond-updelay 250"
-    - name: bond0.801
+    - name: bond0.694
       type: manual
       directives:
         - "vlan-raw-device bond0"
-    - name: bond1.790
+    - name: bond0.465
+      type: manual
+      directives:
+        - "vlan-raw-device bond0"
+    - name: bond1.231
       type: manual
       directives:
         - "vlan-raw-device bond1"
@@ -118,8 +161,8 @@ networking:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge-ports bond0.801"
-        - "address 192.168.10.{{member_number}}/22"
+        - "bridge-ports bond0.694"
+        - "address 172.29.236.{{ member_number }}/22"
         - "dns-nameservers 69.20.0.164 69.20.0.196"
     - name: br-vxlan
       type: static
@@ -127,23 +170,34 @@ networking:
         - "bridge_stp off"
         - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge_ports bond1.790"
-        - "address 172.29.241.{{member_number}}/22"
+        - "bridge_ports bond1.231"
+        - "address 172.29.240.{{ member_number }}/22"
     - name: br-vlan
       type: manual
       directives:
-        - "up ip link set $IFACE up"
-        - "down ip link set $IFACE down"
         - "bridge_stp off"
+        - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge_maxwait 0"
         - "bridge_ports bond1"
+    - name: br-storage
+      type: static
+      directives:
+        - "bridge_stp off"
+        - "bridge_waitport 0"
+        - "bridge_fd 0"
+        - "bridge_ports bond0.465"
+        - "address 172.29.244.{{ member_number }}/22"
     - name: br-snet
       type: static
       directives:
         - "bridge_stp off"
+        - "bridge_waitport 0"
         - "bridge_fd 0"
-        - "bridge_maxwait 0"
-        - "bridge_ports none"
-        - "address 172.29.236.1"
+        - "address 172.29.248.1"
         - "netmask 255.255.252.0"
+
+vgs:
+  - name: cinder-volumes
+    device: /dev/sdb
+  - name: swift-volumes
+    device: /dev/sdb

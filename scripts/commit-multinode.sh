@@ -25,6 +25,13 @@ def cluster_for_claim(clusters, claim):
                 return 0
         return 1
 
+def claim_for_cluster(cluster):
+        for cluster in clusters.json():
+            if cluster.get('short_name') == cluster:
+                print(cluster['claim'])
+                return 0
+        return 1
+
 def check_release(clusters, name):
         for cluster in clusters.json():
                 if cluster['short_name'] == name and cluster['claim'] == "":
@@ -41,8 +48,8 @@ def main():
         base_url = "${DJEEP_URL}/api"
 
         clusters = requests.get('%(base_url)s/clusters' % {'base_url': base_url} )
-
-        router = {'cluster_for_claim': cluster_for_claim,
+        router = {'claim_for_cluster': claim_for_cluster,
+                  'cluster_for_claim': cluster_for_claim,
                   'check_release': check_release}
 
         return router[args.command](clusters, args.arg)
@@ -69,10 +76,14 @@ run_jenkins_rpc_playbook_tag(){
     commit-multinode.yml
 }
 
-ssh_command(){
+get_infra_1_ip(){
   #Find the first node ip from the inventory
-  [[ -z $infra_1_ip ]] && infra_1_ip=$(grep -o -m 1 '10.127.[0-9]\+.[0-9]\+' \
-                          < inventory/commit-cluster-$CLUSTER_NUMBER)
+  grep -o -m 1 '10.127.[0-9]\+.[0-9]\+' \
+    < inventory/commit-cluster-$CLUSTER_NUMBER
+}
+
+ssh_command(){
+  infra_1_ip=$(get_infra_1_ip)
   : >> /tmp/env
   scp script_env $infra_1_ip:/tmp/env
   echo "Running command ${1}"
@@ -96,6 +107,9 @@ run(){
 test(){
   echo "export TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS}" > script_env
   ssh_osad_script run-tempest
+
+  # Get junit xml results from tempest so they can be interpreted by jenkins
+  run_jenkins_rpc_playbook_tag get_tempest_report
 }
 
 clean(){
@@ -125,11 +139,31 @@ claim(){
   [[ "$CLUSTER_NAME" == "$(cluster_tool cluster_for_claim $CLUSTER_CLAIM)" ]]
 }
 
+# Release claim from cluster. Will only work if $CLUSTER_CLAIM matches djeep's
+# stored claim
 release(){
   echo "Releasing claim $CLUSTER_CLAIM from $CLUSTER_NAME"
   curl -X DELETE $DJEEP_URL/api/cluster/claim/$CLUSTER_CLAIM/$CLUSTER_NAME 2>/dev/null
 
   # Check that the claim has been released correctly
+  cluster_tool check_release $CLUSTER_NAME
+}
+
+# Query djeep for $CLUSTER_NAME's claim then release cluster using that claim
+force_release(){
+  echo "Force-releasing $CLUSTER_NAME"
+
+  # Skip if cluster has no claim.
+  cluster_tool check_release $CLUSTER_NAME && return
+
+  #find current claim on this cluster
+  claim=$(cluster_tool claim_for_cluster $CLUSTER_NAME)
+  echo "Claim for $CLUSTER_NAME is $claim"
+
+  #release claim
+  curl -X DELETE $DJEEP_URL/api/cluster/claim/$claim/$CLUSTER_NAME 2>/dev/null
+
+  #check release was succesfull
   cluster_tool check_release $CLUSTER_NAME
 }
 
@@ -148,6 +182,7 @@ write_properties(){
     done
   } > properties
 }
+
 
 ### -------------- [ Main ] --------------------
 
