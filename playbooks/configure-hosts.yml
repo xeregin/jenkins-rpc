@@ -1,5 +1,0 @@
----
-- include: packages.yml
-- include: pip.yml
-- include: networking.yml
-- include: reboot-hosts.yml

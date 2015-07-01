@@ -1,8 +1,0 @@
----
-- hosts: all
-  user: root
-  tags: prepare
-  vars_files:
-    - vars/pip.yml
-  roles:
-    - pip

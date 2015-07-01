@@ -1,15 +1,15 @@
 # repo / dir info
 config_prefix: openstack
-rpc_repo_dir: rpc_repo
+repo_dir: openstack_repo
 repo_url: https://rpc-repo.rackspace.com
 razor_url: http://10.127.101.82:8080/api
 
 # rpc user config info
-rpc_user_config:
+user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
     storage_cidr:  172.29.244.0/22
-    repl_cidr: 
+    repl_cidr:
     used_ips:
         - "172.29.236.1,172.29.236.15"
         - "172.29.236.83,172.29.236.127"
@@ -73,7 +73,7 @@ swift_config:
   weight: 100
   min_part_hours: 1
   repl_number: 3
-  storage_network: 'br-storage' 
+  storage_network: 'br-storage'
   replication_network: 'br-repl'
   drives:
     - name: swift1

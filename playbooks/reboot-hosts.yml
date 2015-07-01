@@ -1,6 +1,0 @@
----
-- hosts: all
-  user: root
-  tags: reboot
-  roles:
-    - reboot

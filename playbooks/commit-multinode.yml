@@ -38,7 +38,7 @@
   tags: prepare
   user: root
   roles:
-    - configure-rpc-swift-lvs
+    - configure-swift-lvs
     - setup-git
 
 - hosts: infrastructure[0]
@@ -52,8 +52,8 @@
   tags: prepare
   user: root
   roles:
-    - configure-rpc-compute
-    - configure-rpc-swift
+    - configure-compute
+    - configure-swift
 
 ## --------- [ Run os-ansible-deployment ] ---------------
 - hosts: infrastructure[0]
