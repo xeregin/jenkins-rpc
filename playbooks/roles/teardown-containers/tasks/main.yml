@@ -5,6 +5,7 @@
   ignore_errors: yes
 
 - name: Stop containers
+<<<<<<< HEAD
   command: lxc-stop --kill --name="{{ item }}"
   with_items: containers.stdout_lines
   when: containers.stdout_lines is defined
@@ -13,6 +14,18 @@
   command: lxc-destroy --force --name="{{ item }}"
   with_items: containers.stdout_lines
   when: containers.stdout_lines is defined
+=======
+  command: lxc-stop --kill --name={{ item }}
+  with_items: containers.stdout_lines
+  when: containers.stdout_lines is defined
+  ignore_errors: yes
+
+- name: Destroy containers
+  command: lxc-destroy --force --name={{ item }}
+  with_items: containers.stdout_lines
+  when: containers.stdout_lines is defined
+  ignore_errors: yes
+>>>>>>> master
 
 - name: Remove all containers from /etc/hosts
   lineinfile: dest=/etc/hosts regexp="container" state=absent
