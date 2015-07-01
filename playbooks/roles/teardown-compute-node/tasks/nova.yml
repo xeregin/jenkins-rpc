@@ -3,18 +3,15 @@
   command: service nova-compute stop
   ignore_errors: yes
 
-- name: Get all running vms
-  shell: "virsh list | grep instance | awk '{print $2}'"
+- name: Gather VMs
+  virt: command=list_vms
   register: instances
   ignore_errors: yes
 
-- name: Stop all running instances
-  virt: name={{ item }} command=shutdown
-  with_items: instances.stdout_lines
-
-- name: Destroy all instances
+- name: Destroy VMs
   virt: name={{ item }} command=destroy
-  with_items: instances.stdout_lines
+  with_items: instances.list_vms
+  ignore_errors: yes
 
 - name: Uninstall nova and python-neutronclient
   pip: name={{ item }} state=absent

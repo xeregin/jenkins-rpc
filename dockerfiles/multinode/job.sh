@@ -2,7 +2,7 @@
 
 set -e
 
-JENKINS_RPC_URL=${JENKINS_RPC_URL:-git@github.com:rcbops/jenkins-rpc.git}
+JENKINS_RPC_URL=${JENKINS_RPC_URL:-https://github.com/rcbops/jenkins-rpc}
 JENKINS_RPC_BRANCH=${JENKINS_RPC_BRANCH:-master}
 
 env
@@ -60,10 +60,10 @@ pushd jenkins-rpc/playbooks
 set -x
 
 # Execute bash script
-bash ../scripts/nightly-multinode.sh & wait %1
-rc=$?
+bash ../scripts/multinode.sh & wait %1
+retval=$?
 
 # Exit cleanly
 popd
 set +x
-cleanup $rc
+cleanup $retval
