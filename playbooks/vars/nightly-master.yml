@@ -1,27 +1,15 @@
 # repo / dir info
 config_prefix: openstack
-<<<<<<< HEAD
-rpc_repo_dir: rpc_repo
-=======
 repo_dir: openstack_repo
->>>>>>> master
 repo_url: https://rpc-repo.rackspace.com
 razor_url: http://10.127.101.82:8080/api
 
 # rpc user config info
-<<<<<<< HEAD
-rpc_user_config:
-    container_cidr: 172.29.236.0/22
-    tunnel_cidr:  172.29.240.0/22
-    storage_cidr:  172.29.244.0/22
-    repl_cidr: 
-=======
 user_config:
     container_cidr: 172.29.236.0/22
     tunnel_cidr:  172.29.240.0/22
     storage_cidr:  172.29.244.0/22
     repl_cidr:
->>>>>>> master
     used_ips:
         - "172.29.236.1,172.29.236.15"
         - "172.29.236.83,172.29.236.127"
@@ -38,26 +26,18 @@ user_config:
           bridge: br-mgmt
           container_bridge: br-mgmt
           container_interface: eth1
-<<<<<<< HEAD
-          ip_from_q: container
-          type: raw
-=======
           container_type: veth
           ip_from_q: container
           type: raw
           is_ssh_address: true
           is_container_address: true
->>>>>>> master
           group_binds:
             - all_containers
             - hosts
         - name: provider
           bridge: br-vlan
           container_interface: eth11
-<<<<<<< HEAD
-=======
           container_type: veth
->>>>>>> master
           type: vlan
           range: 2010:2010
           net_name: vlan
@@ -66,10 +46,7 @@ user_config:
         - name: tenant
           bridge: br-vxlan
           container_interface: eth10
-<<<<<<< HEAD
-=======
           container_type: veth
->>>>>>> master
           ip_from_q: tunnel
           type: vxlan
           range: 1:1000
@@ -79,10 +56,7 @@ user_config:
         - name: storage
           bridge: br-storage
           container_interface: eth2
-<<<<<<< HEAD
-=======
           container_type: veth
->>>>>>> master
           ip_from_q: storage
           type: raw
           group_binds:
@@ -99,11 +73,7 @@ swift_config:
   weight: 100
   min_part_hours: 1
   repl_number: 3
-<<<<<<< HEAD
-  storage_network: 'br-storage' 
-=======
   storage_network: 'br-storage'
->>>>>>> master
   replication_network: 'br-repl'
   drives:
     - name: swift1
@@ -208,11 +178,7 @@ networking:
       type: manual
       directives:
         - "vlan-raw-device bond2"
-<<<<<<< HEAD
-    - name: bond2.XXXX
-=======
     - name: bond2.2005
->>>>>>> master
       type: manual
       directives:
         - "vlan-raw-device bond2"
