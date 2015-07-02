@@ -2,7 +2,6 @@
 - name: Rekick cluster nodes
   gather_facts: False
   hosts: all
-<<<<<<< HEAD
   tasks:
     - name: Rekick and wait for nodes to become available
       delegate_to: localhost
@@ -12,7 +11,5 @@
         kick_wait: 2400
         kick_tries: 2
         djeep_url: "http://10.127.52.2:8000/api"
-=======
   roles:
     - djeep-rekick
->>>>>>> master
