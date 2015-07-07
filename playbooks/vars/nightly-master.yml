@@ -1,7 +1,6 @@
 # repo / dir info
 config_prefix: openstack
 repo_dir: openstack_repo
-repo_url: https://rpc-repo.rackspace.com
 razor_url: http://10.127.101.82:8080/api
 
 # rpc user config info
