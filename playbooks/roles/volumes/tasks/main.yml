@@ -1,3 +1,7 @@
 - name: add volume groups
-  lvg:  vg={{ item.name }} pvs={{ item.device }} pesize=8 state=present
-  with_items: vgs 
+  lvg:
+    vg: "{{ item.name }}"
+    pvs: "{{ item.device }}"
+    pesize: 8
+    state: present
+  with_items: vgs

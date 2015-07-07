@@ -14,27 +14,21 @@
     state: latest
 
 - name: Configure git identity
-  shell: >
-    git config --global user.email "jenkins@propter.net";
-    git config --global user.name "Jenkins"
+  shell: "git config --global user.email 'jenkins@propter.net'; git config --global user.name 'Jenkins'"
 
 - name: Delete repo
-  file: >
-    path={{ product_repo_dir }}
-    state=absent
+  file:
+    path: "{{ product_repo_dir }}"
+    state: absent
 
 - name: Clone repo
-  git: >
-    repo={{ product_url }}
-    dest={{ product_repo_dir }}
-    recursive=yes
-    accept_hostkey=True
-
-- name: Fetch origin
-  command: git fetch origin chdir={{ product_repo_dir }}
-
-- name: Checkout target branch
-  command: git checkout {{ product_branch }} chdir={{ product_repo_dir }}
+  git:
+    repo: "{{ product_url }}"
+    dest: "{{ product_repo_dir }}"
+    version: "{{ product_branch }}"
+    accept_hostkey: yes
+    recursive: yes
+    update: yes
 
 - name: Get change from gerrit
   shell:
@@ -44,7 +38,7 @@
   when: GERRIT_REFSPEC is defined
 
 - name: Merge Review
-  command: >
-    git merge FETCH_HEAD
-    chdir={{ product_repo_dir }}
+  command: git merge FETCH_HEAD
+  args:
+    chdir: "{{ product_repo_dir }}"
   when: GERRIT_REFSPEC is defined

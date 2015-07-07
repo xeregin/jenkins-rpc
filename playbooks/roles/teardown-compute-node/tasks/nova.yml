@@ -1,32 +1,43 @@
 ---
 - name: Stop nova-compute service
-  command: service nova-compute stop
+  service:
+    name: nova-compute
+    state: stopped
   ignore_errors: yes
 
 - name: Gather VMs
-  virt: command=list_vms
+  virt:
+    command: list_vms
   register: instances
   ignore_errors: yes
 
 - name: Destroy VMs
-  virt: name={{ item }} command=destroy
+  virt:
+    name: "{{ item }}"
+    command: destroy
   with_items: instances.list_vms
   ignore_errors: yes
 
 - name: Undefine VMs
-  virt: name={{ item }} command=undefine
+  virt:
+    name: "{{ item }}"
+    command: undefine
   with_items: instances.list_vms
   ignore_errors: yes
 
 - name: Uninstall nova and python-neutronclient
-  pip: name={{ item }} state=absent
+  pip:
+    name: "{{ item }}"
+    state: absent
   with_items:
     - nova
     - python-neutronclient
   ignore_errors: yes
 
 - name: Remove nova directories
-  file: path={{ item }} state=absent
+  file:
+    path: "{{ item }}"
+    state: absent
   with_items:
     - /opt/nova*
     - /etc/nova

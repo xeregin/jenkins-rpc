@@ -4,14 +4,18 @@
   ignore_errors: yes
 
 - name: Uninstall neutron and python-novaclient
-  pip: name={{ item }} state=absent
+  pip:
+    name: "{{ item }}"
+    state: absent
   with_items:
     - neutron
     - python-novaclient
   ignore_errors: yes
 
 - name: Remove neutron directories
-  file: path={{ item }} state=absent
+  file:
+    path: "{{ item }}"
+    state: absent
   with_items:
     - /opt/neutron*
     - /etc/neutron
