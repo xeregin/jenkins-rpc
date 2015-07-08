@@ -13,25 +13,47 @@
     - vlan
 
 - name: load kernel bonding
-  modprobe: name=bonding state=present
+  modprobe:
+    name: bonding
+    state: present
 
 - name: load 802.1q module
-  modprobe: name=8021q state=present
+  modprobe:
+    name: 8021q
+    state: present
 
 - name: ensure module persistance
-  lineinfile: dest=/etc/modules state=present regexp="^{{ item }}" line="{{ item }}"
+  lineinfile:
+    dest: /etc/modules
+    state: present
+    regexp: "^{{ item }}"
+    line: "{{ item }}"
   with_items:
     - bonding
     - 8021q
 
 - name: ensure /etc/network/interfaces.d exists
-  file: path=/etc/network/interfaces.d state=directory owner=root mode=0655
+  file:
+    path: /etc/network/interfaces.d
+    state: directory
+    owner: root
+    mode: 0655
 
 - name: setup interfaces file
-  template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644
+  template:
+    src: interfaces.j2
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: 0644
 
 - name: setup interface config files
-  template: src=interface.j2 dest=/etc/network/interfaces.d/{{ item.name }}.cfg owner=root group=root mode=0644
+  template:
+    src: interface.j2
+    dest: /etc/network/interfaces.d/{{ item.name }}.cfg
+    owner: root
+    group: root
+    mode: 0644
   with_items: networking
   register: result
 

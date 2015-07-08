@@ -1,6 +1,9 @@
 ---
 - name: Stop Swift services
-  service: name={{ item }} enabled=no state=stopped
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
   with_items: swift.service_names
   ignore_errors: yes
 
@@ -9,6 +12,6 @@
   ignore_errors: yes
 
 - name: Remove all files and directories within Swift drives
-  command: rm -rf /mnt/{{ item.name }}/*
+  shell: rm -rf /mnt/{{ item.name }}/*
   with_items: swift_config.drives
   when: swift_config.drives is defined

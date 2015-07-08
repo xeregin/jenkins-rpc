@@ -13,6 +13,10 @@ RUN apt-get install -y curl git python python-pip python-dev ssh-client
 RUN git clone --recursive --branch v1.9.1-1 https://github.com/ansible/ansible
 RUN cd ansible; pip install . ; cd ..
 
+# Install python2-lxc
+RUN git clone https://github.com/lxc/python2-lxc
+RUN cd python2-lxc; pip install . ; cd ..
+
 # Add entrypoint script
 ADD job.sh /root/job.sh
 

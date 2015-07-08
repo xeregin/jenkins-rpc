@@ -1,17 +1,19 @@
 ---
 - name: Create /opt
   file:
-    state: "directory"
-    path: "/opt"
+    state: directory
+    path: /opt
 
-- name: Get Modern Pip
-  shell: "for try in {1..10} :; do curl {{get_pip_url}} > /opt/get-pip.py; file /opt/get-pip.py | grep -q Python && break; sleep 30; done"
+- name: Retrieve pip
+  shell: "for try in {1..10} :; do curl {{ get_pip_url }} > /opt/get-pip.py; file /opt/get-pip.py | grep -q Python && break; sleep 30; done"
   args:
     executable: /bin/bash
 
 - name: Install pip
-  shell: "python /opt/get-pip.py"
+  shell: python /opt/get-pip.py
 
-- name: install all required pip packages
-  pip: name={{ item }} state=latest
+- name: Install required pip packages
+  pip:
+    name: "{{ item }}"
+    state: latest
   with_items: pip
