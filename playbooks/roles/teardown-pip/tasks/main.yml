@@ -1,0 +1,5 @@
+---
+- name: Remove pip configuration directory
+  file:
+    path: ~/.pip
+    state: absent
