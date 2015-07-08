@@ -140,7 +140,6 @@ function main {
     OSAD_REPO_DIR="${PRODUCT_REPO_DIR}/os-ansible-deployment"
 
     if [[ "${LAB_PREFIX}" == "release" ]]; then
-      DEPLOY_MAAS="yes"
       DEPLOY_HAPROXY="no"
     fi
 
