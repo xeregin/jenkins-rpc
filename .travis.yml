@@ -1,0 +1,15 @@
+---
+language: python
+python: "2.7"
+
+before_install:
+  - sudo apt-get update -qq
+
+install:
+  - pip install --upgrade ansible
+
+before_script:
+  - cd playbooks/
+
+script:
+  - ansible-playbook -i inventory/release-eng-iad3-lab02 multinode.yml --syntax-check
