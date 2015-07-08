@@ -143,6 +143,15 @@
     - rekick
   gather_facts: no
   roles:
+    - teardown-pip
+
+- hosts: all
+  user: root
+  tags:
+    - cleanup
+    - rekick
+  gather_facts: no
+  roles:
     - cleanup-host
 
 ## --------- [ Rekick Cluster ] ------------------
