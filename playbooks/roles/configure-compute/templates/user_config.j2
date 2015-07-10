@@ -92,28 +92,7 @@ global_overrides:
 {% endfor %}
 
 # Shared infrastructure parts
-shared-infra_hosts:
-{% for host in infra %}
-  {{ host }}:
-    ip: {{ hostvars[host]["ansible_ssh_host"] }}
-{% endfor %}
-
-# Openstack Compute Infrastructure Parts
-os-infra_hosts:
-{% for host in infra %}
-  {{ host }}:
-    ip: {{ hostvars[host]["ansible_ssh_host"] }}
-{% endfor %}
-
-# Storage Infrastructure Parts
-storage-infra_hosts:
-{% for host in infra %}
-  {{ host }}:
-    ip: {{ hostvars[host]["ansible_ssh_host"] }}
-{% endfor %}
-
-# Keystone Identity Infrastructure Parts
-identity_hosts:
+infra_hosts:
 {% for host in infra %}
   {{ host }}:
     ip: {{ hostvars[host]["ansible_ssh_host"] }}
@@ -169,13 +148,6 @@ storage_hosts:
 # User defined Logger Hosts, this should be a required group
 log_hosts:
 {% for host in logger %}
-  {{ host }}:
-    ip: {{ hostvars[host]["ansible_ssh_host"] }}
-{% endfor %}
-
-# User defined Repo Infrastructure Hosts, this is an optional group
-repo-infra_hosts:
-{% for host in infra %}
   {{ host }}:
     ip: {{ hostvars[host]["ansible_ssh_host"] }}
 {% endfor %}
