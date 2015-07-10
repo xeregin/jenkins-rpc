@@ -9,28 +9,38 @@
 # have flexible jenkins jobs, without complex job relationships in jenkins.
 
 
-## Job-centric variables
+## Job variables
 LAB=${LAB:-master}
 LAB_PREFIX=${LAB_PREFIX:-nightly}
-TAGS=${TAGS:-prepare run upgrade test}
-PRODUCT=${PRODUCT:-os-ansible-deployment}
-CONFIG_PREFIX=${CONFIG_PREFIX:-openstack}
+TAGS=${TAGS:-rekick prepare run test}
 
-## Jenkins-centric variables
-PRODUCT_BRANCH=${PRODUCT_BRANCH:-master}
+## Jenkins variables
 JENKINS_RPC_URL=${JENKINS_RPC_URL:-https://github.com/rcbops/jenkins-rpc}
 JENKINS_RPC_BRANCH=${JENKINS_RPC_BRANCH:-master}
-TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS:-api}
-ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR:-1}
-ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:--v}
+
+## Product Variables
+PRODUCT=${PRODUCT:-os-ansible-deployment}
+PRODUCT_URL=${PRODUCT_URL:-https://github.com/stackforge/os-ansible-deployment.git}
+PRODUCT_BRANCH=${PRODUCT_BRANCH:-master}
+
+## Upgrade Variables
 UPGRADE=${UPGRADE:-NO}
-UPGRADE_BRANCH=${UPGRADE_BRANCH:-master}
+UPGRADE_PRODUCT=${UPGRADE_PRODUCT:-os-ansible-deployment}
+UPGRADE_PRODUCT_URL=${UPGRADE_PRODUCT_URL:-https://github.com/stackforge/os-ansible-deployment.git}
+UPGRADE_PRODUCT_BRANCH=${UPGRADE_PRODUCT_BRANCH:-master}
+
+## Deployment Variables
 DEPLOY_MAAS=${DEPLOY_MAAS:-"no"}
 DEPLOY_HAPROXY=${DEPLOY_HAPROXY:-"yes"}
 DEPLOY_TEMPEST=${DEPLOY_TEMPEST:-"yes"}
 
+# Product Config Variables
+CONFIG_PREFIX=${CONFIG_PREFIX:-openstack}
+TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS:-api}
 
-env
+# Shell Variables
+ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR:-1}
+ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:--v}
 
 function ssh_command {
   local command="$1"
@@ -53,8 +63,11 @@ function run_tag {
   export ANSIBLE_FORCE_COLOR
   local tag="$1"
 
+  # print env
+  env
+
   if [[ ${tag} == "prepare" ]]; then
-    echo "Running ${tag} from multinode.yml with tags: ${tag}, ${PRODUCT}, and ${LAB_PREFIX}."
+    echo "Running tag ${tag} from multinode.yml with tags: ${tag}, ${PRODUCT}, and ${LAB_PREFIX}."
     ansible-playbook \
       --inventory-file="inventory/${LAB_PREFIX}-${LAB}" \
       --extra-vars="@vars/${LAB_PREFIX}-${LAB}.yml" \
@@ -67,7 +80,7 @@ function run_tag {
       ${ANSIBLE_OPTIONS} \
       multinode.yml
   else
-    echo "Running ${tag} from multinode.yml"
+    echo "Running tag ${tag} from multinode.yml"
     ansible-playbook \
       --inventory-file="inventory/${LAB_PREFIX}-${LAB}" \
       --extra-vars="@vars/${LAB_PREFIX}-${LAB}.yml" \
@@ -86,7 +99,13 @@ function run_script {
   local script="$1"
 
   echo "Running ${script} from ${PRODUCT_REPO_DIR}/scripts."
-  ssh_command "cd ${PRODUCT_REPO_DIR}; bash scripts/${script}.sh"
+  
+  # If we are running the upgrade we must echo YES into the script
+  if [[ $tag == "upgrade" ]]; then
+    ssh_command "cd ${PRODUCT_REPO_DIR}; echo \"YES\" | bash scripts/${script}.sh"
+  else
+    ssh_command "cd ${PRODUCT_REPO_DIR}; bash scripts/${script}.sh"
+  fi
 }
 
 function prepare {
@@ -106,7 +125,24 @@ function run {
 }
 
 function upgrade {
+
+  # Due to supporting both osad and rpc upgrade testing we need to override
+  # all the PRODUCT variables to be correct.
+  OLD_PRODUCT=$PRODUCT
+  PRODUCT=$UPGRADE_PRODUCT
+  PRODUCT_BRANCH=$UPGRADE_PRODUCT_BRANCH
+  PRODUCT_URL=$UPGRADE_PRODUCT_URL
+  CONFIG_PREFIX="openstack"
+  
+  if [[ "${OLD_PRODUCT}" == "os-ansible-deployment" ]] && [[ "${UPGRADE_PRODUCT}" == "rpc-openstack" ]]; then
+    PRODUCT_REPO_DIR="/opt/${PRODUCT}"
+    UPGRADE_SCRIPT_NAME="upgrade"
+  fi
+  
+  # run upgrade tag in ansible
   run_tag upgrade
+
+  # run upgrade script
   run_script $UPGRADE_SCRIPT_NAME
 }
 
@@ -136,7 +172,7 @@ function main {
     BUILD_SCRIPT_NAME="deploy"
     UPGRADE_SCRIPT_NAME="upgrade"
     TEST_SCRIPT_NAME="run-tempest"
-    PRODUCT_REPO_DIR="/opt/rpc-openstack"
+    PRODUCT_REPO_DIR="/opt/${PRODUCT}"
     PRODUCT_URL="https://github.com/rcbops/rpc-openstack"
     OSAD_REPO_DIR="${PRODUCT_REPO_DIR}/os-ansible-deployment"
 
@@ -149,7 +185,7 @@ function main {
     BUILD_SCRIPT_NAME="run-playbooks"
     UPGRADE_SCRIPT_NAME="run-upgrade"
     TEST_SCRIPT_NAME="run-tempest"
-    OSAD_REPO_DIR="/opt/os-ansible-deployment"
+    OSAD_REPO_DIR="/opt/${PRODUCT}"
     PRODUCT_REPO_DIR=$OSAD_REPO_DIR
     PRODUCT_URL="https://github.com/stackforge/os-ansible-deployment"
   else
