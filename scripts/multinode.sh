@@ -40,30 +40,31 @@ TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS:-api}
 
 # Shell Variables
 ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR:-1}
-ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:--v}
+ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:-v}
+
+function find_infra01 {
+  # Find the deployment node's IP address within a lab's inventory file
+  OCTET='[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'
+
+  export infra01
+  infra01="$(grep --only-matching --max-count=1 "$OCTET" \
+     ./inventory/"$LAB_PREFIX"-"$LAB")"
+}
 
 function ssh_command {
   local command="$1"
-  local infra01
 
-  # Find the deployment node's IP address within a lab's inventory file
-  OCTET='[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'
-  infra01="$(grep --only-matching --max-count=1 $OCTET \
-     ./inventory/${LAB_PREFIX}-${LAB})"
-
-  # Clear a temp environment file in-case we're already on the deployment node
-  > /tmp/env
   echo "export ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR}" >> script_env
-  scp script_env $infra01:/tmp/env
+  scp script_env "$infra01":/tmp/env
 
-  ssh root@$infra01 "source /tmp/env; ${command}"
+  # shellcheck disable=SC2029
+  ssh root@"$infra01" "source /tmp/env; $command"
 }
 
 function run_tag {
   export ANSIBLE_FORCE_COLOR
   local tag="$1"
 
-  # print env
   env
 
   if [[ ${tag} == "prepare" ]]; then
@@ -77,7 +78,7 @@ function run_tag {
       --extra-vars="product_branch=${PRODUCT_BRANCH}" \
       --extra-vars="config_prefix=${CONFIG_PREFIX}" \
       --tags="${tag},${PRODUCT},${LAB_PREFIX}" \
-      ${ANSIBLE_OPTIONS} \
+      "$ANSIBLE_OPTIONS" \
       multinode.yml
   else
     echo "Running tag ${tag} from multinode.yml"
@@ -90,7 +91,7 @@ function run_tag {
       --extra-vars="product_branch=${PRODUCT_BRANCH}" \
       --extra-vars="config_prefix=${CONFIG_PREFIX}" \
       --tags="${tag}" \
-      ${ANSIBLE_OPTIONS} \
+      "$ANSIBLE_OPTIONS" \
       multinode.yml
   fi
 }
@@ -99,7 +100,7 @@ function run_script {
   local script="$1"
 
   echo "Running ${script} from ${PRODUCT_REPO_DIR}/scripts."
-  
+
   # If we are running the upgrade we must echo YES into the script
   if [[ $tag == "upgrade" ]]; then
     ssh_command "cd ${PRODUCT_REPO_DIR}; echo \"YES\" | bash scripts/${script}.sh"
@@ -121,7 +122,7 @@ function run {
 
   echo "export DEPLOY_MAAS=${DEPLOY_MAAS}" > script_env
   echo "export DEPLOY_HAPROXY=${DEPLOY_HAPROXY}" >> script_env
-  run_script $BUILD_SCRIPT_NAME
+  run_script "$BUILD_SCRIPT_NAME"
 }
 
 function upgrade {
@@ -133,17 +134,15 @@ function upgrade {
   PRODUCT_BRANCH=$UPGRADE_PRODUCT_BRANCH
   PRODUCT_URL=$UPGRADE_PRODUCT_URL
   CONFIG_PREFIX="openstack"
-  
+
   if [[ "${OLD_PRODUCT}" == "os-ansible-deployment" ]] && [[ "${UPGRADE_PRODUCT}" == "rpc-openstack" ]]; then
     PRODUCT_REPO_DIR="/opt/${PRODUCT}"
     UPGRADE_SCRIPT_NAME="upgrade"
   fi
-  
+
   # run upgrade tag in ansible
   run_tag upgrade
-
-  # run upgrade script
-  run_script $UPGRADE_SCRIPT_NAME
+  run_script "$UPGRADE_SCRIPT_NAME"
 }
 
 function test {
@@ -153,7 +152,10 @@ function test {
   # when we run the tests for deploying from rpc-openstack
   # we have to change the DIR that we start from
   PRODUCT_REPO_DIR=$OSAD_REPO_DIR
-  run_script $TEST_SCRIPT_NAME
+  run_script "$TEST_SCRIPT_NAME"
+
+  ssh_command "cd ${PRODUCT_REPO_DIR}/playbooks; ansible 'utility[0]' -m fetch -a 'src=/tmp/tempest_results.xml dest=/tmp/ flat=true'"
+  scp "$infra01":/tmp/tempest_results.xml ~/tempest_results.xml
 }
 
 function rekick {
@@ -191,6 +193,8 @@ function main {
     echo "Invalid product name. Choices: 'rpc-openstack' or 'os-ansible-deployment'"
     exit 1
   fi
+
+  find_infra01
 
   retval=0
   for tag in ${TAGS}

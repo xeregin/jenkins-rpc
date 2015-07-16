@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Update, upgrade and install deps for RPC
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install -y curl git python python-pip python-dev ssh-client
+RUN apt-get install -y curl git python python-pip python-dev ssh-client lxc-dev
 
 # Install ansible
 RUN git clone --recursive --branch v1.9.1-1 https://github.com/ansible/ansible
