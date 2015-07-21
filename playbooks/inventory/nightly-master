@@ -1,3 +1,5 @@
+# This file will be depricated and moved to nightly-sat6-lab01
+
 [all]
 node108 ansible_ssh_host=10.127.101.108 ansible_ssh_user=root member_number=108
 node101 ansible_ssh_host=10.127.101.101 ansible_ssh_user=root member_number=101
