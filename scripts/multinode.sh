@@ -57,9 +57,9 @@ function ssh_command {
 
   echo "export FORKS=${FORKS}" >> script_env
   echo "export ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR}" >> script_env
-  scp script_env $infra01:/tmp/env
+  scp script_env "$infra01":/tmp/env
 
-  ssh root@$infra01 "source /tmp/env; ${command}"
+  ssh root@"$infra01" "source /tmp/env; ${command}"
 }
 
 function run_tag {
@@ -195,6 +195,8 @@ function main {
     echo "Invalid product name. Choices: 'rpc-openstack' or 'os-ansible-deployment'"
     exit 1
   fi
+
+  find_infra01
 
   retval=0
   for tag in ${TAGS}
