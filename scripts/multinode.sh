@@ -41,6 +41,7 @@ TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS:-api}
 # Shell Variables
 ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR:-1}
 ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:-v}
+FORKS=${FORKS:-10}
 
 function find_infra01 {
   # Find the deployment node's IP address within a lab's inventory file
@@ -54,6 +55,7 @@ function find_infra01 {
 function ssh_command {
   local command="$1"
 
+  echo "export FORKS=${FORKS}" >> script_env
   echo "export ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR}" >> script_env
   scp script_env "$infra01":/tmp/env
 
