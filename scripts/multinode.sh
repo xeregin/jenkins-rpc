@@ -40,23 +40,26 @@ TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS:-api}
 
 # Shell Variables
 ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR:-1}
-ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:--v}
+ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:-v}
+FORKS=${FORKS:-10}
+
+function find_infra01 {
+  # Find the deployment node's IP address within a lab's inventory file
+  OCTET='[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'
+
+  export infra01
+  infra01="$(grep --only-matching --max-count=1 "$OCTET" \
+     ./inventory/"$LAB_PREFIX"-"$LAB")"
+}
 
 function ssh_command {
   local command="$1"
-  local infra01
 
-  # Find the deployment node's IP address within a lab's inventory file
-  OCTET='[0-9]\+.[0-9]\+.[0-9]\+.[0-9]\+'
-  infra01="$(grep --only-matching --max-count=1 $OCTET \
-     ./inventory/${LAB_PREFIX}-${LAB})"
-
-  # Clear a temp environment file in-case we're already on the deployment node
-  > /tmp/env
+  echo "export FORKS=${FORKS}" >> script_env
   echo "export ANSIBLE_FORCE_COLOR=${ANSIBLE_FORCE_COLOR}" >> script_env
-  scp script_env $infra01:/tmp/env
+  scp script_env "$infra01":/tmp/env
 
-  ssh root@$infra01 "source /tmp/env; ${command}"
+  ssh root@"$infra01" "source /tmp/env; ${command}"
 }
 
 function run_tag {
@@ -192,6 +195,8 @@ function main {
     echo "Invalid product name. Choices: 'rpc-openstack' or 'os-ansible-deployment'"
     exit 1
   fi
+
+  find_infra01
 
   retval=0
   for tag in ${TAGS}
