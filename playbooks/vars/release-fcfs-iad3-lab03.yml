@@ -12,7 +12,7 @@ user_config:
         - "172.27.240.73,172.27.240.127"
         - "172.27.244.73,172.27.244.127"
     internal_lb_vip_address: 172.27.236.10
-    external_lb_vip_address: 72.4.117.65
+    external_lb_vip_address: 72.4.117.93
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     lb_name: 605011-lbal1.iad3.rpchost.com
