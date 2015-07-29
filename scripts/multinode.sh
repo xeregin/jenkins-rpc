@@ -124,6 +124,7 @@ function run {
 
   echo "export DEPLOY_MAAS=${DEPLOY_MAAS}" > script_env
   echo "export DEPLOY_HAPROXY=${DEPLOY_HAPROXY}" >> script_env
+  echo "export DEPLOY_TEMPEST=${DEPLOY_TEMPEST}" >> script_env
   run_script "$BUILD_SCRIPT_NAME"
 }
 
