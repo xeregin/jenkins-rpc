@@ -3,6 +3,6 @@
   environment: script_env
   shell: "set -o pipefail; scripts/{{ script_name }}.sh |& tee -a /var/log/{{ script_name }}.log"
   args:
-    chdir: "{{ osad_repo_dir }}"
+    chdir: "{{ oa_repo_dir }}"
     executable: /bin/bash
 

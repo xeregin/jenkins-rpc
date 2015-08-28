@@ -32,7 +32,7 @@
 
 - name: Get change from gerrit
   shell:
-    git fetch https://review.openstack.org/stackforge/os-ansible-deployment {{ GERRIT_REFSPEC }}
+    git fetch https://review.openstack.org/openstack/openstack-ansible {{ GERRIT_REFSPEC }}
   args:
     chdir: "{{ product_repo_dir }}"
   when: GERRIT_REFSPEC is defined

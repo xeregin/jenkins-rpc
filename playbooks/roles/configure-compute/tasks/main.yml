@@ -1,15 +1,15 @@
 ---
 - name: Install pip requirements
-  pip: requirements={{ osad_repo_dir }}/requirements.txt
+  pip: requirements={{ oa_repo_dir }}/requirements.txt
 
-- name: Create OSAD configuration directory
+- name: Create OA configuration directory
   file: 
     path: /etc/{{ config_prefix }}_deploy/
     state: directory
     mode: 0755
 
-- name: Copy OSAD configuration files
-  shell: cp --recursive {{ osad_repo_dir }}/etc/{{ config_prefix }}_deploy/* /etc/{{ config_prefix }}_deploy
+- name: Copy OA configuration files
+  shell: cp --recursive {{ oa_repo_dir }}/etc/{{ config_prefix }}_deploy/* /etc/{{ config_prefix }}_deploy
 
 - name: Gather environment MD5
   stat: path=/etc/{{ config_prefix }}_deploy/{{ config_prefix }}_environment.yml
@@ -30,4 +30,4 @@
         mode=0644
 
 - name: Generate passphrases
-  command: "{{ osad_repo_dir }}/scripts/pw-token-gen.py --file /etc/{{ config_prefix }}_deploy/user_secrets.yml"
+  command: "{{ oa_repo_dir }}/scripts/pw-token-gen.py --file /etc/{{ config_prefix }}_deploy/user_secrets.yml"

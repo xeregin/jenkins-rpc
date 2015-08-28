@@ -45,7 +45,7 @@
   tags: prepare
   user: root
   roles:
-    - role: run-script-from-os-ansible-deployment
+    - role: run-script-from-openstack-ansible
       script_name: bootstrap-ansible
 
 - hosts: all
@@ -55,11 +55,11 @@
     - configure-compute
     - configure-swift
 
-## --------- [ Run os-ansible-deployment ] ---------------
+## --------- [ Run openstack-ansible ] ---------------
 - hosts: infrastructure[0]
   tags: run
   roles:
-    - role: run-script-from-os-ansible-deployment
+    - role: run-script-from-openstack-ansible
       script_name: run-playbooks
       script_env:
         DEPLOY_TEMPEST: "yes"
@@ -68,7 +68,7 @@
 
 # The results file cannot be retrieved directly from the utility container as
 # the jenkins-rpc inventory does not include containers.
-# osad/scripts/run-tempest.sh copies tempest_results from the utility container
+# oa/scripts/run-tempest.sh copies tempest_results from the utility container
 # to /tmp on the host.  This play copies tempest_results from the deployment
 # host to the jenkins workspace.
 - hosts: infrastructure
