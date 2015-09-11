@@ -101,26 +101,26 @@ cinder_storage:
 networking:
     - name: lo
       type: loopback
-    - name: em1
-      type: manual
-      directives:
-        - "bond-master bond0"
-        - "bond-primary em1"
-    - name: p1p1
-      type: manual
-      directives:
-        - "bond-master bond0"
     - name: em3
       type: static
       directives:
       - "netmask {{ ansible_em3.ipv4.netmask }}"
       - "post-up ip route add 10.191.192.0/18 via 10.136.157.225 dev em3"
       - "address {{ ansible_em3.ipv4.address }}"
+    - name: em1
+      type: manual
+      directives:
+        - "bond-master bond0"
+        - "bond-primary em1"
     - name: em4
       type: manual
       directives:
+        - "bond-master bond0"
+    - name: p1p1
+      type: manual
+      directives:
         - "bond-master bond1"
-        - "bond-primary em4"
+        - "bond-primary p1p1"
     - name: p1p4
       type: manual
       directives:
