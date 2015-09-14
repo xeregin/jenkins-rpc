@@ -2,7 +2,7 @@
 
 ### -------------- [ Variables ] --------------------
 TAGS=${TAGS:-prepare,run,test}
-OS_ANSIBLE_URL=${OS_ANSIBLE_URL:-https://github.com/stackforge/os-ansible-deployment}
+OS_ANSIBLE_URL=${OS_ANSIBLE_URL:-https://github.com/openstack/openstack-ansible}
 OS_ANSIBLE_BRANCH=${OS_ANSIBLE_BRANCH:-master}
 GERRIT_REFSPEC=${GERRIT_REFSPEC:-refs/changes/87/139087/14}
 ANSIBLE_OPTIONS=${ANSIBLE_OPTIONS:--v}
@@ -91,8 +91,8 @@ ssh_command(){
   ssh root@$infra_1_ip ". /tmp/env; ${1}"
 }
 
-ssh_osad_script(){
-  echo "Running script ${1} from os-ansible-deployment/scripts."
+ssh_oa_script(){
+  echo "Running script ${1} from openstack-ansible/scripts."
   ssh_command "cd ~/rpc_repo; bash scripts/${1}.sh"
 }
 
@@ -102,12 +102,13 @@ prepare(){
 
 run(){
   echo "export DEPLOY_TEMPEST=yes" > script_env
-  ssh_osad_script run-playbooks
+  ssh_oa_script run-playbooks
+
 }
 
 test(){
   echo "export TEMPEST_SCRIPT_PARAMETERS=${TEMPEST_SCRIPT_PARAMETERS}" > script_env
-  ssh_osad_script run-tempest
+  ssh_oa_script run-tempest
 
   # Get junit xml results from tempest so they can be interpreted by jenkins
   run_jenkins_rpc_playbook_tag get_tempest_report

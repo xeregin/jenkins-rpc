@@ -1,6 +1,6 @@
 ---
 config_prefix: openstack
-repo_dir: os-ansible-deployment
+repo_dir: openstack-ansible
 
 user_config:
     container_cidr: 172.27.236.0/22
