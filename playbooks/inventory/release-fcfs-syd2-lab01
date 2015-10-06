@@ -1,0 +1,39 @@
+[all]
+605020-infra01 ansible_ssh_host=10.240.0.192 ansible_ssh_user=root member_number=192
+605021-infra02 ansible_ssh_host=10.240.0.193 ansible_ssh_user=root member_number=193
+605023-infra03 ansible_ssh_host=10.240.0.195 ansible_ssh_user=root member_number=195
+605024-logging01 ansible_ssh_host=10.240.0.198 ansible_ssh_user=root member_number=198
+605057-compute01 ansible_ssh_host=10.240.0.245 ansible_ssh_user=root member_number=245
+605058-compute02 ansible_ssh_host=10.240.0.246 ansible_ssh_user=root member_number=246
+605059-compute03 ansible_ssh_host=10.240.0.215 ansible_ssh_user=root member_number=215
+605061-storage01 ansible_ssh_host=10.240.0.216 ansible_ssh_user=root member_number=216
+605062-storage02 ansible_ssh_host=10.240.0.217 ansible_ssh_user=root member_number=217
+605063-storage03 ansible_ssh_host=10.240.0.219 ansible_ssh_user=root member_number=219
+
+[infrastructure]
+605020-infra01
+605021-infra02
+605023-infra03
+
+[network]
+605020-infra01
+605021-infra02
+605023-infra03
+
+[compute]
+605057-compute01
+605058-compute02
+605059-compute03
+
+[cinder]
+605061-storage01
+605062-storage02
+605063-storage03
+
+[swift]
+605061-storage01 zone=1
+605062-storage02 zone=2
+605063-storage03 zone=3
+
+[logger]
+605024-logging01
