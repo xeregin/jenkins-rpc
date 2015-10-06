@@ -9,7 +9,7 @@
     - nightly
     - commit
     - release
-    - os-ansible-deployment
+    - openstack-ansible
   tasks:
     - name: Ping hosts
       ping:
@@ -71,7 +71,7 @@
   tags:
     - prepare
   roles:
-    - role: run-script-from-os-ansible-deployment
+    - role: run-script-from-openstack-ansible
       script_name: bootstrap-ansible
 
 - hosts: infrastructure[0]

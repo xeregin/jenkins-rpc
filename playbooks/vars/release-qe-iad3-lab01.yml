@@ -13,7 +13,7 @@ user_config:
         - "172.29.244.160,172.29.244.169"
         - "172.29.248.1"
     internal_lb_vip_address: 172.29.236.10
-    external_lb_vip_address: 204.232.187.32
+    external_lb_vip_address: 204.232.187.35
     tunnel_bridge: br-vxlan
     container_bridge: br-mgmt
     lb_name:
@@ -65,15 +65,11 @@ swift_config:
   storage_network: 'br-storage'
   replication_network: 'br-storage'
   drives:
-    - name: swift1
-    - name: swift2
-    - name: swift3
-    - name: swift4
-    - name: swift5
-    - name: swift6
-    - name: swift7
-    - name: swift8
-    - name: swift9
+    - name: sdc
+    - name: sdd
+    - name: sde
+    - name: sdf
+    - name: sdg
   lv_size: 400G
   mount_point: /mnt
   account: "service:glance"
